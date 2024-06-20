@@ -1,8 +1,93 @@
+import { NavLink } from "react-router-dom";
+import logo from "../assets/Images/Header/logo-removebg-preview.png";
+import logo1 from "../assets/Images/Header/logo.jpg";
+import { FaBars, FaSearch } from "react-icons/fa";
+import { FaCartShopping, FaXmark } from "react-icons/fa6";
+import { useState } from "react";
 
 const Header = () => {
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [click, setClick] = useState(false);
+    const toggleMobileMenu = () => {
+        setMobileMenuOpen(!isMobileMenuOpen);
+        setClick(!click);
+    };
     return (
-        <div>
-            <h2>Header</h2>
+        <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
+            <div className="flex flex-row gap-16">
+                <div>
+                    <img className="md:w-28 w-20" src={logo1} alt="" />
+                </div>
+                <div className="lg:block hidden lg:flex items-center gap-10 text-black">
+                    <ul className="text-black text-xl font-medium">
+                        <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                        }>Men</NavLink>
+                    </ul>
+                    {/* <Link to="/laptopCollection" className="text-black text-xl font-medium">Laptop</Link> */}
+                    <ul className="text-black text-xl font-medium">
+                        <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                        }>Women</NavLink>
+                    </ul>
+                    <ul className="text-black text-xl font-medium">
+                        <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                        }>Kids</NavLink>
+                    </ul>
+                    {/* <ul className="text-black text-xl font-medium">
+                    <NavLink to='/headphoneCollection' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                    }>Headphone</NavLink>
+                </ul> */}
+
+                </div>
+            </div>
+            <div className="relative flex border-2 rounded-lg lg:hidden md:block hidden">
+                    <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500 lg:text-base text-sm" />
+                    <input className="py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-72 w-10 lg:font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
+                </div>
+            <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
+                <div className="relative flex border-2 rounded-lg lg:block hidden">
+                    <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
+                    <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
+                </div>
+                <div>
+                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
+                </div>
+                <div className="lg:block hidden">
+                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                        Login
+                    </button>
+                    {/* <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 via-pink-700 to-purple-700">
+                        Login
+                    </button> */}
+
+                </div>
+                <div className="lg:hidden visible">
+                    <button className="text-white focus:outline-none"
+                        onClick={toggleMobileMenu}>
+                        {click ? (<FaXmark className="text-purple-800 font-bold md:text-xl text-lg" />) : (<FaBars className="text-purple-800 font-bold md:text-xl text-lg" />)}
+                    </button>
+                </div>
+                {/* Mobile menu */}
+                {isMobileMenuOpen && (
+                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute top-16 right-4 px-4 md:py-6 py-4 md:w-[168px] w-40 rounded-md shadow-lg border-4 border-purple-800 bg-white">
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                            <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                            }>Men</NavLink>
+                        </ul>
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                            <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                            }>Women</NavLink>
+                        </ul>
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                            <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
+                            }>Kids</NavLink>
+                        </ul>
+                        <button className="py-2 md:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                            Login
+                        </button>
+                    </div>
+                )}
+
+            </div>
         </div>
     );
 };
