@@ -14,7 +14,7 @@ const Header = () => {
         setClick(!click);
     };
     // cart product work
-    const [cartItems, setCartItems] = useState(0);
+    const [cartItems, setCartItems] = useState(2);
     // Function to simulate adding items to the cart
     const addToCart = () => {
         setCartItems(cartItems + 1);
@@ -53,15 +53,14 @@ const Header = () => {
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
                 </div>
                 <div>
-                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
-                    {/* 
                     {cartItems > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    {cartItems}
-                </span>
-            )}
-            <button onClick={addToCart} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Add to Cart</button>
-         */}
+                        <span className="relative top-3 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                            {cartItems}
+                        </span>
+                    )}
+                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg mb-3" />
+                    {/* <button onClick={addToCart} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Add to Cart</button> */}
+
                 </div>
                 {/* large device */}
                 <div className="lg:block hidden">
