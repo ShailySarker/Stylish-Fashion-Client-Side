@@ -52,13 +52,13 @@ const Header = () => {
                     <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
                 </div>
-                <div>
+                <div className="flex">
+                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
                     {cartItems > 0 && (
-                        <span className="relative top-3 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
                             {cartItems}
                         </span>
                     )}
-                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg mb-3" />
                     {/* <button onClick={addToCart} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Add to Cart</button> */}
 
                 </div>
