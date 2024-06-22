@@ -28,7 +28,7 @@ const dataOfFAQs = [
     {
         id: 6,
         question: 'How can I contact customer service?',
-        answer: "You can reach our customer service team via email at support@stylishfashion.com or by calling our toll-free number. Our team is available to assist you with any questions or concerns.",
+        answer: "You can reach our customer service team via email at stylefashion@gmail.com or by calling our toll-free number. Our team is available to assist you with any questions or concerns.",
     },
 ];
 
@@ -44,7 +44,7 @@ const FaqItem = ({ question, answer, id }) => {
             <button
                 className="flex items-center justify-between w-full lg:p-6 md:p-5 px-3 py-4 text-left focus:outline-none"
                 onClick={toggleAccordion}>
-                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-800">Question 0{id}: </span>{question}</span>
+                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-900">Question 0{id}: </span>{question}</span>
                 <span className='w-[5%] flex justify-end'>
                     <svg
                         className={`lg:w-5 md:w-4 w-3 lg:h-5 md:h-4 h-3 ${isOpen ? 'transform rotate-180' : ''}`}
@@ -60,8 +60,8 @@ const FaqItem = ({ question, answer, id }) => {
                 </span>
             </button>
             {isOpen && (
-                <div className="lg:p-6 md:p-5 px-3 py-4 bg-gradient-to-r from-pink-100 to-purple-200 rounded-xl">
-                    <p className="text-black lg:text-xl font-medium "><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-800 border-b-2 border-purple-800">Answer:</span> {answer}</p>
+                <div className="lg:p-6 md:p-5 px-3 py-4 bg-gradient-to-r from-blue-100 to-purple-200 rounded-xl">
+                    <p className="text-black lg:text-xl font-medium "><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-900 border-b-2 border-purple-900">Answer:</span> {answer}</p>
                 </div>
             )}
         </div>
