@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import MenFashion from "../pages/MenFashion/MenFashion";
 import WomenFashion from "../pages/WomenFashion/WomenFashion";
 import KidsFashion from "../pages/KidsFashion/KidsFashion";
+import SingleProductDetails from "../pages/SingleProductDetails/SingleProductDetails";
 
 const router = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             {
                 path: "/kidsFashion",
                 element: <KidsFashion />
+            },
+            {
+                path: "/singleProductDetails",
+                element: <SingleProductDetails />
             },
         ]
     }

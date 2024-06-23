@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/Images/Header/logo-removebg-preview.png";
 import logo1 from "../assets/Images/Header/logo.jpg";
 import { FaBars, FaSearch } from "react-icons/fa";
@@ -23,7 +23,9 @@ const Header = () => {
         <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
             <div className="flex flex-row gap-16">
                 <div>
-                    <img className="md:w-28 w-20" src={logo1} alt="" />
+                    <Link to="/">
+                        <img className="md:w-28 w-20" src={logo1} alt="" />
+                    </Link>
                 </div>
                 {/* large device */}
                 <div className="lg:block hidden lg:flex items-center gap-10 text-black">
@@ -80,7 +82,7 @@ const Header = () => {
                 </div>
                 {/* Mobile menu */}
                 {isMobileMenuOpen && (
-                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute top-16 right-4 px-4 md:py-6 py-4 md:w-[168px] w-40 rounded-md shadow-lg border-4 border-purple-800 bg-white">
+                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute md:top-16 top-[72px] right-4 px-4 md:py-6 py-4 md:w-[168px] w-36 rounded-md shadow-lg border-4 border-purple-800 bg-white">
                         <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
                             <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Men</NavLink>
@@ -93,7 +95,7 @@ const Header = () => {
                             <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Kids</NavLink>
                         </ul>
-                        <button className="py-2 md:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                        <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
                             Login
                         </button>
                     </div>
