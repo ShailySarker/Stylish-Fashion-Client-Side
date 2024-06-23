@@ -27,15 +27,15 @@ const Header = () => {
                 </div>
                 {/* large device */}
                 <div className="lg:block hidden lg:flex items-center gap-10 text-black">
-                    <ul className="text-black text-xl font-medium">
+                    <ul className="text-black text-xl font-semibold">
                         <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                         }>Men</NavLink>
                     </ul>
-                    <ul className="text-black text-xl font-medium">
+                    <ul className="text-black text-xl font-semibold">
                         <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                         }>Women</NavLink>
                     </ul>
-                    <ul className="text-black text-xl font-medium">
+                    <ul className="text-black text-xl font-semibold">
                         <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                         }>Kids</NavLink>
                     </ul>
@@ -81,15 +81,15 @@ const Header = () => {
                 {/* Mobile menu */}
                 {isMobileMenuOpen && (
                     <div style={{ zIndex: 9999 }} className="lg:hidden absolute top-16 right-4 px-4 md:py-6 py-4 md:w-[168px] w-40 rounded-md shadow-lg border-4 border-purple-800 bg-white">
-                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
                             <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Men</NavLink>
                         </ul>
-                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
                             <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Women</NavLink>
                         </ul>
-                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-medium">
+                        <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
                             <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Kids</NavLink>
                         </ul>
