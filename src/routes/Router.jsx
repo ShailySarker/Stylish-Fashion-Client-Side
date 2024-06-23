@@ -3,6 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home/Home";
 import MenFashion from "../pages/MenFashion/MenFashion";
 import WomenFashion from "../pages/WomenFashion/WomenFashion";
+import KidsFashion from "../pages/KidsFashion/KidsFashion";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
             {
                 path: "/womenFashion",
                 element: <WomenFashion />
+            },
+            {
+                path: "/kidsFashion",
+                element: <KidsFashion />
             },
         ]
     }
