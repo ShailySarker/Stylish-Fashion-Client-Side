@@ -67,11 +67,11 @@ const SignUp = () => {
         <div className="flex justify-between items-center lg:gap-0 bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg md:h-screen lg:px-20 md:px-9 px-6 lg:py-2 md:py-7 py-5">
             <div className="lg:w-[57%] md:w-2/3 w-11/12 lg:mx-0 mx-auto">
                 <Link to="/">
-                    <img className="lg:w-36 md:w-32 w-28 md:h-auto" src={companyLogo} alt="Stylish Fashion" />
+                    <img className="lg:w-36 md:w-32 w-24 md:h-auto" src={companyLogo} alt="Stylish Fashion" />
                 </Link>
                 <div className="text-center w-[100%]">
-                    <h2 className="lg:text-3xl md:text-2xl text-xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-900 lg:mt-3 md:mt-2 mt-0">SignUp</h2>
-                    <form onSubmit={handleSignUp} className="lg:mt-12 md:mt-8 mt-3">
+                    <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-900 lg:mt-3 md:mt-2 mt-0">SignUp</h2>
+                    <form onSubmit={handleSignUp} className="lg:mt-8 md:mt-5 mt-3">
                         <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-4 md:gap-5 gap-3 w-full lg:mx-0 mx-auto">
                             <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">First Name<span className="text-[#E41414]">*</span></h4>
@@ -125,7 +125,7 @@ const SignUp = () => {
 
                         <button type="submit" className="lg:mt-8 md:mt-12 mt-5 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-52 md:w-44 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto">SignUp</button>
                     </form>
-                    <p className="lg:w-[400px] md:w-[500px] text-gray-800 lg:mt-4 md:mt-3 mt-2 lg:text-base md:text-base text-sm mx-auto md:font-medium">Already have an account? <span className="text-purple-800 lg:font-extrabold font-bold border-b-2 border-purple-800"><Link to="/signIn">Login</Link></span> now!</p>
+                    <p className="lg:w-[400px] md:w-[500px] text-gray-800 lg:mt-4 md:mt-3 mt-2 lg:text-base md:text-base text-sm mx-auto md:font-medium lg:mb-10">Already have an account? <span className="text-purple-800 lg:font-extrabold font-bold border-b-2 border-purple-800"><Link to="/login">Login</Link></span> now!</p>
                 </div>
             </div>
             <div className="lg:w-[38%] lg:block hidden">
