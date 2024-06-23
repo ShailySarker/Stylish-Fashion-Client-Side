@@ -66,9 +66,11 @@ const Header = () => {
                 </div>
                 {/* large device */}
                 <div className="lg:block hidden">
-                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                        Login
-                    </button>
+                    <Link to="/login">
+                        <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                            Login
+                        </button>
+                    </Link>
                     {/* <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 via-pink-700 to-purple-700">
                         Login
                     </button> */}
@@ -95,9 +97,11 @@ const Header = () => {
                             <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Kids</NavLink>
                         </ul>
-                        <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                            Login
-                        </button>
+                        <Link to="/login">
+                            <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                Login
+                            </button>
+                        </Link>
                     </div>
                 )}
 

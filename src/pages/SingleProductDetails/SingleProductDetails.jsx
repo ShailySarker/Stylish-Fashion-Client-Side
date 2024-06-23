@@ -28,7 +28,7 @@ const SingleProductDetails = () => {
                     {/* color */}
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <p className="lg:text-lg font-semibold">Color: </p>
-                        <span className="lg:px-3 md:px-[10px] px-2 md:py-1 bg-slate-700 rounded-full">.</span>
+                        <span className="lg:px-3 md:px-[10px] px-2 lg:py-1 bg-slate-700 rounded-full">.</span>
                     </div>
                     {/* size */}
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
@@ -46,9 +46,9 @@ const SingleProductDetails = () => {
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <p className="lg:text-lg font-semibold">Quantity: </p>
                         <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
-                            <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                            <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
                             <h4 className="text-purple-700 font-semibold">{countProductQuantity}</h4>
-                            <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                            <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
                         </div>
                     </div>
                 </div>
