@@ -7,6 +7,7 @@ import KidsFashion from "../pages/KidsFashion/KidsFashion";
 import SingleProductDetails from "../pages/SingleProductDetails/SingleProductDetails";
 import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
+import Cart from "../pages/Cart/Cart";
 
 const router = createBrowserRouter(
     [
@@ -33,6 +34,10 @@ const router = createBrowserRouter(
                 {
                     path: "/singleProductDetails",
                     element: <SingleProductDetails />
+                },
+                {
+                    path: "/cart",
+                    element: <Cart />
                 },
             ]
         },
