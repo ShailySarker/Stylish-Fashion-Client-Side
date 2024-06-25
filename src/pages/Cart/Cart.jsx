@@ -23,8 +23,8 @@ const Cart = () => {
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">My Selecting Product</h1>
             </div>
             <div className="flex justify-between items-start lg:mt-16 md:mt-10 mt-8">
-                <button className="md:py-2 py-[6px] lg:w-44 md:w-40 w-24 font-semibold lg:text-lg rounded-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-800 border-2 border-purple-800 shadow-lg" >Continue Shopping</button>
-                <div className="flex lg:gap-8 md:gap-4">
+                <button className="md:py-2 py-[6px] lg:w-44 md:w-40 w-40 font-semibold lg:text-lg rounded-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-800 border-2 border-purple-800 shadow-lg" >Continue Shopping</button>
+                <div className="md:block hidden md:flex lg:gap-8 md:gap-4">
                     <div>
                         <h4 onClick={() => handleToggleWork(1)} className={`font-semibold lg:text-xl md:text-lg md:px-2 px-1 text-center ${isToggle === 1 ? "text-black border-b-2 border-black myShopping" : "text-[#BDC3C7]"}`}>My Shopping(2)</h4>
                         <div className={isToggle === 1 ? "myShopping" : "hidden"}>
@@ -38,7 +38,7 @@ const Cart = () => {
                         </div>
                     </div>
                 </div>
-                <button className="md:py-2 py-[6px] lg:w-44 md:w-36 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
+                <button className="md:py-2 py-[6px] lg:w-44 md:w-36 w-40 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
             </div>
             <div className="flex lg:flex-row flex-col lg:gap-10 md:gap-8 gap-7 lg:mt-12 md:mt-10 mt-6 items-start">
                 {/* product Details */}
