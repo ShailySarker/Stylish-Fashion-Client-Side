@@ -55,7 +55,9 @@ const Header = () => {
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
                 </div>
                 <div className="flex">
-                    <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
+                    <Link to="/cart">
+                        <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
+                    </Link>
                     {cartItems > 0 && (
                         <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
                             {cartItems}

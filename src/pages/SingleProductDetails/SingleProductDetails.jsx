@@ -20,7 +20,7 @@ const SingleProductDetails = () => {
             </div>
             <div className="lg:w-[60%] md:w-[65%]">
                 <div>
-                    <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Herman Coat</h2>
+                    <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Herman Coat</h2>
                     <p className="lg:mt-3 md:mt-2 mt-1 lg:text-lg/normal text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum error similique, distinctio laudantium iusto non odit consectetur fugiat hic expedita facilis vero corporis, laboriosam, cupiditate aperiam esse velit minus. Soluta.</p>
                     <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-purple-700 lg:mt-7 md:mt-5 mt-4">$ 2400</h3>
                 </div>

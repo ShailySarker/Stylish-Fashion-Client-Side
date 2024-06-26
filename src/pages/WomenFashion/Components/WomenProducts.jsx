@@ -14,10 +14,11 @@ const WomenProducts = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Women Fashion</h1>
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">Women Fashion</h1>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Women Fashion</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Browse through our stylish dresses, tops, skirts, and more, perfect for work, casual outings, and special events.</p>
             </div>
-            <div className="bg-purple-700 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row flex-wrap justify-between items-center lg:gap-0 md:gap-y-4 gap-y-3">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row flex-wrap justify-between items-center lg:gap-0 md:gap-y-4 gap-y-3">
                 <div className="flex items-center lg:gap-3 md:gap-3 gap-3">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Color:</h4>
                     <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
