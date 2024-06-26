@@ -44,7 +44,7 @@ const FaqItem = ({ question, answer, id }) => {
             <button
                 className="flex items-center justify-between w-full lg:p-6 md:p-5 px-3 py-4 text-left focus:outline-none"
                 onClick={toggleAccordion}>
-                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-900">Question 0{id}: </span>{question}</span>
+                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-900">Question 0{id}: </span>{question}</span>
                 <span className='w-[5%] flex justify-end'>
                     <svg
                         className={`lg:w-5 md:w-4 w-3 lg:h-5 md:h-4 h-3 ${isOpen ? 'transform rotate-180' : ''}`}
@@ -60,8 +60,9 @@ const FaqItem = ({ question, answer, id }) => {
                 </span>
             </button>
             {isOpen && (
-                <div className="lg:p-6 md:p-5 px-3 py-4 bg-gradient-to-r from-blue-100 to-purple-200 rounded-xl">
-                    <p className="text-black lg:text-xl font-medium "><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-900 border-b-2 border-purple-900">Answer:</span> {answer}</p>
+                <div className="lg:p-6 md:p-5 px-3 py-4 bg-gradient-to-r from-blue-300 to-purple-400 rounded-b-xl">
+                    <p className="text-black lg:text-xl font-medium "><span className="font-bold border-b-2 border-black">Answer:</span> {answer}</p>
+                    {/* <p className="text-black lg:text-xl font-medium "><span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-900 border-b-2 border-purple-900">Answer:</span> {answer}</p> */}
                 </div>
             )}
         </div>
@@ -72,7 +73,7 @@ const FAQs = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14">
             <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Frequently Asked Questions</h1>
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Frequently Asked Questions</h1>
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Explore our frequently asked questions for comprehensive information!</p>
             </div>
             <div className="lg:mt-12 md:mt-10 mt-8 flex flex-col gap-3 ">

@@ -4,8 +4,9 @@ import companyLogo from "../assets/Images/Footer/logo.jpg";
 import moment from "moment";
 const Footer = () => {
     return (
-        <div className="bg-gradient-to-r from-pink-600 to-purple-800 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14">
-            <div className="lg:py-11 md:py-8 py-6 text-white lg:flex lg:flex-row lg:justify-between grid md:grid-cols-2 grid-cols-1 lg:gap-0 md:gap-x-24 md:gap-y-14 gap-6 lg:pb-6 md:pb-2 pb-0 lg:px-12 md:px-7 px-5">
+        <div className="bg-gradient-to-r from-blue-700 to-purple-900 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14">
+        {/* <div className="bg-gradient-to-r from-pink-600 to-purple-800 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14"> */}
+            <div className=" lg:py-11 md:py-8 py-6 text-white lg:flex lg:flex-row lg:justify-between grid md:grid-cols-2 grid-cols-1 lg:gap-0 md:gap-x-24 md:gap-y-14 gap-6 lg:pb-6 md:pb-2 pb-0 lg:px-12 md:px-7 px-5">
                 <div className="md:mt-2 flex flex-col md:items-start items-center lg:w-[22%]">
                     <img className="lg:w-40 md:w-36 w-32 md:h-auto mx-auto" src={companyLogo} alt="Treasures of Tech" />
                     <div className="lg:mt-6 md:mt-5 mt-4">
@@ -82,7 +83,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-purple-900 lg:py-3 md:py-[10px] py-2 px-3">
+            <div className="bg-purple-950 lg:py-3 md:py-[10px] py-2 px-3">
                 <h3 className="text-center lg:text-lg md:text-base text-sm font-bold">Copyright @{moment().format('YYYY')} Stylish Fashion. All rights reserved.</h3>
             </div>
         </div>
