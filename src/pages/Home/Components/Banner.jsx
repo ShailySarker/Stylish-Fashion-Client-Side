@@ -69,7 +69,7 @@ const Banner = () => {
     }, []);
     return (
         <div className="w-full lg:h-[600px] md:h-[680px] h-[576px] relative ">
-            {bannerData.map((singleBanner, index) => (
+            {bannerData?.map((singleBanner, index) => (
                 <div
                     key={singleBanner?.id}
                     className={`absolute inset-0 transition-opacity duration-1000 ${index === currentIndex ? 'opacity-100' : 'opacity-0'} ${singleBanner.backgroundColor}`}>
