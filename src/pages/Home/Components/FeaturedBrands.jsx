@@ -86,7 +86,7 @@ const brandsData = [
 const FeaturedSingleBrandInfo = ({ companyLogo }) => {
     return (
         <div className='slide2 lg:h-[170px] lg:w-[250px] md:h-32 md:w-40 h-24 w-32 lg:px-3 md:px-2 px-[6px]'>
-            <div className="mainBox2 shadow-lg border-[3px] border-purple-800 rounded-lg flex justify-center items-center lg:p-3 p-2">
+            <div className="mainBox2 shadow-lg border-[3px] border-purple-800 rounded-lg flex justify-center items-center lg:p-4 md:p-3 p-2">
                 <img className='md:w-auto w-11/12 h-auto' src={companyLogo} alt="companyLogo" />
             </div>
         </div>

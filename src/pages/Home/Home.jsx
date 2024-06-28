@@ -2,6 +2,7 @@ import Banner from "./Components/Banner";
 import Category from "./Components/Category";
 import ClientReview from "./Components/ClientsReview";
 import FAQs from "./Components/FAQs";
+import FeaturedAttributes from "./Components/FeaturedAttributes";
 import FeaturedBrands from "./Components/FeaturedBrands";
 import Newsletter from "./Components/Newsletter";
 import OurProducts from "./Components/OurProducts";
@@ -11,12 +12,13 @@ const Home = () => {
     return (
         <>
             <Banner />
+            <FeaturedAttributes />
             <Category />
-            <FeaturedBrands/>
+            <FeaturedBrands />
             <OurProducts />
             <WhyChooseUs />
             <Newsletter />
-            <ClientReview/>
+            <ClientReview />
             <FAQs />
         </>
     );
