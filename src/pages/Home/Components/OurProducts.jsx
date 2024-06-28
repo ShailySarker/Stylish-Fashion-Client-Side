@@ -34,7 +34,8 @@ const OurProducts = () => {
     };
 
     return (
-        <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14">
+        <div className="lg:px-20 md:px-12 px-6 lg:mt-6 md:mt-6 mt-6">
+        {/* <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14"> */}
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Our Products</h1>
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Our Products</h1> */}

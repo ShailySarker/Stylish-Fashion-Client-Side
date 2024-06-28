@@ -83,19 +83,19 @@ const clientReviewData = [
 ];
 
 const SingleClientReview = ({ singleReview, goToSlide }) => {
-    const { id, image1, image2, image3, image4, image5, image6, review, clientName, currentIndex } = singleReview;
+    const { id, image1, image2, image3, image4, image5, image6, review, clientName } = singleReview;
     return (
         <div className="text-center lg:w-4/5 w-5/6">
             <div className='md:flex md:flex-row grid grid-cols-3 md:gap-0 gap-5 justify-between lg:mb-12 md:mb-10 mb-6'>
-                <img onClick={() => goToSlide(0)} src={image1} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 1 ? " border-purple-800" : "border-slate-400" }` } />
-                <img onClick={() => goToSlide(1)} src={image2} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 2 ? " border-purple-800" : "border-slate-400" }` } />
-                <img onClick={() => goToSlide(2)} src={image3} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 3 ? " border-purple-800" : "border-slate-400" }` } />
-                <img onClick={() => goToSlide(3)} src={image4} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 4 ? " border-purple-800" : "border-slate-400" }` } />
-                <img onClick={() => goToSlide(4)} src={image5} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 5 ? " border-purple-800" : "border-slate-400" }` } />
-                <img onClick={() => goToSlide(5)} src={image6} alt={`Client ${id}`} className= {`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 6 ? " border-purple-800" : "border-slate-400" }` } />
+                <img onClick={() => goToSlide(0)} src={image1} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 1 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
+                <img onClick={() => goToSlide(1)} src={image2} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 2 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
+                <img onClick={() => goToSlide(2)} src={image3} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 3 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
+                <img onClick={() => goToSlide(3)} src={image4} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 4 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
+                <img onClick={() => goToSlide(4)} src={image5} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 5 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
+                <img onClick={() => goToSlide(5)} src={image6} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 6 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
             </div>
-            <div className="border-[3px] lg:py-10 md:py-5 py-3 lg:px-8 md:px-5 px-2 border-purple-800 rounded-lg shadow-lg">
-                <p className="text-black text-justify lg:text-lg/loose md:text-base/loose text-sm/loose ">{review}</p>
+            <div className="border-[3px] lg:py-10 md:py-5 py-4 lg:px-8 md:px-5 px-3 border-purple-800 rounded-lg shadow-lg bg-purple-200">
+                <p className="text-black text-justify lg:text-lg/loose md:text-base/loose text-sm/relaxed font-medium">{review}</p>
                 <p className="font-semibold lg:mt-16 md:mt-10 mt-6 text-right text-black lg:text-2xl md:text-xl text-lg">- {clientName}</p>
             </div>
         </div>
