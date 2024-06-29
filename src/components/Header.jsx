@@ -14,7 +14,7 @@ const Header = () => {
         setClick(!click);
     };
     // cart product work
-    const [cartItems, setCartItems] = useState(2);
+    const [cartItems, setCartItems] = useState(3);
     // Function to simulate adding items to the cart
     const addToCart = () => {
         setCartItems(cartItems + 1);
