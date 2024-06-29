@@ -3,7 +3,7 @@ const AboutUs = () => {
     return (
         <div>
             <div className='bg-purple-800 lg:py-48 md:py-28 py-20'>
-                <h1 className='lg:text-9xl md:text-8xl text-6xl text-white font-semibold text-center'>Contact Us</h1>
+                <h1 className='lg:text-9xl md:text-8xl text-6xl text-white font-semibold text-center'>About Us</h1>
             </div>
             <div className="lg:px-28 md:px-12 px-6 lg:pt-20 md:pt-[74px] pt-10 text-justify">
                 <div className="lg:mb-10 md:mb-8 mb-6">

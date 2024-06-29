@@ -12,6 +12,7 @@ import Help from "../pages/Help/Help";
 import AllProducts from "../pages/AllProducts/AllProducts";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import AboutUs from "../pages/AboutUs/AboutUs";
+import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 
 const router = createBrowserRouter(
     [
@@ -58,6 +59,10 @@ const router = createBrowserRouter(
                 {
                     path: "/aboutUs",
                     element: <AboutUs />
+                },
+                {
+                    path: "/termsAndConditions",
+                    element: <TermsAndConditions />
                 },
             ]
         },
