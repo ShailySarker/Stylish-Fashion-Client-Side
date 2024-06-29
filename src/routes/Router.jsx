@@ -14,6 +14,7 @@ import ContactUs from "../pages/ContactUs/ContactUs";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import CancellationAndRefundPolicy from "../pages/CancellationAndRefundPolicy/CancellationAndRefundPolicy";
 
 const router = createBrowserRouter(
     [
@@ -68,6 +69,10 @@ const router = createBrowserRouter(
                 {
                     path: "/privacyPolicy",
                     element: <PrivacyPolicy />
+                },
+                {
+                    path: "/cancellationAndRefundPolicy",
+                    element: <CancellationAndRefundPolicy />
                 },
             ]
         },
