@@ -37,6 +37,10 @@ const Footer = () => {
                         </div>
                         <div className="flex flex-col lg:gap-3 md:gap-2 gap-[6px] lg:text-lg md:text-base text-sm font-medium">
                             <ul className="">
+                                <NavLink to='/allProducts' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                }>All Products</NavLink>
+                            </ul>
+                            <ul className="">
                                 <NavLink to='/aboutUs' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
                                 }>About Us</NavLink>
                             </ul>
