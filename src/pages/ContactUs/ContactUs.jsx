@@ -1,9 +1,8 @@
 import { FaRegEnvelope, FaRegPaperPlane, FaRegUser } from "react-icons/fa";
-// import banner from "../../assets/ContactUs/ContactUs_banner.jpg";
 import Swal from "sweetalert2";
 import emailjs from '@emailjs/browser';
 import { useRef, useState } from "react";
-import { FaLocationDot, FaPhone } from "react-icons/fa6";
+import { FaPhone } from "react-icons/fa6";
 
 const ContactUs = () => {
     const form = useRef();
@@ -59,7 +58,7 @@ const ContactUs = () => {
             </div>
             <div className="lg:px-28 md:px-12 px-6 lg:pt-20 md:pt-[74px] pt-10 grid md:grid-cols-2 grid-cols-1 lg:gap-0 md:gap-10 gap-7 items-center">
                 <div className="lg:mb-10 md:mb-8 mb-6">
-                    <h2 className="font-bold lg:text-4xl md:text-3xl text-2xl lg:mb-10 md:mb-6 mb-5 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">General Information</h2>
+                    <h2 className="font-bold lg:text-4xl md:text-3xl text-2xl lg:mb-10 md:mb-6 mb-5 text-purple-800">General Information</h2>
                     <div className='flex flex-col lg:gap-4 md:gap-3 gap-2 font-semibold'>
                         <p className='flex items-center gap-3'>
                             <span><FaPhone className="text-black lg:text-xl md:text-lg text-base " /></span>
