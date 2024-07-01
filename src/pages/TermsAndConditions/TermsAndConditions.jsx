@@ -5,9 +5,9 @@ const TermsAndConditions = () => {
                 <h1 className='lg:text-8xl/relaxed md:text-7xl/normal text-4xl/relaxed text-white font-semibold text-center'>Terms and Conditions</h1>
             </div>
             <div className="lg:px-28 md:px-12 px-6 lg:pt-20 md:pt-14 pt-10 text-justify">
-                <div className="lg:mb-14 md:mb-10 mb-8">
+                <div className="lg:pb-4 md:pb-2 pb-1">
                     <div className="text-black flex flex-col lg:gap-10 md:gap-7 gap-5">
-                        <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-purple-800">Terms and Conditions</h3>
+                        <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-purple-800 text-left">Terms and Conditions</h3>
                         <p className="lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed">Welcome to <span className="font-semibold">Stylish Fashion</span>. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p>
                     </div>
                     <div className="lg:mt-12 md:mt-10 mt-8 text-black flex flex-col lg:gap-5 md:gap-4 gap-3">
