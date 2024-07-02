@@ -40,58 +40,152 @@ const Cart = () => {
                 </div>
                 <button className="md:py-2 py-[6px] lg:w-44 md:w-36 w-40 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
             </div>
-            <div className="flex lg:flex-row flex-col lg:gap-10 md:gap-8 gap-7 lg:mt-12 md:mt-10 mt-6 items-start">
+            <div className="flex lg:flex-row flex-col lg:gap-3 md:gap-9 gap-7 lg:mt-12 md:mt-10 mt-6 items-start">
                 {/* product Details */}
-                <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px]">
-                    <div className="flex items-center justify-between border-2 rounded-lg lg:p-5 md:p-4 p-3 shadow-lg">
+                <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-screen md:h-[540px] h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
                         <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
-                            <div className="lg:h-52 md:h-36 h-28 lg:w-48 md:w-32 w-24">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
                                 <img className="h-full w-full" src={product} alt="product" />
                             </div>
                             <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
                                 {/* <h4>Product Name: Women Bardot Dress</h4> */}
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
                                 <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                                     <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
                                     <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
-                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
-                                        <h4 className="text-black font-bold">{countProductQuantity}</h4>
-                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2 className="text-black lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
                     </div>
-                    <div className="flex items-center justify-between border-2 rounded-lg lg:p-5 md:p-4 p-3 shadow-lg">
+
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
                         <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
-                            <div className="lg:h-52 md:h-36 h-28 lg:w-48 md:w-32 w-24">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
                                 <img className="h-full w-full" src={product} alt="product" />
                             </div>
                             <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
                                 {/* <h4>Product Name: Women Bardot Dress</h4> */}
-                                <h4 className="text-black lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
                                 <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                                     <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
                                     <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
-                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
-                                        <h4 className="text-black font-bold">{countProductQuantity}</h4>
-                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2 className="text-black lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
                     </div>
+
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
+                        <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
+                                <img className="h-full w-full" src={product} alt="product" />
+                            </div>
+                            <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                {/* <h4>Product Name: Women Bardot Dress</h4> */}
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                                    <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
+                                    <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                    </div>
+
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
+                        <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
+                                <img className="h-full w-full" src={product} alt="product" />
+                            </div>
+                            <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                {/* <h4>Product Name: Women Bardot Dress</h4> */}
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                                    <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
+                                    <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                    </div>
+
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
+                        <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
+                                <img className="h-full w-full" src={product} alt="product" />
+                            </div>
+                            <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                {/* <h4>Product Name: Women Bardot Dress</h4> */}
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                                    <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
+                                    <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                    </div>
+
+                    <div className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
+                        <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
+                            <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
+                                <img className="h-full w-full" src={product} alt="product" />
+                            </div>
+                            <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> 1111</h4>
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> Women Bardot Dress</h4>
+                                {/* <h4>Product Name: Women Bardot Dress</h4> */}
+                                <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> M</h4>
+                                <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                                    <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
+                                    <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                        <h4 className="font-bold">{countProductQuantity}</h4>
+                                        <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 className="lg:text-xl md:text-lg text-base font-bold">$250</h2>
+                    </div>
+
                 </div>
                 {/* order summary */}
-                <div className="lg:w-1/3 md:w-2/3 w-5/6 lg:mx-0 mx-auto border-2 rounded-xl lg:p-5 md:p-4 p-3 shadow-lg">
+                <div className="lg:w-1/3 md:w-2/3 w-full lg:mx-0 mx-auto border-2 border-purple-800 rounded-xl lg:px-5 lg:py-7 md:p-6 p-4 shadow-lg">
                     <h2 className="text-black font-semibold lg:text-3xl md:text-2xl text-xl">Order Details</h2>
-                    <div className="lg:mt-10 md:mt-8 mt-6 flex flex-col lg:gap-4 md:gap-3 gap-2">
+                    <div className="lg:mt-16 md:mt-10 mt-8 flex flex-col lg:gap-4 md:gap-3 gap-2">
                         <div className="flex justify-between">
                             <p className="font-medium lg:text-lg md:text-base text-sm">Subtotal</p>
                             <p className="font-semibold lg:text-lg md:text-base text-sm">$250</p>
@@ -109,7 +203,7 @@ const Cart = () => {
                             <p className="font-bold lg:text-2xl md:text-xl text-lg">$250</p>
                         </div>
                     </div>
-                    <button className="lg:mt-14 md:mt-12 mt-10 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
+                    <button className="lg:mt-16 md:mt-14 mt-12 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
                 </div>
             </div>
         </div>
