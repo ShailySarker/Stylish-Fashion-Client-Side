@@ -141,6 +141,8 @@ const MenProducts = () => {
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Men Fashion</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">From sophisticated suits and formal wear to casual shirts and jeans, our men's collection offers a variety of options to suit every style.</p>
             </div>
+
+            {/* queries */}
             <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row md:flex-wrap flex-col justify-between lg:items-center md:items-center items-end lg:gap-0 md:gap-y-4 gap-y-3">
                 <div className="flex items-center lg:gap-3 md:gap-10 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Color:</h4>
