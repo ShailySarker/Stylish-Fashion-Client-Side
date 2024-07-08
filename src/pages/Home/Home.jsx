@@ -1,25 +1,45 @@
-import FAQs from "../../components/FAQs";
-import Newsletter from "../../components/Newsletter";
-import Banner from "./Components/Banner";
-import Category from "./Components/Category";
-import ClientReview from "./Components/ClientsReview";
-import FeaturedAttributes from "./Components/FeaturedAttributes";
-import FeaturedBrands from "./Components/FeaturedBrands";
-import OurProducts from "./Components/OurProducts";
-import WhyChooseUs from "./Components/WhyChooseUs";
+import React, { Suspense } from "react";
+import LazyLoaderComponent from "../../components/LazyLoaderComponent";
+const FAQs = React.lazy(() => import("../../components/FAQs"));
+const Newsletter = React.lazy(() => import("../../components/Newsletter"));
+const Banner = React.lazy(() => import("./Components/Banner"));
+const Category = React.lazy(() => import("./Components/Category"));
+const ClientsReview = React.lazy(() => import("./Components/ClientsReview"));
+const FeaturedAttributes = React.lazy(() => import("./Components/FeaturedAttributes"));
+const FeaturedBrands = React.lazy(() => import("./Components/FeaturedBrands"));
+const OurProducts = React.lazy(() => import("./Components/OurProducts"));
+const WhyChooseUs = React.lazy(() => import("./Components/WhyChooseUs"));
 
 const Home = () => {
     return (
         <>
-            <Banner />
-            <FeaturedAttributes />
-            <Category />
-            <FeaturedBrands />
-            <OurProducts />
-            <WhyChooseUs />
-            <Newsletter />
-            <ClientReview />
-            <FAQs />
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <Banner />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <FeaturedAttributes />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <Category />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <FeaturedBrands />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <OurProducts />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <WhyChooseUs />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <Newsletter />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <ClientsReview />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <FAQs />
+            </Suspense>
         </>
     );
 };

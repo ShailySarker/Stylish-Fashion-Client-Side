@@ -13,7 +13,7 @@ import client5 from '../../../assets/Images/Home/ClientsReview_reviewer5Shadow.p
 import client6 from '../../../assets/Images/Home/ClientsReview_reviewer6Shadow.png';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 
-const clientReviewData = [
+const clientsReviewData = [
     {
         id: 1,
         image1: client1Real,
@@ -102,13 +102,13 @@ const SingleClientReview = ({ singleReview, goToSlide }) => {
     );
 };
 
-const ClientReview = () => {
+const ClientsReview = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const goToNextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % clientReviewData.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % clientsReviewData.length);
     };
     const goToPrevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + clientReviewData.length) % clientReviewData.length);
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + clientsReviewData.length) % clientsReviewData.length);
     };
     const goToSlide = (index) => {
         setCurrentIndex(index);
@@ -129,7 +129,7 @@ const ClientReview = () => {
                 <button onClick={goToPrevSlide} className="text-white bg-purple-800 rounded-full lg:mt-10 md:mt-7 mt-20">
                     <FaAngleLeft className='text-2xl border-2 border-purple-950 lg:w-10 lg:h-10 md:w-8 md:h-8 rounded-full lg:p-2 p-1' />
                 </button>
-                <SingleClientReview singleReview={clientReviewData[currentIndex]} goToSlide={goToSlide} />
+                <SingleClientReview singleReview={clientsReviewData[currentIndex]} goToSlide={goToSlide} />
                 <button onClick={goToNextSlide} className="text-white bg-purple-800 rounded-full lg:mt-10 md:mt-7 mt-20">
                     <FaAngleRight className='text-2xl border-2 border-purple-950 lg:w-10 lg:h-10 md:w-8 md:h-8 rounded-full lg:p-2 p-1' />
                 </button>
@@ -138,4 +138,4 @@ const ClientReview = () => {
     );
 };
 
-export default ClientReview;
+export default ClientsReview;
