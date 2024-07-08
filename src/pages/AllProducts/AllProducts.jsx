@@ -1,9 +1,21 @@
-import Products from './Components/Products';
+import React, { Suspense } from "react";
+import LazyLoaderComponent from "../../components/LazyLoaderComponent";
+const FAQs = React.lazy(() => import("../../components/FAQs"));
+const Newsletter = React.lazy(() => import("../../components/Newsletter"));
+const Products = React.lazy(() => import("./Components/Products"));
 
 const AllProducts = () => {
     return (
         <>
-            <Products />
+        <Suspense fallback={<LazyLoaderComponent />}>
+                <Products />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <Newsletter />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <FAQs />
+            </Suspense>
         </>
     );
 };
