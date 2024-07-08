@@ -1,20 +1,23 @@
+import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
+import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
-import Home from "../pages/Home/Home";
-import MenFashion from "../pages/MenFashion/MenFashion";
-import WomenFashion from "../pages/WomenFashion/WomenFashion";
-import KidsFashion from "../pages/KidsFashion/KidsFashion";
-import SingleProductDetails from "../pages/SingleProductDetails/SingleProductDetails";
-import Login from "../pages/Login/Login";
-import SignUp from "../pages/SignUp/SignUp";
-import Cart from "../pages/Cart/Cart";
-import Help from "../pages/Help/Help";
-import AllProducts from "../pages/AllProducts/AllProducts";
-import ContactUs from "../pages/ContactUs/ContactUs";
-import AboutUs from "../pages/AboutUs/AboutUs";
-import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
-import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
-import CancellationAndRefundPolicy from "../pages/CancellationAndRefundPolicy/CancellationAndRefundPolicy";
+
+const Home = React.lazy(() => import("../pages/Home/Home"));
+const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
+const WomenFashion = React.lazy(() => import("../pages/WomenFashion/WomenFashion"));
+const KidsFashion = React.lazy(() => import("../pages/KidsFashion/KidsFashion"));
+const SingleProductDetails = React.lazy(() => import("../pages/SingleProductDetails/SingleProductDetails"));
+const Login = React.lazy(() => import("../pages/Login/Login"));
+const SignUp = React.lazy(() => import("../pages/SignUp/SignUp"));
+const Cart = React.lazy(() => import("../pages/Cart/Cart"));
+const Help = React.lazy(() => import("../pages/Help/Help"));
+const AllProducts = React.lazy(() => import("../pages/AllProducts/AllProducts"));
+const ContactUs = React.lazy(() => import("../pages/ContactUs/ContactUs"));
+const AboutUs = React.lazy(() => import("../pages/AboutUs/AboutUs"));
+const TermsAndConditions = React.lazy(() => import("../pages/TermsAndConditions/TermsAndConditions"));
+const PrivacyPolicy = React.lazy(() => import("../pages/PrivacyPolicy/PrivacyPolicy"));
+const CancellationAndRefundPolicy = React.lazy(() => import("../pages/CancellationAndRefundPolicy/CancellationAndRefundPolicy"));
 
 const router = createBrowserRouter(
     [
@@ -24,65 +27,111 @@ const router = createBrowserRouter(
             children: [
                 {
                     path: "",
-                    element: <Home />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <Home />
+                    </Suspense>
                 },
                 {
                     path: "/menFashion",
-                    element: <MenFashion />
+                    element:
+                        <Suspense fallback={
+                            <LazyLoader />}>
+                            <MenFashion />
+                        </Suspense>
                 },
                 {
                     path: "/womenFashion",
-                    element: <WomenFashion />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <WomenFashion />
+                    </Suspense>
                 },
                 {
                     path: "/kidsFashion",
-                    element: <KidsFashion />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <KidsFashion />
+                    </Suspense>
                 },
                 {
                     path: "/singleProductDetails",
-                    element: <SingleProductDetails />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <SingleProductDetails />
+                    </Suspense>
                 },
                 {
                     path: "/cart",
-                    element: <Cart />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <Cart />
+                    </Suspense>
                 },
                 {
                     path: "/allProducts",
-                    element: <AllProducts />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <AllProducts />
+                    </Suspense>
                 },
                 {
                     path: "/help",
-                    element: <Help />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <Help />
+                    </Suspense>
                 },
                 {
                     path: "/contactUs",
-                    element: <ContactUs />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <ContactUs />
+                    </Suspense>
                 },
                 {
                     path: "/aboutUs",
-                    element: <AboutUs />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <AboutUs />
+                    </Suspense>
                 },
                 {
                     path: "/termsAndConditions",
-                    element: <TermsAndConditions />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <TermsAndConditions />
+                    </Suspense>
                 },
                 {
                     path: "/privacyPolicy",
-                    element: <PrivacyPolicy />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <PrivacyPolicy />
+                    </Suspense>
                 },
                 {
                     path: "/cancellationAndRefundPolicy",
-                    element: <CancellationAndRefundPolicy />
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <CancellationAndRefundPolicy />
+                    </Suspense>
                 },
             ]
         },
         {
             path: "/login",
-            element: <Login />
+            element: <Suspense fallback={
+                <LazyLoader />}>
+                <Login />
+            </Suspense>
         },
         {
             path: "/signUp",
-            element: <SignUp />
+            element: <Suspense fallback={
+                <LazyLoader />}>
+                <SignUp />
+            </Suspense>
         }
     ]
 );

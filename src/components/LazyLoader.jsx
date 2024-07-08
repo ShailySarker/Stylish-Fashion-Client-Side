@@ -1,5 +1,5 @@
 import Lottie from 'lottie-react';
-import lazyLoaderAnimation from '../../../LazyLoaderAnimation.json';
+import lazyLoaderAnimation from '../../LazyLoaderAnimation.json';
 const LazyLoader = () => {
     return (
         <div className="flex flex-col justify-center items-center py-12">
