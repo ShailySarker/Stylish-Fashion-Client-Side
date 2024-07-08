@@ -24,7 +24,7 @@ const Header = () => {
             <div className="flex flex-row gap-16">
                 <div>
                     <Link to="/">
-                        <img className="md:w-28 w-20" src={logo1} alt="" />
+                        <img className="md:w-28 w-20" src={logo1} alt="Stylish Fashion" />
                     </Link>
                 </div>
                 {/* large device */}
