@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
+import NotFound from "../pages/NotFound/NotFound";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -132,7 +133,14 @@ const router = createBrowserRouter(
                 <LazyLoader />}>
                 <SignUp />
             </Suspense>
-        }
+        },
+        {
+            path: "/*",
+            element: <Suspense fallback={
+              <LazyLoader />}>
+              <NotFound />
+            </Suspense>
+          }
     ]
 );
 

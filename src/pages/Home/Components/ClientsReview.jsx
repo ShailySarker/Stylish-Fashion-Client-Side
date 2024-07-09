@@ -94,7 +94,7 @@ const SingleClientReview = ({ singleReview, goToSlide }) => {
                 <img onClick={() => goToSlide(4)} src={image5} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 5 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
                 <img onClick={() => goToSlide(5)} src={image6} alt={`Client ${id}`} className={`rounded-full lg:w-36 lg:h-36 md:w-[85px] md:h-[85px] w-20 h-20 cursor-pointer border-[6px] ${id === 6 ? " border-purple-800 shadow-lg" : "border-slate-400"}`} />
             </div>
-            <div className="border-[3px] lg:py-10 md:py-5 py-4 lg:px-8 md:px-5 px-3 border-purple-800 rounded-lg shadow-lg bg-purple-200">
+            <div className="border-[3px] lg:py-10 md:py-5 py-4 lg:px-8 md:px-5 px-3 border-purple-800 rounded-lg shadow-lg bg-purple-100">
                 <p className="text-black text-justify lg:text-lg/loose md:text-base/loose text-sm/relaxed font-medium">{review}</p>
                 <p className="font-semibold lg:mt-16 md:mt-10 mt-6 text-right text-black lg:text-2xl md:text-xl text-lg">- {clientName}</p>
             </div>
