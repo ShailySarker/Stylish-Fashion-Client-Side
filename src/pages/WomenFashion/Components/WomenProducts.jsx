@@ -9,8 +9,9 @@ import product15 from "../../../assets/Images/Home/OurProducts_womenSkirtDress.j
 import product16 from "../../../assets/Images/Home/OurProducts_womenTopDress.jpg";
 import product17 from "../../../assets/Images/Home/OurProducts_womenWinterCap.jpg";
 import product18 from "../../../assets/Images/Home/OurProducts_womenWinterCoatDress.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const womenProductsData = [
     {
@@ -85,10 +86,72 @@ const womenProductsData = [
         id: 18,
         image: product18,
     },
-    
+
 ];
 
 const WomenProducts = () => {
+
+
+    // filter work
+    const [filters, setFilters] = useState({});
+    const [sort, setSort] = useState("newest");
+
+    const handleFilters = (event) => {
+        const selectedValue = event.target.value;
+        setFilters({
+            ...filters,
+            [event.target.name]: selectedValue
+        });
+    };
+
+    console.log(filters);
+
+    // product data show
+    const [womenProducts, setWomenProducts] = useState([]);
+    const [filteredWomenProducts, setFilteredWomenProducts] = useState([]);
+    const category = "women";
+    // for normal data show
+    useEffect(() => {
+        const getWomenProducts = async () => {
+            try {
+                const res = await axios.get(`http://localhost:3000/api/products?category=${category}`);
+                console.log(res?.data);
+                setWomenProducts(res?.data);
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getWomenProducts();
+    }, [category]);
+
+    // for filtered data show
+    useEffect(() => {
+        category && setFilteredWomenProducts(
+            womenProducts.filter((product) =>
+                Object.entries(filters).every(([key, value]) => (
+                    product[key].includes(value)
+                ))
+            )
+        )
+    }, [womenProducts, category, filters]);
+
+    // for sort data show
+    useEffect(() => {
+        if (sort === "newest") {
+            setFilteredWomenProducts((prev) =>
+                [...prev].sort((x, y) => new Date(y?.createdAt) - new Date(x?.createdAt))
+            )
+        } else if (sort === "asc") {
+            setFilteredWomenProducts((prev) =>
+                [...prev].sort((x, y) => x?.price - y?.price)
+            )
+        } else {
+            setFilteredWomenProducts((prev) =>
+                [...prev].sort((x, y) => y?.price - x?.price)
+            )
+        }
+    }, [womenProducts, sort, filters]);
+
 
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
@@ -97,7 +160,7 @@ const WomenProducts = () => {
     // Logic to calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = womenProductsData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredWomenProducts.slice(indexOfFirstItem, indexOfLastItem);
 
     // Function to handle page change
     const paginate = pageNumber => setCurrentPage(pageNumber);
@@ -107,11 +170,11 @@ const WomenProducts = () => {
     };
 
     const goToNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(womenProductsData.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(filteredWomenProducts.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
     };
 
     const maxVisibleButtons = 5; // Maximum number of buttons to show at a time
-    const totalPages = Math.ceil(womenProductsData.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredWomenProducts.length / itemsPerPage);
     let startPage, endPage;
 
     if (totalPages <= maxVisibleButtons) {
@@ -176,64 +239,76 @@ const WomenProducts = () => {
                     </select>
                 </div>
             </div>
+            {
+                currentItems?.length === 0 ?
+                    <div>
+                        <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-32 my-24 text-black text-center font-semibold">No product is available now!</h2>
+                    </div> :
+                    <>
+                        {
+                            currentItems?.length > 0 &&
+                            <>
+                                {/* products */}
+                                <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+                                    {
+                                        currentItems?.map((womenProduct) => (
+                                            <div key={womenProduct?.id} className="relative group duration-500 transform hover:scale-105">
+                                                <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={womenProduct?.image} alt="men product image" />
+                                                <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                                    <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    <Link to="/singleProductDetails">
+                                                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    </Link>
+                                                    <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
 
-            {/* products */}
-            <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-                {
-                    currentItems?.map((womenProduct) => (
-                        <div key={womenProduct?.id} className="relative group duration-500 transform hover:scale-105">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={womenProduct?.image} alt="women product image" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                                <Link to="/singleProductDetails">
-                                    <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                                </Link>
-                                <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
+                                {/* pagination */}
+                                <div className="lg:mt-14 md:mt-12 mt-10">
+                                    <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
+                                        {/* Render Previous button */}
 
-            {/* pagination */}
-            <div className="lg:mt-14 md:mt-12 mt-10">
-                <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
-                    {/* Render Previous button */}
+                                        <button
+                                            onClick={goToPreviousPage}
+                                            disabled={currentPage === 1}
+                                            className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                        >
+                                            <FaAngleLeft />
+                                        </button>
 
-                    <button
-                        onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleLeft />
-                    </button>
+                                        {/* Render pagination buttons */}
+                                        {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
+                                            const pageNumber = startPage + index;
+                                            return (
+                                                <li key={pageNumber}>
+                                                    <button
+                                                        onClick={() => paginate(pageNumber)}
+                                                        className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
+                                                    >
+                                                        {pageNumber}
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
 
-                    {/* Render pagination buttons */}
-                    {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
-                        const pageNumber = startPage + index;
-                        return (
-                            <li key={pageNumber}>
-                                <button
-                                    onClick={() => paginate(pageNumber)}
-                                    className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
-                                >
-                                    {pageNumber}
-                                </button>
-                            </li>
-                        );
-                    })}
+                                        {/* Render Next button */}
+                                        <button
+                                            onClick={goToNextPage}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                        >
+                                            <FaAngleRight />
+                                        </button>
 
-                    {/* Render Next button */}
-                    <button
-                        onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleRight />
-                    </button>
-
-                </ul>
-            </div>
+                                    </ul>
+                                </div>
+                            </>
+                        }
+                    </>
+            }
             {/* <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
                 <div className="relative group">
                     <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product10} alt="product10" />
