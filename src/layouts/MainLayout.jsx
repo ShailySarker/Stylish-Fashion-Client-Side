@@ -6,7 +6,7 @@ import Announcement from "../components/Announcement";
 const MainLayout = () => {
     return (
         <>
-            <Announcement />
+            {/* <Announcement /> */}
             <Header />
             <Outlet />
             <Footer />

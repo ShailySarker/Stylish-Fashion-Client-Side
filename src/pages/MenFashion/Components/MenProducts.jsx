@@ -10,7 +10,8 @@ import product8 from "../../../assets/Images/MenFashion/MenProducts_menTshirt.jp
 import product9 from "../../../assets/Images/MenFashion/MenProducts_menWinterCoat.jpg";
 import { FaAngleLeft, FaAngleRight, FaRegHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const menProductsData = [
     {
@@ -94,6 +95,68 @@ const menProductsData = [
 
 
 const MenProducts = () => {
+
+    // filter work
+    const [filters, setFilters] = useState({});
+    const [sort, setSort] = useState("newest");
+
+    const handleFilters = (event) => {
+        const selectedValue = event.target.value;
+        setFilters({
+            ...filters,
+            [event.target.name]: selectedValue
+        });
+    };
+
+    console.log(filters);
+
+    // product data show
+    const [menProducts, setMenProducts] = useState([]);
+    const [filteredMenProducts, setFilteredMenProducts] = useState([]);
+    const category = "men";
+    // for normal data show
+    useEffect(() => {
+        const getMenProducts = async () => {
+            try {
+                const res = await axios.get(`http://localhost:3000/api/products?category=${category}`);
+                console.log(res?.data);
+                setMenProducts(res?.data);
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getMenProducts();
+    }, [category]);
+
+    // for filtered data show
+    useEffect(() => {
+        category && setFilteredMenProducts(
+            menProducts.filter((product) =>
+                Object.entries(filters).every(([key, value]) => (
+                    product[key].includes(value)
+                ))
+            )
+        )
+    }, [menProducts, category, filters]);
+
+    // for sort data show
+    useEffect(() => {
+        if (sort === "newest") {
+            setFilteredMenProducts((prev) =>
+                [...prev].sort((x, y) => new Date(y?.createdAt) - new Date(x?.createdAt))
+            )
+        } else if (sort === "asc") {
+            setFilteredMenProducts((prev) =>
+                [...prev].sort((x, y) => x?.price - y?.price)
+            )
+        } else {
+            setFilteredMenProducts((prev) =>
+                [...prev].sort((x, y) => y?.price - x?.price)
+            )
+        }
+    }, [menProducts, sort, filters]);
+
+
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15;
@@ -101,7 +164,7 @@ const MenProducts = () => {
     // Logic to calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = menProductsData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredMenProducts.slice(indexOfFirstItem, indexOfLastItem);
 
     // Function to handle page change
     const paginate = pageNumber => setCurrentPage(pageNumber);
@@ -111,11 +174,11 @@ const MenProducts = () => {
     };
 
     const goToNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(menProductsData.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(filteredMenProducts.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
     };
 
     const maxVisibleButtons = 5; // Maximum number of buttons to show at a time
-    const totalPages = Math.ceil(menProductsData.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredMenProducts.length / itemsPerPage);
     let startPage, endPage;
 
     if (totalPages <= maxVisibleButtons) {
@@ -134,9 +197,11 @@ const MenProducts = () => {
         }
     }
 
+
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-purple-800">Men Fashion</h1> */}
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">Men Fashion</h1>
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Men Fashion</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">From sophisticated suits and formal wear to casual shirts and jeans, our men's collection offers a variety of options to suit every style.</p>
@@ -146,98 +211,111 @@ const MenProducts = () => {
             <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row md:flex-wrap flex-col justify-between lg:items-center md:items-center items-end lg:gap-0 md:gap-y-4 gap-y-3">
                 <div className="flex items-center lg:gap-3 md:gap-10 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Color:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="color">
                         <option disabled selected>Color</option>
-                        <option value="">Blue</option>
-                        <option value="">Pink</option>
-                        <option value="">Gray</option>
-                        <option value="">Black</option>
-                        <option value="">White</option>
-                        <option value="">Red</option>
-                        <option value="">Yellow</option>
-                        <option value="">Green</option>
-                        <option value="">Orange</option>
+                        <option value="blue">Blue</option>
+                        <option value="pink">Pink</option>
+                        <option value="gray">Gray</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                        <option value="red">Red</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="green">Green</option>
+                        <option value="orange">Orange</option>
                     </select>
                 </div>
                 <div className="flex items-center lg:gap-3 md:gap-12 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Size:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="size">
                         <option disabled selected>Size</option>
-                        <option value="">XS</option>
-                        <option value="">S</option>
-                        <option value="">M</option>
-                        <option value="">L</option>
-                        <option value="">XL</option>
-                        <option value="">2XL</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="2XL">2XL</option>
                     </select>
                 </div>
                 <div className="flex items-center lg:gap-3 md:gap-20 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Sort By:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
-                        <option selected>New Arrival</option>
-                        <option value="">Price Low to High</option>
-                        <option value="">Price High to Low</option>
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={event => setSort(event.target.value)}>
+                        <option value="newest">New Arrival</option>
+                        <option value="asc">Price Low to High</option>
+                        <option value="desc">Price High to Low</option>
                     </select>
                 </div>
             </div>
 
-            {/* products */}
-            <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-                {
-                    currentItems?.map((menProduct) => (
-                        <div key={menProduct?.id} className="relative group duration-500 transform hover:scale-105">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={menProduct?.image} alt="men product image" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                                <Link to="/singleProductDetails">
-                                    <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                                </Link>
-                                <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
+            {
+                currentItems?.length === 0 ?
+                    <div>
+                        <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-32 my-24 text-black text-center font-semibold">No product is available now!</h2>
+                    </div> :
+                    <>
+                        {
+                            currentItems?.length > 0 &&
+                            <>
+                                {/* products */}
+                                <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+                                    {
+                                        currentItems?.map((menProduct) => (
+                                            <div key={menProduct?.id} className="relative group duration-500 transform hover:scale-105">
+                                                <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={menProduct?.image} alt="men product image" />
+                                                <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                                    <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    <Link to="/singleProductDetails">
+                                                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    </Link>
+                                                    <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
 
-            {/* pagination */}
-            <div className="lg:mt-14 md:mt-12 mt-10">
-                <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
-                    {/* Render Previous button */}
+                                {/* pagination */}
+                                <div className="lg:mt-14 md:mt-12 mt-10">
+                                    <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
+                                        {/* Render Previous button */}
 
-                    <button
-                        onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleLeft />
-                    </button>
+                                        <button
+                                            onClick={goToPreviousPage}
+                                            disabled={currentPage === 1}
+                                            className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                        >
+                                            <FaAngleLeft />
+                                        </button>
 
-                    {/* Render pagination buttons */}
-                    {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
-                        const pageNumber = startPage + index;
-                        return (
-                            <li key={pageNumber}>
-                                <button
-                                    onClick={() => paginate(pageNumber)}
-                                    className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
-                                >
-                                    {pageNumber}
-                                </button>
-                            </li>
-                        );
-                    })}
+                                        {/* Render pagination buttons */}
+                                        {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
+                                            const pageNumber = startPage + index;
+                                            return (
+                                                <li key={pageNumber}>
+                                                    <button
+                                                        onClick={() => paginate(pageNumber)}
+                                                        className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
+                                                    >
+                                                        {pageNumber}
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
 
-                    {/* Render Next button */}
-                    <button
-                        onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleRight />
-                    </button>
+                                        {/* Render Next button */}
+                                        <button
+                                            onClick={goToNextPage}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                        >
+                                            <FaAngleRight />
+                                        </button>
 
-                </ul>
-            </div>
+                                    </ul>
+                                </div>
+                            </>
+                        }
+                    </>
+            }
             {/* <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
                 <div className="relative group">
                     <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product1} alt="product1" />
