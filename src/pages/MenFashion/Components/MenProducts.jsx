@@ -197,7 +197,6 @@ const MenProducts = () => {
         }
     }
 
-
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
