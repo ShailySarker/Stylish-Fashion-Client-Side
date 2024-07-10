@@ -197,60 +197,76 @@ const Products = () => {
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">All Products</h1>
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover the latest trends in men’s, women’s, and kids' wear. At Stylish Fashion, we offer a curated collection of stylish and affordable clothing to keep your wardrobe fresh and fashionable.</p>
             </div>
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+            <div>
                 {
-                    currentItems?.map((product) => (
-                        <div key={product?.id} className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
-                                <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
-                            </div>
-                        </div>
-                    ))
+                    currentItems?.length === 0 ?
+                        <div>
+                            <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-32 my-24 text-black text-center font-semibold">No product is available now!</h2>
+                        </div> :
+                        <>
+                            {
+                                currentItems?.length > 0 &&
+
+                                <>
+                                    <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+                                        {
+                                            currentItems?.map((product) => (
+                                                <div key={product?.id} className="relative group">
+                                                    <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
+                                                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                    {/* pagination */}
+                                    <div className="lg:mt-14 md:mt-12 mt-10">
+                                        <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
+                                            {/* Render Previous button */}
+
+                                            <button
+                                                onClick={goToPreviousPage}
+                                                disabled={currentPage === 1}
+                                                className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                            >
+                                                <FaAngleLeft />
+                                            </button>
+
+
+                                            {/* Render pagination buttons */}
+                                            {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
+                                                const pageNumber = startPage + index;
+                                                return (
+                                                    <li key={pageNumber}>
+                                                        <button
+                                                            onClick={() => paginate(pageNumber)}
+                                                            className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
+                                                        >
+                                                            {pageNumber}
+                                                        </button>
+                                                    </li>
+                                                );
+                                            })}
+
+
+                                            {/* Render Next button */}
+                                            <button
+                                                onClick={goToNextPage}
+                                                disabled={currentPage === totalPages}
+                                                className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                                            >
+                                                <FaAngleRight />
+                                            </button>
+
+                                        </ul>
+                                    </div>
+                                </>
+                            }
+                        </>
                 }
-            </div>
-            {/* pagination */}
-            <div className="lg:mt-14 md:mt-12 mt-10">
-                <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
-                    {/* Render Previous button */}
-
-                    <button
-                        onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleLeft />
-                    </button>
-
-
-                    {/* Render pagination buttons */}
-                    {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
-                        const pageNumber = startPage + index;
-                        return (
-                            <li key={pageNumber}>
-                                <button
-                                    onClick={() => paginate(pageNumber)}
-                                    className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
-                                >
-                                    {pageNumber}
-                                </button>
-                            </li>
-                        );
-                    })}
-
-
-                    {/* Render Next button */}
-                    <button
-                        onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
-                        className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
-                    >
-                        <FaAngleRight />
-                    </button>
-
-                </ul>
             </div>
         </div>
     );
