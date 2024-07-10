@@ -24,193 +24,59 @@ import product23 from "../../../assets/Images/Home/OurProducts_girlCap.jpg";
 import product24 from "../../../assets/Images/Home/OurProducts_girlFrog.jpg";
 import product25 from "../../../assets/Images/Home/OurProducts_girlSkirtSet.jpg";
 import product26 from "../../../assets/Images/Home/OurProducts_girlWinterDress.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { MdArrowOutward } from "react-icons/md";
 
 const OurProducts = () => {
-    const [seeAllProduct, setAllProduct] = useState(false);
-    const handleSeeMoreCollections = () => {
-        setAllProduct(!seeAllProduct);
-    };
+    const [allProducts, setAllProducts] = useState([]);
+    // for normal data show
+    useEffect(() => {
+        const getAllProducts = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/api/products");
+                console.log(res?.data);
+                setAllProducts(res?.data.slice(0, 12));
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getAllProducts();
+    }, []);
 
     return (
-        <div className="lg:px-20 md:px-12 px-6 lg:mt-6 md:mt-6 mt-6">
-        {/* <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14"> */}
-            <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Our Products</h1>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Our Products</h1> */}
-                <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Explore our extensive selection and enjoy a seamless shopping experience at Stylish Fashion!</p>
-            </div>
-            <div className="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-3 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product1} alt="product1" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
+        <>
+            {
+                allProducts.length > 0 &&
+                <div className="lg:px-20 md:px-12 px-6 lg:mt-6 md:mt-6 mt-6">
+                    {/* <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14"> */}
+                    <div>
+                        <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Our Products</h1>
+                        {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Our Products</h1> */}
+                        <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Explore our extensive selection and enjoy a seamless shopping experience at Stylish Fashion!</p>
                     </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product2} alt="product2" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
+                    <div className="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-3 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+                        {
+                            allProducts?.map((product) => (
+                                <div key={product?.id} className="relative group">
+                                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product?.image} alt="product image" />
+                                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
+                                    </div>
+                                </div>
+                            ))
+                        }
                     </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product3} alt="product3" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product4} alt="product4" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product5} alt="product5" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product6} alt="product6" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product7} alt="product7" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product8} alt="product8" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product9} alt="product9" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product10} alt="product10" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product11} alt="product11" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product12} alt="product12" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                {
-                    seeAllProduct &&
-                    <>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product13} alt="product13" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product14} alt="product14" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product15} alt="product15" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product16} alt="product16" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product17} alt="product17" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product18} alt="product18" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product19} alt="product19" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product20} alt="product20" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product21} alt="product21" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product22} alt="product22" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product23} alt="product23" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product24} alt="product24" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product25} alt="product25" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product26} alt="product26" />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
-                            </div>
-                        </div>
-                    </>
-                }
-            </div>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-56 md:w-48 w-44 py-2 rounded-2xl lg:text-lg text-base font-semibold flex justify-center mx-auto lg:mt-14 md:mt-12 mt-10" onClick={handleSeeMoreCollections}>
-                {
-                    seeAllProduct ?
-                        "See Less Products" : "See More Products"
-                }
-            </button>
-        </div >
+                    <Link to="/allProducts">
+                        <button className="bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-56 md:w-48 w-44 py-2 rounded-2xl lg:text-lg text-base font-semibold flex justify-center mx-auto lg:mt-14 md:mt-12 mt-10 items-center md:gap-2 gap-1">
+                            See All Product <MdArrowOutward className="lg:text-xl text-lg" />
+                        </button>
+                    </Link>
+                </div >
+            }
+        </>
     );
 };
 

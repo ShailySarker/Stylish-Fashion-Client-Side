@@ -25,8 +25,9 @@ import product23 from "../../../assets/Images/AllProducts/Products_girlCap.jpg";
 import product24 from "../../../assets/Images/AllProducts/Products_girlFrog.jpg";
 import product25 from "../../../assets/Images/AllProducts/Products_girlSkirtSet.jpg";
 import product26 from "../../../assets/Images/AllProducts/Products_girlWinterDress.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import axios from "axios";
 
 const productsData = [
     {
@@ -136,6 +137,21 @@ const productsData = [
 ];
 
 const Products = () => {
+    const [allProducts, setAllProducts] = useState([]);
+    // for normal data show
+    useEffect(() => {
+        const getAllProducts = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/api/products");
+                console.log(res?.data);
+                setAllProducts(res?.data);
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        getAllProducts();
+    }, []);
+
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
@@ -143,7 +159,7 @@ const Products = () => {
     // Logic to calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = productsData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = allProducts.slice(indexOfFirstItem, indexOfLastItem);
 
     // Function to handle page change
     const paginate = pageNumber => setCurrentPage(pageNumber);
@@ -153,11 +169,11 @@ const Products = () => {
     };
 
     const goToNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(productsData.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(allProducts.length / itemsPerPage))); // Ensure currentPage doesn't exceed the total number of pages
     };
 
     const maxVisibleButtons = 5; // Maximum number of buttons to show at a time
-    const totalPages = Math.ceil(productsData.length / itemsPerPage);
+    const totalPages = Math.ceil(allProducts.length / itemsPerPage);
     let startPage, endPage;
 
     if (totalPages <= maxVisibleButtons) {
@@ -185,7 +201,7 @@ const Products = () => {
                 {
                     currentItems?.map((product) => (
                         <div key={product?.id} className="relative group">
-                            <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product10" />
+                            <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
                             <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
                                 <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
                                 <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
