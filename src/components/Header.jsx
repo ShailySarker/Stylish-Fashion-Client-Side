@@ -4,8 +4,13 @@ import logo1 from "../assets/Images/Header/logo.jpg";
 import { FaBars, FaSearch } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+    // redux
+    const productQuantity = useSelector(state => state?.cart?.cartQuantity);
+    console.log(productQuantity);
+
     // mobile view
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [click, setClick] = useState(false);
@@ -21,7 +26,7 @@ const Header = () => {
     };
     return (
         <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
-        {/* <div style={{zIndex:9999}} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}
+            {/* <div style={{zIndex:9999}} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}
             <div className="flex flex-row gap-16">
                 <div>
                     <Link to="/">
@@ -59,11 +64,16 @@ const Header = () => {
                     <Link to="/cart">
                         <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
                     </Link>
-                    {cartItems > 0 && (
+                    {productQuantity > 0 && (
+                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
+                            {productQuantity}
+                        </span>
+                    )}
+                    {/* {cartItems > 0 && (
                         <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
                             {cartItems}
                         </span>
-                    )}
+                    )} */}
                     {/* <button onClick={addToCart} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Add to Cart</button> */}
 
                 </div>

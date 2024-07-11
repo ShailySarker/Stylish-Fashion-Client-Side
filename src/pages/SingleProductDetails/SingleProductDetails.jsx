@@ -3,17 +3,21 @@ import product from "../../assets/Images/MenFashion/MenProducts_menCap.jpg";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
 import { publicRequest } from "../../helpers/axios/requestMethod";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { addProduct } from "../../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const SingleProductDetails = () => {
+
     const location = useLocation();
     const id = location.pathname.split("/")[2];
-
+    const navigate = useNavigate();
     const [product, setProduct] = useState({});
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [countProductQuantity, setCountProductQuantity] = useState(1);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const getProduct = async () => {
@@ -41,15 +45,28 @@ const SingleProductDetails = () => {
         if (selectedColor) {
             if (selectedSize) {
                 console.log(selectedColor, selectedSize, countProductQuantity);
+
+                // api
+                const addToCartInfo = {
+                    ...product,
+                    countProductQuantity,
+                    selectedColor,
+                    selectedSize
+                };
+                dispatch(addProduct(addToCartInfo));
+
                 Swal.fire({
-                    position: "top-center",
+                    position: "center",
                     icon: "success",
                     title: "The product is successfully added into cart!",
                     showConfirmButton: false,
                     timer: 2000
-                  });
-                  setSelectedColor("");
-                  setSelectedSize("");
+                });
+                setSelectedColor("");
+                setSelectedSize("");
+                setCountProductQuantity(1);
+
+                // navigate("/cart");
 
             } else {
                 alert("kindly select size");
