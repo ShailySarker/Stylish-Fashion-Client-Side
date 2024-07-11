@@ -60,10 +60,12 @@ const OurProducts = () => {
                     <div className="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-3 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
                         {
                             allProducts?.map((product) => (
-                                <div key={product?.id} className="relative group">
+                                <div key={product?._id} className="relative group">
                                     <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product?.image} alt="product image" />
                                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
+                                        <Link to={`/product/${product?._id}`}>
+                                            <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
+                                        </Link>
                                     </div>
                                 </div>
                             ))

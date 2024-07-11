@@ -56,7 +56,7 @@ const router = createBrowserRouter(
                     </Suspense>
                 },
                 {
-                    path: "/singleProductDetails",
+                    path: "/product/:id",
                     element: <Suspense fallback={
                         <LazyLoader />}>
                         <SingleProductDetails />

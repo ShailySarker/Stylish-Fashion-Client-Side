@@ -252,7 +252,7 @@ const WomenProducts = () => {
                                 <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
                                     {
                                         currentItems?.map((womenProduct) => (
-                                            <div key={womenProduct?.id} className="relative group duration-500 transform hover:scale-105">
+                                            <div key={womenProduct?._id} className="relative group duration-500 transform hover:scale-105">
                                                 <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={womenProduct?.image} alt="men product image" />
                                                 <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
                                                     <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />

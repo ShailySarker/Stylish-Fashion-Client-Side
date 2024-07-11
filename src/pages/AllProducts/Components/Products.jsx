@@ -206,12 +206,11 @@ const Products = () => {
                         <>
                             {
                                 currentItems?.length > 0 &&
-
                                 <>
                                     <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
                                         {
                                             currentItems?.map((product) => (
-                                                <div key={product?.id} className="relative group">
+                                                <div key={product?._id} className="relative group">
                                                     <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
                                                     <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
                                                         <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
