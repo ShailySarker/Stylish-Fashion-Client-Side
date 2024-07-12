@@ -66,7 +66,7 @@ const SingleProductDetails = () => {
                 setSelectedSize("");
                 setCountProductQuantity(1);
 
-                // navigate("/cart");
+                navigate("/cart");
 
             } else {
                 alert("kindly select size");

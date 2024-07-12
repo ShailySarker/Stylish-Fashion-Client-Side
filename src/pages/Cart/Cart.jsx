@@ -4,6 +4,7 @@ import MyWishlist from "./Components/MyWishlist";
 import product from "../../assets/Images/Home/OurProducts_womenBardotDress.jpg";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+
 const Cart = () => {
     const cartData = useSelector(state => state?.cart);
     console.log(cartData);
@@ -46,16 +47,16 @@ const Cart = () => {
             </div> */}
             <div className="flex lg:flex-row flex-col lg:gap-3 md:gap-9 gap-7 lg:mt-12 md:mt-10 mt-6 items-start">
                 {/* product Details */}
-                <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:h-[540px] h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
-                    {
-                        cartData?.products?.length === 0 ?
-                            <div>
-                                <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-32 my-24 text-black text-right font-semibold lg:pr-20">No product is added into cart!</h2>
-                            </div> :
-                            <>
-                                {
-                                    cartData?.products?.length > 0 &&
-                                    <>
+                {
+                    cartData?.products?.length === 0 ?
+                        <div className="w-full">
+                            <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-28 my-20 text-black text-center font-semibold">No product is added into cart!</h2>
+                        </div> :
+                        <>
+                            {
+                                cartData?.products?.length > 0 &&
+                                <>
+                                    <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:h-[540px] h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
                                         {
                                             cartData?.products?.map((product) => (
                                                 <div key={product?._id} className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
@@ -81,12 +82,12 @@ const Cart = () => {
                                                 </div>
                                             ))
                                         }
-                                    </>
-                                }
-                            </>
-                    }
+                                    </div>
+                                </>
+                            }
+                        </>
+                }
 
-                </div>
                 {
                     cartData?.products?.length > 0 &&
                     <>
