@@ -1,13 +1,109 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyShopping from "./Components/MyShopping";
 import MyWishlist from "./Components/MyWishlist";
 import product from "../../assets/Images/Home/OurProducts_womenBardotDress.jpg";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+import { userRequest } from "../../helpers/axios/requestMethod";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const cartData = useSelector(state => state?.cart);
-    console.log(cartData);
+    const navigate = useNavigate();
+    const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    const [stripeToken, setStripeToken] = useState(null);
+
+    const handleToken = (token) => {
+        console.log("Stripe Token:", token);
+        setStripeToken(token);
+    };
+
+    useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                console.log("Sending payment request to backend");
+                const res = await userRequest.post("/checkout/payment", {
+                    tokenId: stripeToken?.id,
+                    amount: cartData?.total * 100,
+                });
+                console.log("Payment Response:", res?.data);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Payment is successful!",
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+                navigate("/"); // Ensure correct navigation path
+            } catch (error) {
+                console.error("Payment Error:", error);
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Payment failed!",
+                    text: error.response?.data?.message || error.message,
+                    showConfirmButton: true,
+                });
+            }
+        };
+        if (stripeToken) makeRequest();
+    }, [stripeToken, cartData?.total, navigate]);
+
+    // // cart info
+    // const cartData = useSelector(state => state?.cart);
+    // console.log(cartData);
+    // const navigate = useNavigate();
+    // // stripe
+    // const KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    // const [stripeToken, setStripeToken] = useState(null);
+
+    // const handleToken = (token) => {
+    //     setStripeToken(token);
+    // };
+    // console.log(stripeToken);
+
+    // useEffect(() => {
+    //     const makeRequest = async () => {
+    //         try {
+    //             console.log("Sending payment request to backend");
+
+    //             const res = await userRequest.post("/checkout/payment",
+    //             // const res = await axios.post("http://localhost:3000/api/checkout/payment",
+    //                 {
+    //                     tokenId: stripeToken?.id,
+    //                     amount: cartData?.total * 100,
+
+    //                 }
+    //             );
+    //             console.log("Payment Response:", res?.data);
+
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "success",
+    //                 title: "Payment is successful!",
+    //                 showConfirmButton: false,
+    //                 timer: 2000
+    //             });
+    //             navigate("/");
+    //         } catch (error) {
+    //             console.log(error);
+    //             console.error("Payment Error:", error);
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "error",
+    //                 title: "Payment failed!",
+    //                 text: error.response?.data?.message || error.message,
+    //                 showConfirmButton: true,
+    //             });
+    //         }
+    //     }
+    //     if (stripeToken) makeRequest();
+
+    //     // stripeToken && makeRequest();
+    // }, [stripeToken, cartData?.total, navigate]);
+
     const [isToggle, setToggle] = useState(1);
     const handleToggleWork = (id) => {
         setToggle(id);
@@ -113,7 +209,34 @@ const Cart = () => {
                                     </p>
                                 </div>
                             </div>
-                            <button className="lg:mt-16 md:mt-14 mt-12 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
+                            {/* <StripeCheckout
+                                name="Stylish Fashion"
+                                // image="https://i.ibb.co/v4gKvy3/Icon.png"
+                                // billingAddress
+                                // shippingAddress
+                                description={`Your total is $ ${cartData?.total}`}
+                                amount={cartData?.total * 100}
+                                token={handleToken}
+                                stripeKey={KEY}
+                            >
+                                <button className="lg:mt-16 md:mt-14 mt-12 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
+                            </StripeCheckout> */}
+
+
+                            <StripeCheckout
+                                name="Stylish Fashion"
+                                image="https://i.ibb.co/v4gKvy3/Icon.png"
+                                // billingAddress
+                                // shippingAddress
+                                description={`Your total is $${cartData?.total}`}
+                                amount={cartData?.total * 100}
+                                token={handleToken}
+                                stripeKey={Stripe_Key}
+                            >
+                                <button className="lg:mt-16 md:mt-14 mt-12 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">
+                                    Checkout Now
+                                </button>
+                            </StripeCheckout>
                         </div>
                     </>
                 }
