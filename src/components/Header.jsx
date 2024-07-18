@@ -5,6 +5,7 @@ import { FaBars, FaRegUserCircle, FaSearch, FaUserCircle } from "react-icons/fa"
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
     // redux
@@ -86,7 +87,13 @@ const Header = () => {
                     {
                         isUserAvailable ?
                             <>
-                            <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/>
+                                {/* <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/> */}
+                                <Link to="/">
+                                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
+                                        <FiLogOut />
+                                        Logout
+                                    </button>
+                                </Link>
                             </> :
                             <>
                                 <Link to="/login">
@@ -122,11 +129,24 @@ const Header = () => {
                             <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Kids</NavLink>
                         </ul>
-                        <Link to="/login">
-                            <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                                Login
-                            </button>
-                        </Link>
+                        {
+                            isUserAvailable ?
+                                <>
+                                    <Link to="/">
+                                        <button className="md:py-2 py-[6px] md:w-32 w-[105px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
+                                            <FiLogOut />
+                                            Logout
+                                        </button>
+                                    </Link>
+                                </> :
+                                <>
+                                    <Link to="/login">
+                                        <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                            Login
+                                        </button>
+                                    </Link>
+                                </>
+                        }
                     </div>
                 )}
 
