@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/Images/Header/logo-removebg-preview.png";
 import logo1 from "../assets/Images/Header/logo.jpg";
-import { FaBars, FaSearch } from "react-icons/fa";
+import { FaBars, FaRegUserCircle, FaSearch, FaUserCircle } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,6 +24,10 @@ const Header = () => {
     const addToCart = () => {
         setCartItems(cartItems + 1);
     };
+
+    // user availability
+    const [isUserAvailable, setUserAvailable] = useState(true);
+
     return (
         <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
             {/* <div style={{zIndex:9999}} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}
@@ -62,7 +66,7 @@ const Header = () => {
                 </div>
                 <div className="flex">
                     <Link to="/cart">
-                        <FaCartShopping className="lg:text-2xl  md:text-xl text-lg" />
+                        <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
                     </Link>
                     {productQuantity > 0 && (
                         <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
@@ -79,11 +83,19 @@ const Header = () => {
                 </div>
                 {/* large device */}
                 <div className="lg:block hidden">
-                    <Link to="/login">
-                        <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                            Login
-                        </button>
-                    </Link>
+                    {
+                        isUserAvailable ?
+                            <>
+                            <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/>
+                            </> :
+                            <>
+                                <Link to="/login">
+                                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                        Login
+                                    </button>
+                                </Link>
+                            </>
+                    }
                     {/* <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 via-pink-700 to-purple-700">
                         Login
                     </button> */}
