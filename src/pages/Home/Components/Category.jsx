@@ -16,7 +16,7 @@ const Category = () => {
                     <img src={category1} alt="category1" className="w-full h-auto" />
                     <div className="absolute inset-0 flex flex-col items-center lg:gap-6 md:gap-5 gap-4 justify-center bg-black bg-opacity-50">
                         <h2 className="text-white lg:text-3xl md:text-2xl text-xl font-bold">Men Wear</h2>
-                        <Link to="/menWear" className="">
+                        <Link to="/menFashion" className="">
                             <button className="py-2 lg:w-36 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-600 to-purple-800">Visit Now</button>
                         </Link>
                     </div>
@@ -25,7 +25,7 @@ const Category = () => {
                     <img src={category2} alt="category2" className="w-full h-auto" />
                     <div className="absolute inset-0 flex flex-col items-center lg:gap-6 md:gap-5 gap-4 justify-center bg-black bg-opacity-50">
                         <h2 className="text-white lg:text-3xl md:text-2xl text-xl font-bold">Women Wear</h2>
-                        <Link to="/womenWear" className="">
+                        <Link to="/womenFashion" className="">
                             <button className="py-2 lg:w-36 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-600 to-purple-800">Visit Now</button>
                         </Link>
                     </div>
@@ -34,7 +34,7 @@ const Category = () => {
                     <img src={category3} alt="category3" className="w-full h-auto" />
                     <div className="absolute inset-0 flex flex-col items-center lg:gap-6 md:gap-5 gap-4 justify-center bg-black bg-opacity-50">
                         <h2 className="text-white lg:text-3xl md:text-2xl text-xl font-bold">Kids Wear</h2>
-                        <Link to="/kidsWear" className="">
+                        <Link to="/kidsFashion" className="">
                             <button className="py-2 lg:w-36 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-600 to-purple-800">Visit Now</button>
                         </Link>
                     </div>
