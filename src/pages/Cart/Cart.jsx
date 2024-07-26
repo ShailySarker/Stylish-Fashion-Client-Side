@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import MyShopping from "./Components/MyShopping";
 import MyWishlist from "./Components/MyWishlist";
 import product from "../../assets/Images/Home/OurProducts_womenBardotDress.jpg";
-import { FaMinus, FaPlus } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { FaMinus, FaPlus, FaXmark } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import { userRequest } from "../../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { deleteProduct } from "../../redux/cartRedux";
 
 const Cart = () => {
     const cartData = useSelector(state => state?.cart);
@@ -21,7 +22,11 @@ const Cart = () => {
         console.log("Stripe Token:", token);
         setStripeToken(token);
     };
-    
+    const dispatch = useDispatch();
+
+    const handleDeleteProduct = (id) => {
+        dispatch(deleteProduct({ id }));
+    };
     useEffect(() => {
         const makeRequest = async () => {
             try {
@@ -132,7 +137,10 @@ const Cart = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.productQuantity}`}</h2>
+                                                    <div className="grid grid-rows-3 gap-9">
+                                                        <FaXmark onClick={() => handleDeleteProduct(product?._id)} className="flex justify-end" />
+                                                        <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.productQuantity}`}</h2>
+                                                    </div>
                                                 </div>
                                             ))
                                         }

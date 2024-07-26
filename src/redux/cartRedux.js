@@ -15,13 +15,13 @@ const cartSlice = createSlice({
         },
         deleteProduct: (state, action) => {
             const productId = action.payload.id;
-            const product = state.products.find(p => p.id === productId);
+            const productIndex = state.products.findIndex(p => p._id === productId);
 
-            if (product) {
+            if (productIndex !== -1) {
+                const product = state.products[productIndex];
                 state.cartQuantity -= 1;
                 state.total -= product.price * product.productQuantity;
-
-                state.products = state.products.filter(p => p.id !== productId);
+                state.products.splice(productIndex, 1);
             }
         }
     }
