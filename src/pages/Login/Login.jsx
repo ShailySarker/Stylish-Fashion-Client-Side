@@ -3,20 +3,26 @@ import banner from "../../assets/Images/Login/fashion-model-kids-free-photo-remo
 import companyLogo from "../../assets/Images/Login/logo.jpg";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/api/apiCalls";
+import Swal from "sweetalert2";
 
 const Login = () => {
+    // redux
+    const dispatch = useDispatch();
+    const { isFatching, error } = useSelector((state) => state?.user);
+    // login handling
     const navigate = useNavigate();
     const [passwordVisible, setPasswordVisible] = useState(false);
     // password showing toggle
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
-
     const handleLogin = (event) => {
         event.preventDefault();
         const form = event.target;
         // const email = form.email.value;
-        const userName = form.userName.value;
+        const username = form.username.value;
         const password = form.password.value;
 
         // const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
@@ -27,11 +33,30 @@ const Login = () => {
         // }
 
         // If all validations pass
-        if (userName && password) {
-            console.log(userName, password);
-            form.reset();
-            navigate('/');
-            // Add your sign-up logic here (e.g., sending data to the server)
+        if (username && password) {
+            try {
+                console.log(username, password);
+                // api call
+                login(dispatch, { username, password });
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Login is successful!",
+                    showConfirmButton: false,
+                    timer: 3000,
+                });
+                form.reset();
+                navigate('/');
+            } catch (error) {
+                console.error("Login Error:", error);
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Login is failed!",
+                    text: error.response?.data?.message || error.message,
+                    showConfirmButton: true,
+                });
+            }
         }
     };
     return (
@@ -46,7 +71,7 @@ const Login = () => {
                         <div className="flex flex-col lg:gap-6 md:gap-5 gap-4 w-full lg:mx-0 mx-auto">
                             <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">UserName<span className="text-[#E41414]">*</span></h4>
-                                <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="userName" id="" required />
+                                <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="username" id="username" required />
                             </div>
                             {/* <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">Email<span className="text-[#E41414]">*</span></h4>
@@ -57,7 +82,7 @@ const Login = () => {
                                 <div className="relative w-full">
                                     <input
                                         type={passwordVisible ? 'text' : 'password'}
-                                        className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" name="password" id="" required
+                                        className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" name="password" id="password" required
                                     />
                                     <button
                                         type="button"

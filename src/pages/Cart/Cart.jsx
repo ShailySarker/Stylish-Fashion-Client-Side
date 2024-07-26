@@ -11,16 +11,17 @@ import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const cartData = useSelector(state => state?.cart);
+    console.log(cartData?.cartQuantity)
+    const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
     // const history = 
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-    const [stripeToken, setStripeToken] = useState(null);
 
     const handleToken = (token) => {
         console.log("Stripe Token:", token);
         setStripeToken(token);
     };
-
+    
     useEffect(() => {
         const makeRequest = async () => {
             try {
@@ -30,6 +31,7 @@ const Cart = () => {
                     amount: ((cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))) * 100,
                     // amount: cartData?.total * 100,
                 });
+                // cartData?.cartQuantity = 0;
                 console.log("Payment Response:", res?.data);
                 if (res?.data?.status === "succeeded") {
                     Swal.fire({
@@ -41,7 +43,7 @@ const Cart = () => {
                         timer: 3000,
                     });
                     navigate("/");
-                    // cartData?.cartQuantity=0
+                    // cartData();
                 }
                 // window.location.reload();
             } catch (error) {
@@ -56,23 +58,21 @@ const Cart = () => {
             }
         };
         stripeToken && makeRequest();
-        // if (stripeToken) {
-        //     makeRequest();
-        // }
+        // }, [stripeToken, cartData?.total, navigate]);
     }, [stripeToken, cartData?.total, cartData?.cartQuantity, navigate]);
 
-    
+
     // const [isToggle, setToggle] = useState(1);
     // const handleToggleWork = (id) => {
     //     setToggle(id);
     // };
-    // const [countProductQuantity, setCountProductQuantity] = useState(1);
+    // const [productQuantity, setProductQuantity] = useState(1);
     // const handleIncreaseProduct = () => {
-    //     setCountProductQuantity(countProductQuantity + 1);
+    //     setProductQuantity(productQuantity + 1);
     // };
     // const handleDecreaseProduct = () => {
-    //     if (countProductQuantity > 0) {
-    //         setCountProductQuantity(countProductQuantity - 1);
+    //     if (productQuantity > 0) {
+    //         setProductQuantity(productQuantity - 1);
     //     }
     // };
     return (
@@ -110,7 +110,7 @@ const Cart = () => {
                             {
                                 cartData?.products?.length > 0 &&
                                 <>
-                                    <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:h-[540px] h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
+                                    <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:max-h-[540px] max-h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
                                         {
                                             cartData?.products?.map((product) => (
                                                 <div key={product?._id} className="flex items-center justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
@@ -126,13 +126,13 @@ const Cart = () => {
                                                                 <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
                                                                 <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
                                                                     {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4> */}
-                                                                    <h4 className="font-bold">{product?.countProductQuantity}</h4>
+                                                                    <h4 className="font-bold">{product?.productQuantity}</h4>
                                                                     {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4> */}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.countProductQuantity}`}</h2>
+                                                    <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.productQuantity}`}</h2>
                                                 </div>
                                             ))
                                         }
@@ -146,7 +146,7 @@ const Cart = () => {
                     cartData?.products?.length > 0 &&
                     <>
                         {/* order summary */}
-                        <div className="lg:w-1/3 md:w-2/3 w-full lg:mx-0 mx-auto border-2 border-purple-800 rounded-xl lg:px-5 lg:py-7 md:p-6 p-4 shadow-lg">
+                        <div className="lg:w-1/3 md:w-2/3 w-full lg:h-[480px] lg:mx-0 mx-auto border-2 border-purple-800 rounded-xl lg:px-5 lg:py-7 md:p-6 p-4 shadow-lg">
                             <h2 className="text-black font-semibold lg:text-3xl md:text-2xl text-xl">Order Details</h2>
                             <div className="lg:mt-16 md:mt-10 mt-8 flex flex-col lg:gap-4 md:gap-3 gap-2">
                                 <div className="flex justify-between">
@@ -184,14 +184,14 @@ const Cart = () => {
                             <StripeCheckout
                                 name="Stylish Fashion"
                                 image="https://i.ibb.co/v4gKvy3/Icon.png"
-                                billingAddress
-                                shippingAddress
+                                // billingAddress
+                                // shippingAddress
                                 // description={`Your total is $${cartData?.total}`}
                                 // amount={cartData?.total * 100}
                                 description={`Your total is ${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}`}
                                 amount={`${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}` * 100}
-                                // description={`Your total is $${product?.price * product?.countProductQuantity}`}
-                                // amount={`${product?.price * product?.countProductQuantity}`}
+                                // description={`Your total is $${product?.price * product?.productQuantity}`}
+                                // amount={`${product?.price * product?.productQuantity}`}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >

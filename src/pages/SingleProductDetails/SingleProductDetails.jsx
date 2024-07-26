@@ -17,7 +17,7 @@ const SingleProductDetails = () => {
     const [product, setProduct] = useState({});
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
-    const [countProductQuantity, setCountProductQuantity] = useState(1);
+    const [productQuantity, setProductQuantity] = useState(1);
 
     useEffect(() => {
         const getProduct = async () => {
@@ -33,23 +33,23 @@ const SingleProductDetails = () => {
     }, [id]);
 
     const handleIncreaseProduct = () => {
-        setCountProductQuantity(countProductQuantity + 1);
+        setProductQuantity(productQuantity + 1);
     };
     const handleDecreaseProduct = () => {
-        if (countProductQuantity > 1) {
-            setCountProductQuantity(countProductQuantity - 1);
+        if (productQuantity > 1) {
+            setProductQuantity(productQuantity - 1);
         }
     };
 
     const handleAddToCart = () => {
         if (selectedColor) {
             if (selectedSize) {
-                console.log(selectedColor, selectedSize, countProductQuantity);
+                console.log(selectedColor, selectedSize, productQuantity);
 
                 // api
                 const addToCartInfo = {
                     ...product,
-                    countProductQuantity,
+                    productQuantity,
                     selectedColor,
                     selectedSize
                 };
@@ -64,7 +64,7 @@ const SingleProductDetails = () => {
                 });
                 setSelectedColor("");
                 setSelectedSize("");
-                setCountProductQuantity(1);
+                setProductQuantity(1);
 
                 navigate("/cart");
 
@@ -125,7 +125,7 @@ const SingleProductDetails = () => {
                         <p className="lg:text-lg font-semibold">Quantity: </p>
                         <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
                             <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
-                            <h4 className="text-purple-700 font-semibold">{countProductQuantity}</h4>
+                            <h4 className="text-purple-700 font-semibold">{productQuantity}</h4>
                             <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
                         </div>
                     </div>

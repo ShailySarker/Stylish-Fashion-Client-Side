@@ -11,6 +11,8 @@ const Header = () => {
     // redux
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
     console.log(cartQuantity);
+    const userAvailability = useSelector(state => state?.user?.currentUser !== null);
+    console.log(userAvailability);
 
     // mobile view
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,8 +22,11 @@ const Header = () => {
         setClick(!click);
     };
     
-    // user availability
-    const [isUserAvailable, setUserAvailable] = useState(true);
+    const handleLogout = () =>{
+        console.log("hi")
+    }
+    // // user availability
+    // const [isUserAvailable, setUserAvailable] = useState(false);
 
     return (
         <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
@@ -79,11 +84,11 @@ const Header = () => {
                 {/* large device */}
                 <div className="lg:block hidden">
                     {
-                        isUserAvailable ?
+                        userAvailability ?
                             <>
                                 {/* <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/> */}
                                 <Link to="/">
-                                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
+                                    <button onClick={handleLogout} className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
                                         <FiLogOut />
                                         Logout
                                     </button>
@@ -124,10 +129,10 @@ const Header = () => {
                             }>Kids</NavLink>
                         </ul>
                         {
-                            isUserAvailable ?
+                            userAvailability ?
                                 <>
                                     <Link to="/">
-                                        <button className="md:py-2 py-[6px] md:w-32 w-[105px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
+                                        <button onClick={handleLogout} className="md:py-2 py-[6px] md:w-32 w-[105px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
                                             <FiLogOut />
                                             Logout
                                         </button>
