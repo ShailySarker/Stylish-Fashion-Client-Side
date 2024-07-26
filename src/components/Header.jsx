@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/Images/Header/logo-removebg-preview.png";
 import logo1 from "../assets/Images/Header/logo.jpg";
-import { FaBars, FaRegUserCircle, FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaSearch } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,8 +9,8 @@ import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
     // redux
-    const productQuantity = useSelector(state => state?.cart?.cartQuantity);
-    console.log(productQuantity);
+    const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
+    console.log(cartQuantity);
 
     // mobile view
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,13 +19,7 @@ const Header = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
         setClick(!click);
     };
-    // cart product work
-    const [cartItems, setCartItems] = useState(3);
-    // Function to simulate adding items to the cart
-    const addToCart = () => {
-        setCartItems(cartItems + 1);
-    };
-
+    
     // user availability
     const [isUserAvailable, setUserAvailable] = useState(true);
 
@@ -69,9 +63,9 @@ const Header = () => {
                     <Link to="/cart">
                         <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
                     </Link>
-                    {productQuantity > 0 && (
+                    {cartQuantity > 0 && (
                         <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
-                            {productQuantity}
+                            {cartQuantity}
                         </span>
                     )}
                     {/* {cartItems > 0 && (

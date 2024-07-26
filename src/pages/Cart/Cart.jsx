@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
     const cartData = useSelector(state => state?.cart);
     const navigate = useNavigate();
+    // const history = 
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
     const [stripeToken, setStripeToken] = useState(null);
 
@@ -26,17 +27,23 @@ const Cart = () => {
                 console.log("Sending payment request to backend");
                 const res = await userRequest.post("/checkout/payment", {
                     tokenId: stripeToken?.id,
-                    amount: cartData?.total * 100,
+                    amount: ((cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))) * 100,
+                    // amount: cartData?.total * 100,
                 });
                 console.log("Payment Response:", res?.data);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Payment is successful!",
-                    showConfirmButton: false,
-                    timer: 2000,
-                });
-                navigate("/"); // Ensure correct navigation path
+                if (res?.data?.status === "succeeded") {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Payment is successful!",
+                        // text: res?.response?.data,
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                    navigate("/");
+                    // cartData?.cartQuantity=0
+                }
+                // window.location.reload();
             } catch (error) {
                 console.error("Payment Error:", error);
                 Swal.fire({
@@ -48,75 +55,26 @@ const Cart = () => {
                 });
             }
         };
-        if (stripeToken) makeRequest();
-    }, [stripeToken, cartData?.total, navigate]);
+        stripeToken && makeRequest();
+        // if (stripeToken) {
+        //     makeRequest();
+        // }
+    }, [stripeToken, cartData?.total, cartData?.cartQuantity, navigate]);
 
-    // // cart info
-    // const cartData = useSelector(state => state?.cart);
-    // console.log(cartData);
-    // const navigate = useNavigate();
-    // // stripe
-    // const KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-    // const [stripeToken, setStripeToken] = useState(null);
-
-    // const handleToken = (token) => {
-    //     setStripeToken(token);
+    
+    // const [isToggle, setToggle] = useState(1);
+    // const handleToggleWork = (id) => {
+    //     setToggle(id);
     // };
-    // console.log(stripeToken);
-
-    // useEffect(() => {
-    //     const makeRequest = async () => {
-    //         try {
-    //             console.log("Sending payment request to backend");
-
-    //             const res = await userRequest.post("/checkout/payment",
-    //             // const res = await axios.post("http://localhost:3000/api/checkout/payment",
-    //                 {
-    //                     tokenId: stripeToken?.id,
-    //                     amount: cartData?.total * 100,
-
-    //                 }
-    //             );
-    //             console.log("Payment Response:", res?.data);
-
-    //             Swal.fire({
-    //                 position: "center",
-    //                 icon: "success",
-    //                 title: "Payment is successful!",
-    //                 showConfirmButton: false,
-    //                 timer: 2000
-    //             });
-    //             navigate("/");
-    //         } catch (error) {
-    //             console.log(error);
-    //             console.error("Payment Error:", error);
-    //             Swal.fire({
-    //                 position: "center",
-    //                 icon: "error",
-    //                 title: "Payment failed!",
-    //                 text: error.response?.data?.message || error.message,
-    //                 showConfirmButton: true,
-    //             });
-    //         }
+    // const [countProductQuantity, setCountProductQuantity] = useState(1);
+    // const handleIncreaseProduct = () => {
+    //     setCountProductQuantity(countProductQuantity + 1);
+    // };
+    // const handleDecreaseProduct = () => {
+    //     if (countProductQuantity > 0) {
+    //         setCountProductQuantity(countProductQuantity - 1);
     //     }
-    //     if (stripeToken) makeRequest();
-
-    //     // stripeToken && makeRequest();
-    // }, [stripeToken, cartData?.total, navigate]);
-
-    const [isToggle, setToggle] = useState(1);
-    const handleToggleWork = (id) => {
-        setToggle(id);
-    };
-    const [countProductQuantity, setCountProductQuantity] = useState(1);
-    const handleIncreaseProduct = () => {
-        setCountProductQuantity(countProductQuantity + 1);
-    };
-    const handleDecreaseProduct = () => {
-        if (countProductQuantity > 0) {
-            setCountProductQuantity(countProductQuantity - 1);
-        }
-    };
+    // };
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
@@ -167,9 +125,9 @@ const Cart = () => {
                                                             <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                                                                 <p className="lg:text-lg md:text-base text-sm font-semibold">Quantity: </p>
                                                                 <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
-                                                                    <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
+                                                                    {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4> */}
                                                                     <h4 className="font-bold">{product?.countProductQuantity}</h4>
-                                                                    <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
+                                                                    {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4> */}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -226,10 +184,14 @@ const Cart = () => {
                             <StripeCheckout
                                 name="Stylish Fashion"
                                 image="https://i.ibb.co/v4gKvy3/Icon.png"
-                                // billingAddress
-                                // shippingAddress
-                                description={`Your total is $${cartData?.total}`}
-                                amount={cartData?.total * 100}
+                                billingAddress
+                                shippingAddress
+                                // description={`Your total is $${cartData?.total}`}
+                                // amount={cartData?.total * 100}
+                                description={`Your total is ${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}`}
+                                amount={`${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}` * 100}
+                                // description={`Your total is $${product?.price * product?.countProductQuantity}`}
+                                // amount={`${product?.price * product?.countProductQuantity}`}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >

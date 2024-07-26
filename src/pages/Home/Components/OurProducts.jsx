@@ -37,7 +37,7 @@ const OurProducts = () => {
         const getAllProducts = async () => {
             try {
                 const res = await axios.get("http://localhost:3000/api/products");
-                console.log(res?.data);
+                // console.log(res?.data);
                 setAllProducts(res?.data.slice(0, 12));
             } catch (error) {
                 console.log(error)

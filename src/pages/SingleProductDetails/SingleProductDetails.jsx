@@ -12,12 +12,12 @@ const SingleProductDetails = () => {
 
     const location = useLocation();
     const id = location.pathname.split("/")[2];
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [product, setProduct] = useState({});
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [countProductQuantity, setCountProductQuantity] = useState(1);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const getProduct = async () => {
