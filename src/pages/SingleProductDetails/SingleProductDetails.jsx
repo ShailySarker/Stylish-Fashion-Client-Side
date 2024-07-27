@@ -87,7 +87,7 @@ const SingleProductDetails = () => {
                     <p className="lg:mt-3 md:mt-2 mt-1 lg:text-lg/normal text-justify">{product?.desc}</p>
                     <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-purple-700 lg:mt-7 md:mt-5 mt-4">$ {product?.price}</h3>
                 </div>
-                <div className="lg:mt-7 md:mt-5 mt-4 flex flex-row lg:gap-16 md:gap-8 gap-0 md:justify-start justify-between">
+                <div className="lg:mt-7 md:mt-5 mt-4 flex md:flex-row md:flex-nowrap flex-wrap lg:gap-16 md:gap-8 gap-x-8 gap-y-3 md:justify-start">
                     {/* color */}
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <p className="lg:text-lg font-semibold">Color: </p>
