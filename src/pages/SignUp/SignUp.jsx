@@ -3,8 +3,11 @@ import companyLogo from "../../assets/Images/SignUp/logo.jpg";
 import banner from "../../assets/Images/SignUp/SignUp_banner.png";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { signUp } from "../../redux/api/apiCalls";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -22,7 +25,7 @@ const SignUp = () => {
         const form = event.target;
         const firstName = form.firstName.value;
         const lastName = form.lastName.value;
-        const userName = form.userName.value;
+        const username = form.username.value;
         const email = form.email.value;
         const password = form.password.value;
         const confirmPassword = form.confirmPassword.value;
@@ -51,8 +54,10 @@ const SignUp = () => {
 
         if (password === confirmPassword) {
             // If all validations pass
-            if (firstName && lastName && userName && email && password && password && confirmPassword) {
-                console.log(firstName, lastName, userName, email, password, confirmPassword);
+            if (firstName && lastName && username && email && password && password && confirmPassword) {
+                console.log(firstName, lastName, username, email, password, confirmPassword);
+                signUp(dispatch, { username, email, password });
+
                 form.reset();
                 alert('User SignUp Successfully !!!');
                 navigate('/login');
@@ -83,7 +88,7 @@ const SignUp = () => {
                             </div>
                             <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">UserName<span className="text-[#E41414]">*</span></h4>
-                                <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="userName" id="" required />
+                                <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="username" id="" required />
                             </div>
                             <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">Email<span className="text-[#E41414]">*</span></h4>
