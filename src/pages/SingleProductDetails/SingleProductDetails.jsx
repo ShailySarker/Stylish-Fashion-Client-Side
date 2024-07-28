@@ -18,7 +18,11 @@ const SingleProductDetails = () => {
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [productQuantity, setProductQuantity] = useState(1);
-
+    useEffect(() => {
+        if (product?.size?.length > 0) {
+            setSelectedSize(product.size[0]);
+        }
+    }, [product]);
     useEffect(() => {
         const getProduct = async () => {
             try {
@@ -110,13 +114,15 @@ const SingleProductDetails = () => {
                     {/* size */}
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <h4 className="lg:text-lg text-base font-semibold">Size:</h4>
-                        <select className="lg:py-2 md:py-[6px] py-1 lg:px-4 md:px-3 px-1 lg:text-lg text-base font-medium rounded-lg lg:w-28 md:w-24 w-[60px] border-2 border-[#787878]" onChange={(e) => setSelectedSize(e.target.value)}>
+                        <select
+                            className="lg:py-2 md:py-[6px] py-1 lg:px-4 md:px-3 px-1 lg:text-lg text-base font-medium rounded-lg lg:w-28 md:w-24 w-[60px] border-2 border-[#787878]"
+                            value={selectedSize}
+                            onChange={(e) => setSelectedSize(e.target.value)}
+                        >
                             {
-                                product?.size?.map(
-                                    eachSize => (
-                                        <option key={eachSize} value={eachSize}>{eachSize}</option>
-                                    )
-                                )
+                                product?.size?.map(eachSize => (
+                                    <option key={eachSize} value={eachSize}>{eachSize}</option>
+                                ))
                             }
                         </select>
                     </div>

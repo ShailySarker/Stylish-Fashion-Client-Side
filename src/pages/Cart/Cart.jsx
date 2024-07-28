@@ -8,14 +8,14 @@ import StripeCheckout from "react-stripe-checkout";
 import { userRequest } from "../../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { deleteProduct } from "../../redux/cartRedux";
+import { clearCart, deleteProduct } from "../../redux/cartRedux";
 
 const Cart = () => {
+    const dispatch = useDispatch();
     const cartData = useSelector(state => state?.cart);
     console.log(cartData)
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
-    // const history = 
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
     const handleToken = (token) => {
@@ -23,51 +23,104 @@ const Cart = () => {
         setStripeToken(token);
     };
 
-    // const cart
-    const dispatch = useDispatch();
-
+    // delete cart product
     const handleDeleteProduct = (cartItemId) => {
         dispatch(deleteProduct({ cartItemId }));
     };
 
-    useEffect(() => {
-        const makeRequest = async () => {
-            try {
-                console.log("Sending payment request to backend");
-                const res = await userRequest.post("/checkout/payment", {
-                    tokenId: stripeToken?.id,
-                    amount: ((cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))) * 100,
-                    // amount: cartData?.total * 100,
+    // handling payment
+    const makePaymentRequest = async (token, cartData) => {
+        try {
+            console.log("Sending payment request to backend");
+
+            const amount = Math.round(
+                (cartData?.total +
+                    (cartData?.cartQuantity * 5) +
+                    parseFloat((cartData?.total * 0.05).toFixed(2))) * 100
+            );
+
+            const res = await userRequest.post("/checkout/payment", {
+                tokenId: token?.id,
+                amount: amount,
+            });
+
+            console.log("Payment Response:", res?.data);
+
+            if (res?.data?.status === "succeeded") {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Payment is successful!",
+                    showConfirmButton: false,
+                    timer: 3000,
                 });
-                // cartData?.cartQuantity = 0;
-                console.log("Payment Response:", res?.data);
-                if (res?.data?.status === "succeeded") {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Payment is successful!",
-                        // text: res?.response?.data,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    navigate("/");
-                    // cartData();
-                }
-                // window.location.reload();
-            } catch (error) {
-                console.error("Payment Error:", error);
+
+                dispatch(clearCart()); // Clear cart after successful payment
+                navigate("/");
+            } else {
                 Swal.fire({
                     position: "center",
                     icon: "error",
                     title: "Payment failed!",
-                    text: error.response?.data?.message || error.message,
+                    text: "The payment could not be processed.",
                     showConfirmButton: true,
                 });
             }
-        };
-        stripeToken && makeRequest();
-        // }, [stripeToken, cartData?.total, navigate]);
-    }, [stripeToken, cartData?.total, cartData?.cartQuantity, navigate]);
+        } catch (error) {
+            console.error("Payment Error:", error);
+
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Payment failed!",
+                text: error.response?.data?.message || error.message,
+                showConfirmButton: true,
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (stripeToken) {
+            makePaymentRequest(stripeToken, cartData);
+        }
+    }, [stripeToken]);
+
+    // useEffect(() => {
+    //     const makeRequest = async () => {
+    //         try {
+    //             console.log("Sending payment request to backend");
+    //             const res = await userRequest.post("/checkout/payment", {
+    //                 tokenId: stripeToken?.id,
+    //                 amount: ((cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))) * 100,
+    //                 // amount: cartData?.total * 100,
+    //             });
+    //             // cartData?.cartQuantity = 0;
+    //             console.log("Payment Response:", res?.data);
+    //             if (res?.data?.status === "succeeded") {
+    //                 Swal.fire({
+    //                     position: "center",
+    //                     icon: "success",
+    //                     title: "Payment is successful!",
+    //                     // text: res?.response?.data,
+    //                     showConfirmButton: false,
+    //                     timer: 3000,
+    //                 });
+    //             }
+    //             // window.location.reload();
+    //         } catch (error) {
+    //             console.error("Payment Error:", error);
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "error",
+    //                 title: "Payment failed!",
+    //                 text: error.response?.data?.message || error.message,
+    //                 showConfirmButton: true,
+    //             });
+    //         }
+    //     };
+    //     stripeToken && makeRequest();
+    //     // }, [stripeToken, cartData?.total, navigate]);
+    // }, [stripeToken, cartData?.total, cartData?.cartQuantity, navigate]);
 
 
     // const [isToggle, setToggle] = useState(1);
@@ -121,14 +174,14 @@ const Cart = () => {
                                     <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:max-h-[540px] max-h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
                                         {
                                             cartData?.products?.map((product) => (
-                                                <div key={product?._id} className="flex items-start justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
+                                                <div key={product?.cartItemId} className="flex items-start justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
                                                     <div className="flex items-center justify-between w-[96%]">
                                                         <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
                                                             <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
                                                                 <img className="h-full w-full" src={product?.image} alt="product" />
                                                             </div>
                                                             <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
-                                                                <h4 className="md:block hidden lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> {product?._id}</h4>
+                                                                <h4 className="md:block hidden lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">ID:</span> {product?.cartItemId}</h4>
                                                                 <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Product Name:</span> {product?.title}</h4>
                                                                 <h4 className="lg:text-lg md:text-base text-sm font-medium"><span className="font-semibold">Size:</span> {product?.selectedSize}</h4>
                                                                 <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
@@ -181,31 +234,15 @@ const Cart = () => {
                                     </p>
                                 </div>
                             </div>
-                            {/* <StripeCheckout
-                                name="Stylish Fashion"
-                                // image="https://i.ibb.co/v4gKvy3/Icon.png"
-                                // billingAddress
-                                // shippingAddress
-                                description={`Your total is $ ${cartData?.total}`}
-                                amount={cartData?.total * 100}
-                                token={handleToken}
-                                stripeKey={KEY}
-                            >
-                                <button className="lg:mt-16 md:mt-14 mt-12 flex mx-auto justify-center md:py-2 py-[6px] lg:w-44 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
-                            </StripeCheckout> */}
-
-
                             <StripeCheckout
                                 name="Stylish Fashion"
                                 image="https://i.ibb.co/v4gKvy3/Icon.png"
-                                // billingAddress
-                                // shippingAddress
+                                billingAddress
+                                shippingAddress
                                 // description={`Your total is $${cartData?.total}`}
                                 // amount={cartData?.total * 100}
                                 description={`Your total is ${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}`}
                                 amount={`${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}` * 100}
-                                // description={`Your total is $${product?.price * product?.productQuantity}`}
-                                // amount={`${product?.price * product?.productQuantity}`}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >
