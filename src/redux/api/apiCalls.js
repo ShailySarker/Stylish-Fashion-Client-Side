@@ -5,25 +5,20 @@ export const login = async (dispatch, user) => {
     dispatch(loginStart());
     try {
         const res = await publicRequest.post("/auth/login", user)
+        localStorage.setItem("user", JSON.stringify(res?.data)); // Save user info to localStorage
         dispatch(loginSuccess(res?.data));
     } catch (error) {
-        dispatch(loginFailure());
+        const errorMsg = error.response?.data?.message || "Login failed";
+        console.error('Login Error:', errorMsg);
+        dispatch(loginFailure(errorMsg));
     }
 };
 
-// export const signUp = async (dispatch, user) => {
-//     dispatch(signUpStart());
-//     try {
-//         const res = await publicRequest.post("/auth/signUp", user);
-//         dispatch(signUpSuccess(res?.data));
-//     } catch (error) {
-//         dispatch(signUpFailure());
-//     }
-// };
 export const signUp = async (dispatch, user) => {
     dispatch(signUpStart());
     try {
         const res = await publicRequest.post("/auth/signUp", user);
+        localStorage.setItem("user", JSON.stringify(res?.data)); // Save user info to localStorage
         dispatch(signUpSuccess(res?.data));
     } catch (error) {
         const errorMsg = error.response?.data?.message || "Sign up failed";
@@ -33,5 +28,6 @@ export const signUp = async (dispatch, user) => {
 };
 
 export const logOut = (dispatch) => {
+    localStorage.removeItem("user"); // Remove user info from localStorage
     dispatch(logout());
 };

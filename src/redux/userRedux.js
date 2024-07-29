@@ -3,22 +3,25 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        currentUser: null,
+        currentUser: JSON.parse(localStorage.getItem('user')) || null,
         isFetching: false,
         error: false,
         signUpError: null,
+        loginError: null
     },
     reducers: {
         loginStart: (state) => {
             state.isFetching = true;
+            state.loginError = null;
         },
         loginSuccess: (state, action) => {
             state.isFetching = false;
             state.currentUser = action.payload;
+            // localStorage.setItem('user', JSON.stringify(action.payload));
         },
-        loginFailure: (state) => {
+        loginFailure: (state, action) => {
             state.isFetching = false;
-            state.error = true;
+            state.loginError = action.payload;  // Store login error message here
         },
         signUpStart: (state) => {
             state.isFetching = true;
@@ -35,10 +38,12 @@ const userSlice = createSlice({
 
         },
         logout: (state) => {
+            // state.currentUser = null;
+            // state.isFetching = false;
+            // state.error = false;
+            // state.signUpError = false;
             state.currentUser = null;
-            state.isFetching = false;
-            state.error = false;
-            state.signUpError = false;
+            // localStorage.removeItem('user');
         },
     }
 });

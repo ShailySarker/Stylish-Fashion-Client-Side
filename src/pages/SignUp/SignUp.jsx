@@ -6,13 +6,14 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { signUp } from "../../redux/api/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import Loader from "../../components/Loader";
 
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { signUpError } = useSelector((state) => state.user);
+    const { isFetching, signUpError } = useSelector((state) => state.user);
     console.log(signUpError)
     // password showing toggle
     const togglePasswordVisibility = () => {
@@ -68,13 +69,12 @@ const SignUp = () => {
                             showConfirmButton: false,
                             timer: 3000,
                         });
-                        // form.reset();
-                        // navigate('/login');
+                        form.reset();
+                        navigate('/login');
                     } else {
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            // title: signUpError.message,
                             title: "SignUp is failed!",
                             text: signUpError,
                             showConfirmButton: false,
@@ -100,6 +100,7 @@ const SignUp = () => {
     };
     return (
         <div className="flex justify-between items-center lg:gap-0 bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg md:h-screen lg:px-20 md:px-9 px-6 lg:py-2 md:py-7 py-5">
+            {isFetching && <Loader />} {/* Show loader when fetching */}
             <div className="lg:w-[57%] md:w-2/3 w-11/12 lg:mx-0 mx-auto">
                 <Link to="/">
                     <img className="lg:w-36 md:w-32 w-24 md:h-auto" src={companyLogo} alt="Stylish Fashion" />

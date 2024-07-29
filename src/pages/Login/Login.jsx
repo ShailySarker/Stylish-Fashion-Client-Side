@@ -6,19 +6,21 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/api/apiCalls";
 import Swal from "sweetalert2";
+import Loader from "../../components/Loader";
 
 const Login = () => {
+    const [passwordVisible, setPasswordVisible] = useState(false);
     // redux
     const dispatch = useDispatch();
-    const { isFatching, error } = useSelector((state) => state?.user);
+    const { isFetching, loginError } = useSelector((state) => state.user);
+    console.log(loginError)
     // login handling
     const navigate = useNavigate();
-    const [passwordVisible, setPasswordVisible] = useState(false);
     // password showing toggle
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
         const form = event.target;
         // const email = form.email.value;
@@ -35,9 +37,18 @@ const Login = () => {
         // If all validations pass
         try {
             // if (username && password) {
-                console.log(username, password);
-                // api call
-                login(dispatch, { username, password });
+            console.log(username, password);
+            // api call
+            await login(dispatch, { username, password });
+            if (loginError) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Login failed!",
+                    text: loginError,
+                    showConfirmButton: true,
+                });
+            } else {
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -45,22 +56,23 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 3000,
                 });
-                form.reset();
+                // form.reset();
                 navigate('/');
-            // }
+            }
         } catch (error) {
             console.error("Login Error:", error);
             Swal.fire({
                 position: "center",
                 icon: "error",
-                title: "Login is failed!",
-                text: error.response?.data?.message || error.message,
+                title: "Login failed!",
+                text: loginError || "An unexpected error occurred",
                 showConfirmButton: true,
             });
         }
     }
     return (
-        <div className="flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
+        <div className="relative flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
+            {isFetching && <Loader />} {/* Show loader when fetching */}
             <div className="lg:w-[45%] md:w-2/3 w-11/12 lg:mx-0 mx-auto">
                 <Link to="/">
                     <img className="lg:w-36 md:w-32 w-24 md:h-auto" src={companyLogo} alt="Stylish Fashion" />

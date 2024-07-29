@@ -9,6 +9,7 @@ import { FiLogOut } from "react-icons/fi";
 import { logOut } from "../redux/api/apiCalls";
 import { userRequest } from "../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
+import { logout } from "../redux/userRedux";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -30,8 +31,10 @@ const Header = () => {
     // handle logout
     const handleLogout = async () => {
         try {
-            await userRequest.post('/auth/logout');
-            logOut(dispatch);
+            // await userRequest.post('/auth/logout');
+            // logOut(dispatch);
+            await dispatch(logout());
+
             Swal.fire({
                 position: "center",
                 icon: "success",
