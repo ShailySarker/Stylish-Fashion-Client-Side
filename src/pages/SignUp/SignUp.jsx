@@ -4,14 +4,16 @@ import banner from "../../assets/Images/SignUp/SignUp_banner.png";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { signUp } from "../../redux/api/apiCalls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { signUpError } = useSelector((state) => state.user);
+    console.log(signUpError)
     // password showing toggle
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
@@ -20,7 +22,7 @@ const SignUp = () => {
         setConfirmPasswordVisible((prev) => !prev);
     };
     // handleSignUp form handler
-    const handleSignUp = (event) => {
+    const handleSignUp = async (event) => {
         event.preventDefault();
         const form = event.target;
         const firstName = form.firstName.value;
@@ -53,18 +55,46 @@ const SignUp = () => {
         }
 
         if (password === confirmPassword) {
-            // If all validations pass
-            if (firstName && lastName && username && email && password && password && confirmPassword) {
-                console.log(firstName, lastName, username, email, password, confirmPassword);
-                signUp(dispatch, { username, email, password });
+            if (firstName && lastName && username && email && password && confirmPassword) {
+                try {
+                    const newUser = { username, email, password };
+                    await signUp(dispatch, newUser);
 
-                form.reset();
-                alert('User SignUp Successfully !!!');
-                navigate('/login');
-                // Add your sign-up logic here (e.g., sending data to the server)
+                    if (!signUpError) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'User SignUp Successfully !!!',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        });
+                        // form.reset();
+                        // navigate('/login');
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            // title: signUpError.message,
+                            title: "SignUp is failed!",
+                            text: signUpError,
+                            showConfirmButton: false,
+                            timer: 3000,
+                        });
+                    }
+                } catch (error) {
+                    console.log('Error in sign-up:', error);
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'SignUp Failed !!!',
+                        text: error.response?.data?.message || error.message,
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                }
             }
-        } else{
-            alert("Confirm Password is not same as Password")
+        } else {
+            alert("Confirm Password is not same as Password");
         }
 
     };

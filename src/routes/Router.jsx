@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
 import NotFound from "../pages/NotFound/NotFound";
+import MyAccount from "../pages/MyAccount/MyAccount";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -118,6 +119,13 @@ const router = createBrowserRouter(
                         <CancellationAndRefundPolicy />
                     </Suspense>
                 },
+                {
+                    path: "/myAccount",
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <MyAccount />
+                    </Suspense>
+                },
             ]
         },
         {
@@ -137,10 +145,10 @@ const router = createBrowserRouter(
         {
             path: "/*",
             element: <Suspense fallback={
-              <LazyLoader />}>
-              <NotFound />
+                <LazyLoader />}>
+                <NotFound />
             </Suspense>
-          }
+        }
     ]
 );
 

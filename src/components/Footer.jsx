@@ -2,10 +2,14 @@ import { FaDiscord, FaEnvelope, FaFacebook, FaInstagram, FaPhone, FaYoutube } fr
 import { NavLink } from "react-router-dom";
 import companyLogo from "../assets/Images/Footer/logo.jpg";
 import moment from "moment";
+import { useSelector } from "react-redux";
+
 const Footer = () => {
+    const userAvailability = useSelector(state => state?.user?.currentUser !== null);
+    console.log(userAvailability);
     return (
         <div className="bg-gradient-to-r from-blue-700 to-purple-900 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14">
-        {/* <div className="bg-gradient-to-r from-pink-600 to-purple-800 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14"> */}
+            {/* <div className="bg-gradient-to-r from-pink-600 to-purple-800 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14"> */}
             <div className=" lg:py-11 md:py-8 py-6 text-white lg:flex lg:flex-row lg:justify-between grid md:grid-cols-2 grid-cols-1 lg:gap-0 md:gap-x-24 md:gap-y-14 gap-6 lg:pb-6 md:pb-2 pb-0 lg:px-12 md:px-7 px-5">
                 <div className="md:mt-2 flex flex-col md:items-start items-center lg:w-[22%]">
                     <img className="lg:w-40 md:w-36 w-32 md:h-auto mx-auto" src={companyLogo} alt="Treasures of Tech" />
@@ -16,25 +20,30 @@ const Footer = () => {
                 <div>
                     <h2 className="lg:text-2xl md:text-xl text-lg font-bold">Quick Links</h2>
                     <div className="flex md:gap-20 gap-28 lg:mt-7 md:mt-5 mt-3">
-                        {/* only visible for user signUp / signIn */}
-                        <div className="flex flex-col lg:gap-3 md:gap-2 gap-[6px] lg:text-lg md:text-base text-sm font-medium">
-                            <ul className="">
-                                <NavLink to='/cart' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                }>Cart</NavLink>
-                            </ul>
-                            <ul className="">
-                                <NavLink to='/myAccount' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                }>My Account</NavLink>
-                            </ul>
-                            <ul className="">
-                                <NavLink to='/orderTracking' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                }>Order Tracking</NavLink>
-                            </ul>
-                            <ul className="">
-                                <NavLink to='/wishlist' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                }>Wishlist</NavLink>
-                            </ul>
-                        </div>
+                        {
+                            userAvailability &&
+                            <>
+                                {/* only visible for user signUp / signIn */}
+                                <div className="flex flex-col lg:gap-3 md:gap-2 gap-[6px] lg:text-lg md:text-base text-sm font-medium">
+                                    <ul className="">
+                                        <NavLink to='/cart' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>Cart</NavLink>
+                                    </ul>
+                                    <ul className="">
+                                        <NavLink to='/myAccount' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>My Account</NavLink>
+                                    </ul>
+                                    <ul className="">
+                                        <NavLink to='/orderTracking' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>Order Tracking</NavLink>
+                                    </ul>
+                                    <ul className="">
+                                        <NavLink to='/wishlist' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>Wishlist</NavLink>
+                                    </ul>
+                                </div>
+                            </>
+                        }
                         <div className="flex flex-col lg:gap-3 md:gap-2 gap-[6px] lg:text-lg md:text-base text-sm font-medium">
                             <ul className="">
                                 <NavLink to='/allProducts' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""

@@ -4,10 +4,15 @@ import logo1 from "../assets/Images/Header/logo.jpg";
 import { FaBars, FaSearch } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
+import { logOut } from "../redux/api/apiCalls";
+import { userRequest } from "../helpers/axios/requestMethod";
+import Swal from "sweetalert2";
 
 const Header = () => {
+    const dispatch = useDispatch();
+
     // redux
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
     console.log(cartQuantity);
@@ -21,10 +26,32 @@ const Header = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
         setClick(!click);
     };
-    
-    const handleLogout = () =>{
-        console.log("hi")
-    }
+
+    // handle logout
+    const handleLogout = async () => {
+        try {
+            await userRequest.post('/auth/logout');
+            logOut(dispatch);
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Logout successfully!",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        } catch (error) {
+            console.error('Logout failed:', error);
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Logout failed!",
+                text: error.response?.data?.message || error.message,
+                showConfirmButton: true,
+            });
+        }
+    };
+
+
     // // user availability
     // const [isUserAvailable, setUserAvailable] = useState(false);
 
@@ -54,16 +81,16 @@ const Header = () => {
                 </div>
             </div>
             {/* medium device search bar */}
-            <div className="relative flex border-2 rounded-lg lg:hidden md:block hidden">
+            {/* <div className="relative flex border-2 rounded-lg lg:hidden md:block hidden">
                 <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500 lg:text-base text-sm" />
                 <input className="py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-72 w-10 lg:font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
-            </div>
+            </div> */}
             <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
                 {/* large device search bar */}
-                <div className="relative flex border-2 rounded-lg lg:block hidden">
+                {/* <div className="relative flex border-2 rounded-lg lg:block hidden">
                     <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
-                </div>
+                </div> */}
                 <div className="flex">
                     <Link to="/cart">
                         <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />

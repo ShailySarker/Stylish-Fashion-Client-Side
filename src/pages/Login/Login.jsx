@@ -33,8 +33,8 @@ const Login = () => {
         // }
 
         // If all validations pass
-        if (username && password) {
-            try {
+        try {
+            // if (username && password) {
                 console.log(username, password);
                 // api call
                 login(dispatch, { username, password });
@@ -47,18 +47,18 @@ const Login = () => {
                 });
                 form.reset();
                 navigate('/');
-            } catch (error) {
-                console.error("Login Error:", error);
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Login is failed!",
-                    text: error.response?.data?.message || error.message,
-                    showConfirmButton: true,
-                });
-            }
+            // }
+        } catch (error) {
+            console.error("Login Error:", error);
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Login is failed!",
+                text: error.response?.data?.message || error.message,
+                showConfirmButton: true,
+            });
         }
-    };
+    }
     return (
         <div className="flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
             <div className="lg:w-[45%] md:w-2/3 w-11/12 lg:mx-0 mx-auto">
