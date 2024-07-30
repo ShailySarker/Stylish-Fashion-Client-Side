@@ -78,7 +78,7 @@ const Banner = () => {
                         <div className="lg:text-left text-center">
                             <p className="lg:text-5xl/normal md:text-4xl/normal text-3xl font-bold">Welcome to  <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-800 italic" style={{ fontFamily: "Playwrite NL" }}>{singleBanner?.bannerTitle}</span></p>
                             <p className="font-medium lg:mt-6 md:mt-4 mt-3 text-justify text-[#121212] lg:text-xl/normal md:text-lg text-base"> {singleBanner?.description}</p>
-                            <Link to="" className="">
+                            <Link to="/allProducts" className="">
                                 <button className="lg:mt-14 md:mt-7 mt-7 py-2 lg:w-40 md:w-36 w-32 text-white font-semibold lg:text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-600 to-purple-800">Shop Now</button>
                             </Link>
                         </div>
