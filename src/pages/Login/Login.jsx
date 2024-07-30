@@ -40,15 +40,7 @@ const Login = () => {
             console.log(username, password);
             // api call
             await login(dispatch, { username, password });
-            if (loginError) {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Login failed!",
-                    text: loginError,
-                    showConfirmButton: true,
-                });
-            } else {
+            if (!loginError) {
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -58,6 +50,14 @@ const Login = () => {
                 });
                 // form.reset();
                 navigate('/');
+            } else {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Login failed!",
+                    text: loginError,
+                    showConfirmButton: true,
+                });
             }
         } catch (error) {
             console.error("Login Error:", error);
