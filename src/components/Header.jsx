@@ -59,8 +59,8 @@ const Header = () => {
     // const [isUserAvailable, setUserAvailable] = useState(false);
 
     return (
-        <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
-            {/* <div style={{zIndex:9999}} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}
+        <div style={{ zIndex: 9999 }} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
+            {/* <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}
             <div className="flex flex-row gap-16">
                 <div>
                     <Link to="/">
