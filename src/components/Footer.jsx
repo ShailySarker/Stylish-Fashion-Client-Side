@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const Footer = () => {
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
-    console.log(userAvailability);
+    // console.log(userAvailability);
     return (
         <div className="bg-gradient-to-r from-blue-700 to-purple-900 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14">
             {/* <div className="bg-gradient-to-r from-pink-600 to-purple-800 text-white flex flex-col gap-8 lg:mt-20 md:mt-16 mt-14"> */}

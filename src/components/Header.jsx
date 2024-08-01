@@ -6,8 +6,6 @@ import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
-import { logOut } from "../redux/api/apiCalls";
-import { userRequest } from "../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { logout } from "../redux/userRedux";
 
@@ -18,9 +16,9 @@ const Header = () => {
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
     console.log(cartQuantity);
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
-    console.log(userAvailability);
+    // console.log(userAvailability);
     const userInfo = useSelector(state => state?.user?.currentUser);
-    console.log(userInfo);
+    // console.log(userInfo);
 
     // mobile view
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -89,16 +87,26 @@ const Header = () => {
                     <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
                 </div> */}
-                {/* <div className="flex">
-                    <Link to="/cart">
-                        <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
-                    </Link>
-                    {cartQuantity > 0 && (
-                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
-                            {cartQuantity}
-                        </span>
-                    )}
-                </div> */}
+                <div className="flex lg:hidden visible">
+                    {
+                        userAvailability &&
+                        <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
+                            {
+                                userInfo && <p className="font-medium lg:text-lg md:text-base text-sm flex gap-1">
+                                    <span className="md:block hidden">Welcome, </span><span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
+                                </p>
+                            }
+                            <Link to="/cart">
+                                <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
+                            </Link>
+                            {cartQuantity > 0 && (
+                                <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
+                                    {cartQuantity}
+                                </span>
+                            )}
+                        </div>
+                    }
+                </div>
                 {/* large device */}
                 <div className="lg:block hidden">
                     {
@@ -150,7 +158,7 @@ const Header = () => {
                 </div>
                 {/* Mobile menu */}
                 {isMobileMenuOpen && (
-                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute md:top-16 top-[72px] right-4 px-4 md:py-6 py-4 md:w-[168px] w-36 rounded-md shadow-lg border-4 border-purple-800 bg-white">
+                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute md:top-16 top-[72px] right-4 px-4 md:py-6 py-4 md:w-44 w-36 rounded-md shadow-lg border-4 border-purple-800 bg-white">
                         <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
                             <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Men</NavLink>
@@ -163,41 +171,27 @@ const Header = () => {
                             <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
                             }>Kids</NavLink>
                         </ul>
-                        {
-                            userAvailability ?
-                                <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
-                                    <div>
-                                        {
-                                            userInfo && <p className="font-medium lg:text-lg">
-                                                Welcome, <span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
-                                            </p>
-                                        }
-                                    </div>
-                                    <div className="flex">
-                                        <Link to="/cart">
-                                            <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
+                        <div className="w-full">
+                            {
+                                userAvailability ?
+                                    <>
+                                        <Link to="/">
+                                            <button onClick={handleLogout} className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
+                                                <FiLogOut />
+                                                Logout
+                                            </button>
                                         </Link>
-                                        {cartQuantity > 0 && (
-                                            <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
-                                                {cartQuantity}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <Link to="/">
-                                        <button onClick={handleLogout} className="md:py-2 py-[6px] md:w-32 w-[105px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
-                                            <FiLogOut />
-                                            Logout
-                                        </button>
-                                    </Link>
-                                </div> :
-                                <>
-                                    <Link to="/login">
-                                        <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                                            Login
-                                        </button>
-                                    </Link>
-                                </>
-                        }
+                                    </>
+                                    :
+                                    <>
+                                        <Link to="/login">
+                                            <button className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                                Login
+                                            </button>
+                                        </Link>
+                                    </>
+                            }
+                        </div>
                     </div>
                 )}
 
