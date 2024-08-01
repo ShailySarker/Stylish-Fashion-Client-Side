@@ -19,6 +19,8 @@ const Header = () => {
     console.log(cartQuantity);
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
     console.log(userAvailability);
+    const userInfo = useSelector(state => state?.user?.currentUser);
+    console.log(userInfo);
 
     // mobile view
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,10 +33,7 @@ const Header = () => {
     // handle logout
     const handleLogout = async () => {
         try {
-            // await userRequest.post('/auth/logout');
-            // logOut(dispatch);
             await dispatch(logout());
-
             Swal.fire({
                 position: "center",
                 icon: "success",
@@ -48,15 +47,11 @@ const Header = () => {
                 position: "center",
                 icon: "error",
                 title: "Logout failed!",
-                text: error.response?.data?.message || error.message,
+                text: error.response?.data?.message || error?.message,
                 showConfirmButton: true,
             });
         }
     };
-
-
-    // // user availability
-    // const [isUserAvailable, setUserAvailable] = useState(false);
 
     return (
         <div style={{ zIndex: 9999 }} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
@@ -94,7 +89,7 @@ const Header = () => {
                     <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
                     <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
                 </div> */}
-                <div className="flex">
+                {/* <div className="flex">
                     <Link to="/cart">
                         <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
                     </Link>
@@ -103,19 +98,29 @@ const Header = () => {
                             {cartQuantity}
                         </span>
                     )}
-                    {/* {cartItems > 0 && (
-                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
-                            {cartItems}
-                        </span>
-                    )} */}
-                    {/* <button onClick={addToCart} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Add to Cart</button> */}
-
-                </div>
+                </div> */}
                 {/* large device */}
                 <div className="lg:block hidden">
                     {
                         userAvailability ?
-                            <>
+                            <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
+                                <div>
+                                    {
+                                        userInfo && <p className="font-medium text-lg">
+                                            Welcome, <span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
+                                        </p>
+                                    }
+                                </div>
+                                <div className="flex">
+                                    <Link to="/cart">
+                                        <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
+                                    </Link>
+                                    {cartQuantity > 0 && (
+                                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
+                                            {cartQuantity}
+                                        </span>
+                                    )}
+                                </div>
                                 {/* <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/> */}
                                 <Link to="/">
                                     <button onClick={handleLogout} className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
@@ -123,7 +128,7 @@ const Header = () => {
                                         Logout
                                     </button>
                                 </Link>
-                            </> :
+                            </div> :
                             <>
                                 <Link to="/login">
                                     <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
@@ -160,14 +165,31 @@ const Header = () => {
                         </ul>
                         {
                             userAvailability ?
-                                <>
+                                <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
+                                    <div>
+                                        {
+                                            userInfo && <p className="font-medium lg:text-lg">
+                                                Welcome, <span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
+                                            </p>
+                                        }
+                                    </div>
+                                    <div className="flex">
+                                        <Link to="/cart">
+                                            <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
+                                        </Link>
+                                        {cartQuantity > 0 && (
+                                            <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
+                                                {cartQuantity}
+                                            </span>
+                                        )}
+                                    </div>
                                     <Link to="/">
                                         <button onClick={handleLogout} className="md:py-2 py-[6px] md:w-32 w-[105px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
                                             <FiLogOut />
                                             Logout
                                         </button>
                                     </Link>
-                                </> :
+                                </div> :
                                 <>
                                     <Link to="/login">
                                         <button className="md:py-2 py-[6px] md:w-32 w-24 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">

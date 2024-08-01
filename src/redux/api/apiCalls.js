@@ -5,16 +5,10 @@ export const login = async (dispatch, user) => {
     dispatch(loginStart());
     try {
         const res = await publicRequest.post("/auth/login", user)
-        // localStorage.setItem("user", JSON.stringify(res?.data)); // Save user info to localStorage
         dispatch(loginSuccess(res?.data));
     } catch (error) {
         dispatch(loginFailure(error?.response?.data?.message || error?.message));
     }
-    // catch (error) {
-    //     const errorMsg = error.response?.data?.message || "Login failed";
-    //     console.error('Login Error:', errorMsg);
-    //     dispatch(loginFailure(errorMsg));
-    // }
 };
 
 export const signUp = async (dispatch, user) => {
@@ -31,6 +25,5 @@ export const signUp = async (dispatch, user) => {
 };
 
 export const logOut = (dispatch) => {
-    // localStorage.removeItem("user"); // Remove user info from localStorage
     dispatch(logout());
 };

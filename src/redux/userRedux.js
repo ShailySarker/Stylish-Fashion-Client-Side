@@ -33,15 +33,10 @@ const userSlice = createSlice({
         },
         signUpFailure: (state, action) => {
             state.isFetching = false;
-            // state.signUpError = true;
             state.signUpError = action.payload; // Store the error message here
 
         },
         logout: (state) => {
-            // state.currentUser = null;
-            // state.isFetching = false;
-            // state.error = false;
-            // state.signUpError = false;
             state.currentUser = null;
             localStorage.removeItem('user');
         },
