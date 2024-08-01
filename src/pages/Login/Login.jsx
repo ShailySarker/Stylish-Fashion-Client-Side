@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import banner from "../../assets/Images/Login/fashion-model-kids-free-photo-removebg-preview.png";
 import companyLogo from "../../assets/Images/Login/logo.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/api/apiCalls";
@@ -10,66 +10,44 @@ import Loader from "../../components/Loader";
 
 const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-    // redux
     const dispatch = useDispatch();
-    const { isFetching, loginError } = useSelector((state) => state.user);
-    console.log(loginError)
-    // login handling
+    const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
     const navigate = useNavigate();
-    // password showing toggle
+
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
+
     const handleLogin = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        // const email = form.email.value;
-        const username = form.username.value;
-        const password = form.password.value;
+        event?.preventDefault();
+        const form = event?.target;
+        const username = form?.username?.value;
+        const password = form?.password?.value;
 
-        // const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+        await login(dispatch, { username, password });
+    };
 
-        // if (!gmailRegex.test(email)) {
-        //     alert("Email is not in the correct format!");
-        //     return;
-        // }
-
-        // If all validations pass
-        try {
-            // if (username && password) {
-            console.log(username, password);
-            // api call
-            await login(dispatch, { username, password });
-            if (!loginError) {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Login is successful!",
-                    showConfirmButton: false,
-                    timer: 3000,
-                });
-                // form.reset();
-                navigate('/');
-            } else {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Login failed!",
-                    text: loginError,
-                    showConfirmButton: true,
-                });
-            }
-        } catch (error) {
-            console.error("Login Error:", error);
+    useEffect(() => {
+        if (currentUser) {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Login is successful!",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+            navigate('/');
+        } else if (loginError) {
             Swal.fire({
                 position: "center",
                 icon: "error",
                 title: "Login failed!",
-                text: loginError || "An unexpected error occurred",
+                text: loginError,
                 showConfirmButton: true,
             });
         }
-    }
+    }, [currentUser, loginError, navigate]);
+
     return (
         <div className="relative flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
             {isFetching && <Loader />} {/* Show loader when fetching */}

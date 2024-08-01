@@ -17,7 +17,7 @@ const userSlice = createSlice({
         loginSuccess: (state, action) => {
             state.isFetching = false;
             state.currentUser = action.payload;
-            // localStorage.setItem('user', JSON.stringify(action.payload));
+            localStorage.setItem('user', JSON.stringify(action.payload));
         },
         loginFailure: (state, action) => {
             state.isFetching = false;
@@ -43,7 +43,7 @@ const userSlice = createSlice({
             // state.error = false;
             // state.signUpError = false;
             state.currentUser = null;
-            // localStorage.removeItem('user');
+            localStorage.removeItem('user');
         },
     }
 });
