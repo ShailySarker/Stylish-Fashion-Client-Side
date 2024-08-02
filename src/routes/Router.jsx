@@ -2,10 +2,7 @@ import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
-import NotFound from "../pages/NotFound/NotFound";
-import MyAccount from "../pages/MyAccount/MyAccount";
 import PrivateRouter from "./PrivateRouter";
-import Wishlist from "../pages/Wishlist/Wishlist";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -22,6 +19,10 @@ const AboutUs = React.lazy(() => import("../pages/AboutUs/AboutUs"));
 const TermsAndConditions = React.lazy(() => import("../pages/TermsAndConditions/TermsAndConditions"));
 const PrivacyPolicy = React.lazy(() => import("../pages/PrivacyPolicy/PrivacyPolicy"));
 const CancellationAndRefundPolicy = React.lazy(() => import("../pages/CancellationAndRefundPolicy/CancellationAndRefundPolicy"));
+const NotFound = React.lazy(() => import("../pages/NotFound/NotFound"));
+const MyAccount = React.lazy(() => import("../pages/MyAccount/MyAccount"));
+const Wishlist = React.lazy(() => import("../pages/Wishlist/Wishlist"));
+const OrderTracking = React.lazy(() => import("../pages/OrderTracking/OrderTracking"));
 
 const router = createBrowserRouter(
     [
@@ -143,6 +144,16 @@ const router = createBrowserRouter(
                         </PrivateRouter>
                     </Suspense>
                 },
+                {
+                    path: "/orderTracking",
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <PrivateRouter>
+                            <OrderTracking />
+                        </PrivateRouter>
+                    </Suspense>
+                },
+                
             ]
         },
         {
