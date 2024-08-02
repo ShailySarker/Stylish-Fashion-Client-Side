@@ -5,6 +5,7 @@ import MainLayout from "../layouts/MainLayout";
 import NotFound from "../pages/NotFound/NotFound";
 import MyAccount from "../pages/MyAccount/MyAccount";
 import PrivateRouter from "./PrivateRouter";
+import Wishlist from "../pages/Wishlist/Wishlist";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -130,6 +131,15 @@ const router = createBrowserRouter(
                         <LazyLoader />}>
                         <PrivateRouter>
                             <MyAccount />
+                        </PrivateRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/wishlist",
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <PrivateRouter>
+                            <Wishlist />
                         </PrivateRouter>
                     </Suspense>
                 },
