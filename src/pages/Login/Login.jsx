@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import banner from "../../assets/Images/Login/fashion-model-kids-free-photo-removebg-preview.png";
 import companyLogo from "../../assets/Images/Login/logo.jpg";
 import { useEffect, useState } from "react";
@@ -13,7 +13,9 @@ const Login = () => {
     const dispatch = useDispatch();
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+    
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
@@ -36,7 +38,8 @@ const Login = () => {
                 showConfirmButton: false,
                 timer: 3000,
             });
-            navigate('/');
+            navigate(from, { replace: true });
+            // navigate('/');
         } else if (loginError) {
             Swal.fire({
                 position: "center",
@@ -46,7 +49,7 @@ const Login = () => {
                 showConfirmButton: true,
             });
         }
-    }, [currentUser, loginError, navigate]);
+    }, [currentUser, loginError, from, navigate]);
 
     return (
         <div className="relative flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">

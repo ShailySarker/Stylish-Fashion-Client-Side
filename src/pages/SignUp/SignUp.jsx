@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import companyLogo from "../../assets/Images/SignUp/logo.jpg";
 import banner from "../../assets/Images/SignUp/SignUp_banner.png";
 import { useState } from "react";
@@ -13,7 +13,9 @@ const SignUp = () => {
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isFetching, signUpError } = useSelector((state) => state.user);
+    // const location = useLocation();
+    // const from = location.state?.from?.pathname || '/';
+    const { isFetching, signUpError } = useSelector((state) => state?.user);
     console.log(signUpError)
     // password showing toggle
     const togglePasswordVisibility = () => {
@@ -24,14 +26,14 @@ const SignUp = () => {
     };
     // handleSignUp form handler
     const handleSignUp = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const firstName = form.firstName.value;
-        const lastName = form.lastName.value;
-        const username = form.username.value;
-        const email = form.email.value;
-        const password = form.password.value;
-        const confirmPassword = form.confirmPassword.value;
+        event?.preventDefault();
+        const form = event?.target;
+        const firstName = form?.firstName?.value;
+        const lastName = form?.lastName?.value;
+        const username = form?.username?.value;
+        const email = form?.email?.value;
+        const password = form?.password?.value;
+        const confirmPassword = form?.confirmPassword?.value;
 
         const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
         if (!gmailRegex.test(email)) {

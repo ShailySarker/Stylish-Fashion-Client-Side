@@ -4,6 +4,7 @@ import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
 import NotFound from "../pages/NotFound/NotFound";
 import MyAccount from "../pages/MyAccount/MyAccount";
+import PrivateRouter from "./PrivateRouter";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -60,14 +61,18 @@ const router = createBrowserRouter(
                     path: "/product/:id",
                     element: <Suspense fallback={
                         <LazyLoader />}>
-                        <SingleProductDetails />
+                        <PrivateRouter>
+                            <SingleProductDetails />
+                        </PrivateRouter>
                     </Suspense>
                 },
                 {
                     path: "/cart",
                     element: <Suspense fallback={
                         <LazyLoader />}>
-                        <Cart />
+                        <PrivateRouter>
+                            <Cart />
+                        </PrivateRouter>
                     </Suspense>
                 },
                 {
@@ -123,7 +128,9 @@ const router = createBrowserRouter(
                     path: "/myAccount",
                     element: <Suspense fallback={
                         <LazyLoader />}>
-                        <MyAccount />
+                        <PrivateRouter>
+                            <MyAccount />
+                        </PrivateRouter>
                     </Suspense>
                 },
             ]

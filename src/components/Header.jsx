@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { logout } from "../redux/userRedux";
+import { logOut } from "../redux/api/apiCalls";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -31,7 +32,8 @@ const Header = () => {
     // handle logout
     const handleLogout = async () => {
         try {
-            await dispatch(logout());
+            await logOut(dispatch);
+            // await dispatch(logout());
             Swal.fire({
                 position: "center",
                 icon: "success",

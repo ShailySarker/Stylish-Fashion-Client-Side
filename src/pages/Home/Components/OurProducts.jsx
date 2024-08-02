@@ -26,9 +26,9 @@ import product25 from "../../../assets/Images/Home/OurProducts_girlSkirtSet.jpg"
 import product26 from "../../../assets/Images/Home/OurProducts_girlWinterDress.jpg";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { MdArrowOutward } from "react-icons/md";
+import { publicRequest } from "../../../helpers/axios/requestMethod";
 
 const OurProducts = () => {
     const [allProducts, setAllProducts] = useState([]);
@@ -36,8 +36,8 @@ const OurProducts = () => {
     useEffect(() => {
         const getAllProducts = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/products");
-                // console.log(res?.data);
+                const res = await publicRequest.get("/products");
+                console.log(res?.data);
                 setAllProducts(res?.data.slice(0, 12));
             } catch (error) {
                 console.log(error)
@@ -49,7 +49,7 @@ const OurProducts = () => {
     return (
         <>
             {
-                allProducts.length > 0 &&
+                allProducts?.length > 0 &&
                 <div className="lg:px-20 md:px-12 px-6 lg:mt-6 md:mt-6 mt-6">
                     {/* <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14"> */}
                     <div>
