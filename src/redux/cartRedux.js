@@ -88,22 +88,88 @@
         
 
 
+// import { createSlice } from "@reduxjs/toolkit";
+// import { v4 as uuidv4 } from 'uuid';
+
+// const cartSlice = createSlice({
+//     name: "cart",
+//     initialState: {
+//         products: [],
+//         cartQuantity: 0,
+//         total: 0
+//     },
+//     reducers: {
+//         addProduct: (state, action) => {
+//             const newProduct = { ...action.payload, cartItemId: uuidv4() }; // generate unique id
+//             state.products.push(newProduct);
+//             state.cartQuantity += 1;
+//             state.total += action.payload.price * action.payload.productQuantity;
+//         },
+//         deleteProduct: (state, action) => {
+//             const cartItemId = action.payload.cartItemId;
+//             const productIndex = state.products.findIndex(p => p.cartItemId === cartItemId);
+
+//             if (productIndex !== -1) {
+//                 const product = state.products[productIndex];
+//                 state.products.splice(productIndex, 1);
+//                 state.cartQuantity -= 1;
+//                 state.total -= product.price * product.productQuantity;
+//             }
+//         },
+//         clearCart: (state) => {
+//             state.products = [];
+//             state.cartQuantity = 0;
+//             state.total = 0;
+//         }
+//     }
+// });
+
+// export const { addProduct, deleteProduct, clearCart } = cartSlice.actions;
+// export default cartSlice.reducer;
+
+
+//////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 
+// Helper function to load cart state from localStorage
+const loadCartState = () => {
+    try {
+        const serializedState = localStorage.getItem("cart");
+        return serializedState ? JSON.parse(serializedState) : undefined;
+    } catch (error) {
+        console.error("Could not load cart state from localStorage", error);
+        return undefined;
+    }
+};
+
+// Helper function to save cart state to localStorage
+const saveCartState = (state) => {
+    try {
+        const serializedState = JSON.stringify(state);
+        localStorage.setItem("cart", serializedState);
+    } catch (error) {
+        console.error("Could not save cart state to localStorage", error);
+    }
+};
+
+const initialState = loadCartState() || {
+    products: [],
+    cartQuantity: 0,
+    total: 0
+};
+
 const cartSlice = createSlice({
     name: "cart",
-    initialState: {
-        products: [],
-        cartQuantity: 0,
-        total: 0
-    },
+    initialState,
     reducers: {
         addProduct: (state, action) => {
             const newProduct = { ...action.payload, cartItemId: uuidv4() }; // generate unique id
             state.products.push(newProduct);
             state.cartQuantity += 1;
             state.total += action.payload.price * action.payload.productQuantity;
+            saveCartState(state);
         },
         deleteProduct: (state, action) => {
             const cartItemId = action.payload.cartItemId;
@@ -114,12 +180,14 @@ const cartSlice = createSlice({
                 state.products.splice(productIndex, 1);
                 state.cartQuantity -= 1;
                 state.total -= product.price * product.productQuantity;
+                saveCartState(state);
             }
         },
         clearCart: (state) => {
             state.products = [];
             state.cartQuantity = 0;
             state.total = 0;
+            saveCartState(state);
         }
     }
 });
