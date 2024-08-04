@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import product from "../../assets/Images/MenFashion/MenProducts_menCap.jpg";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
-import { publicRequest } from "../../helpers/axios/requestMethod";
+import { publicRequest, userRequest } from "../../helpers/axios/requestMethod";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addProduct } from "../../redux/cartRedux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCart } from "../../redux/api/cartCalls";
 
 const SingleProductDetails = () => {
 
@@ -14,6 +15,12 @@ const SingleProductDetails = () => {
     const id = location.pathname.split("/")[2];
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    // Get user info and cart data from Redux store
+    const currentUser = useSelector((state) => state?.user?.currentUser);
+    console.log("Current User:", currentUser);
+
+    const cartData = useSelector((state) => state?.cart);
+
     const [product, setProduct] = useState({});
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
@@ -44,7 +51,7 @@ const SingleProductDetails = () => {
             setProductQuantity(productQuantity - 1);
         }
     };
-
+    
     const handleAddToCart = () => {
         if (selectedColor) {
             if (selectedSize) {
