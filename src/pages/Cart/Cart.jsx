@@ -73,7 +73,7 @@ const Cart = () => {
                 position: "center",
                 icon: "error",
                 title: "Payment failed!",
-                text: error.response?.data?.message || error.message,
+                text: error.response?.data?.message || error?.message,
                 showConfirmButton: true,
             });
         }
