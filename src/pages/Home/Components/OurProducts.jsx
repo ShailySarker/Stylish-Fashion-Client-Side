@@ -37,7 +37,7 @@ const OurProducts = () => {
         const getAllProducts = async () => {
             try {
                 const res = await publicRequest.get("/products");
-                console.log(res?.data);
+                // console.log(res?.data);
                 setAllProducts(res?.data.slice(0, 12));
             } catch (error) {
                 console.log(error)

@@ -9,33 +9,33 @@ import { userRequest } from "../../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { clearCart, deleteProduct } from "../../redux/cartRedux";
-import { fetchCart } from "../../redux/api/cartCalls";
+import { deleteProductFromCart, fetchCart } from "../../redux/api/cartCalls";
 
 const Cart = () => {
     const dispatch = useDispatch();
-    const currentUserId = useSelector(state => state?.user?.currentUser?._id);
-    console.log(currentUserId)
+    const currentUser = useSelector(state => state?.user?.currentUser);
+    // console.log(currentUser);
     const cartData = useSelector(state => state?.cart);
     // console.log(cartData)
+    // Get cart data from the Redux store
+    const cartInfo = useSelector((state) => state?.cart);
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
-    // Get cart data from the Redux store
-    const cartInfo = useSelector((state) => state?.cart);
 
     // Log the current user ID
     useEffect(() => {
-        if (currentUserId) {
-            console.log("Current User ID:", currentUserId);
-            dispatch(fetchCart(currentUserId));
+        if (currentUser?._id) {
+            // console.log("Current User ID:", currentUser?._id);
+            dispatch(fetchCart(currentUser?._id));
         }
-    }, [currentUserId, dispatch]);
+    }, [currentUser?._id, dispatch]);
 
-    // Log the cart information whenever it updates
-    useEffect(() => {
-        console.log("Cart Info:", cartInfo);
-    }, [cartInfo]);
+    // // Log the cart information whenever it updates
+    // useEffect(() => {
+    //     console.log("Cart Info:", cartInfo);
+    // }, [cartInfo]);
     const handleToken = (token) => {
         console.log("Stripe Token:", token);
         setStripeToken(token);
@@ -43,7 +43,41 @@ const Cart = () => {
 
     // delete cart product
     const handleDeleteProduct = (cartItemId) => {
-        dispatch(deleteProduct({ cartItemId }));
+        // dispatch(deleteProduct({ cartItemId }));
+        try {
+
+            if (currentUser && currentUser?._id) {
+                // Dispatch the action to delete the product
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        dispatch(deleteProductFromCart(currentUser?._id, cartItemId));
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The product has been deleted.",
+                            icon: "success"
+                        });
+                    }
+                });
+            } else {
+                alert("User not authenticated.");
+            }
+        } catch (error) {
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Failed to remove product from cart",
+                text: error.response?.data?.message || "There was an error deleting the product from the cart.",
+                showConfirmButton: true,
+            });
+        }
     };
 
     // handling payment

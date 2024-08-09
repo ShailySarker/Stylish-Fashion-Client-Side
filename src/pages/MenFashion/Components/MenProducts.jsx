@@ -108,7 +108,7 @@ const MenProducts = () => {
         });
     };
 
-    console.log(filters);
+    // console.log(filters);
 
     // product data show
     const [menProducts, setMenProducts] = useState([]);
@@ -119,7 +119,7 @@ const MenProducts = () => {
         const getMenProducts = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/api/products?category=${category}`);
-                console.log(res?.data);
+                // console.log(res?.data);
                 setMenProducts(res?.data);
             } catch (error) {
                 console.log(error)
