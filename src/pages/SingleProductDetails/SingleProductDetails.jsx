@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { addProduct } from "../../redux/cartRedux";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "../../redux/api/cartCalls";
+import { v4 as uuidv4 } from 'uuid';
 
 const SingleProductDetails = () => {
 
@@ -51,41 +52,101 @@ const SingleProductDetails = () => {
             setProductQuantity(productQuantity - 1);
         }
     };
-    
+
     const handleAddToCart = () => {
-        if (selectedColor) {
-            if (selectedSize) {
-                console.log(selectedColor, selectedSize, productQuantity);
+        if (selectedColor && selectedSize) {
+            const addToCartInfo = {
+                userId: currentUser?._id, // Ensure userId is correctly set
+                products: [{
+                    cartItemId: uuidv4(), // unique id
+                    selectedProductId: product?._id,
+                    title: product?.title,
+                    image: product?.image,
+                    desc: product?.desc,
+                    productQuantity: productQuantity,
+                    selectedColor: selectedColor,
+                    selectedSize: selectedSize,
+                    price: product?.price,
+                    total: productQuantity * product?.price
+                }]
+            };
+            console.log(addToCartInfo)
 
-                // api
-                const addToCartInfo = {
-                    ...product,
-                    productQuantity,
-                    selectedColor,
-                    selectedSize
-                };
-                dispatch(addProduct(addToCartInfo));
+            userRequest.post("/carts", addToCartInfo)
+                .then(response => {
+                    console.log(response?.data);
+                    // const productToAdd = {
+                    //     ...product,
+                    //     cartItemId: uuidv4(), // unique id
+                    //     quantity: productQuantity,
+                    //     selectedColor,
+                    //     selectedSize
+                    // };
 
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "The product is successfully added into cart!",
-                    showConfirmButton: false,
-                    timer: 2000
+                    // dispatch(addProduct(productToAdd));
+                    dispatch(addProduct(addToCartInfo));
+
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "The product is successfully added to the cart!",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    setSelectedColor("");
+                    setSelectedSize("");
+                    setProductQuantity(1);
+                    navigate("/cart");
+                })
+                .catch(error => {
+                    console.error("Failed to add product to cart", error);
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "Failed to add product to cart",
+                        text: error.response?.data || "There was an error adding the product to the cart.",
+                        showConfirmButton: true
+                    });
                 });
-                setSelectedColor("");
-                setSelectedSize("");
-                setProductQuantity(1);
-
-                navigate("/cart");
-
-            } else {
-                alert("kindly select size");
-            }
         } else {
-            alert("kindly select color");
+            alert("Please select both color and size");
         }
     };
+
+    // const handleAddToCart = () => {
+    //     if (selectedColor) {
+    //         if (selectedSize) {
+    //             console.log(selectedColor, selectedSize, productQuantity);
+
+    //             // api
+    //             const addToCartInfo = {
+    //                 ...product,
+    //                 productQuantity,
+    //                 selectedColor,
+    //                 selectedSize
+    //             };
+    //             dispatch(addProduct(addToCartInfo));
+
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "success",
+    //                 title: "The product is successfully added into cart!",
+    //                 showConfirmButton: false,
+    //                 timer: 2000
+    //             });
+    //             setSelectedColor("");
+    //             setSelectedSize("");
+    //             setProductQuantity(1);
+
+    //             navigate("/cart");
+
+    //         } else {
+    //             alert("kindly select size");
+    //         }
+    //     } else {
+    //         alert("kindly select color");
+    //     }
+    // };
 
     return (
         <div className="flex md:flex-row flex-col items-center lg:gap-8 md:gap-7 gap-6 lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">

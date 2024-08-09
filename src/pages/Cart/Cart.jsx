@@ -9,15 +9,33 @@ import { userRequest } from "../../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { clearCart, deleteProduct } from "../../redux/cartRedux";
+import { fetchCart } from "../../redux/api/cartCalls";
 
 const Cart = () => {
     const dispatch = useDispatch();
+    const currentUserId = useSelector(state => state?.user?.currentUser?._id);
+    console.log(currentUserId)
     const cartData = useSelector(state => state?.cart);
-    console.log(cartData)
+    // console.log(cartData)
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
+    // Get cart data from the Redux store
+    const cartInfo = useSelector((state) => state?.cart);
+
+    // Log the current user ID
+    useEffect(() => {
+        if (currentUserId) {
+            console.log("Current User ID:", currentUserId);
+            dispatch(fetchCart(currentUserId));
+        }
+    }, [currentUserId, dispatch]);
+
+    // Log the cart information whenever it updates
+    useEffect(() => {
+        console.log("Cart Info:", cartInfo);
+    }, [cartInfo]);
     const handleToken = (token) => {
         console.log("Stripe Token:", token);
         setStripeToken(token);
@@ -81,7 +99,7 @@ const Cart = () => {
 
     useEffect(() => {
         if (stripeToken) {
-            makePaymentRequest(stripeToken, cartData);
+            makePaymentRequest(stripeToken, cartInfo);
         }
     }, [stripeToken]);
 
@@ -163,17 +181,17 @@ const Cart = () => {
             <div className="flex lg:flex-row flex-col lg:gap-3 md:gap-9 gap-7 lg:mt-12 md:mt-10 mt-6 items-start">
                 {/* product Details */}
                 {
-                    cartData?.products?.length === 0 ?
+                    cartInfo?.products?.length === 0 ?
                         <div className="w-full">
                             <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-40 md:my-28 my-20 text-black text-center font-semibold">No product is added into cart!</h2>
                         </div> :
                         <>
                             {
-                                cartData?.products?.length > 0 &&
+                                cartInfo?.products?.length > 0 &&
                                 <>
                                     <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:max-h-[540px] max-h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
                                         {
-                                            cartData?.products?.map((product) => (
+                                            cartInfo?.products?.map((product) => (
                                                 <div key={product?.cartItemId} className="flex items-start justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300">
                                                     <div className="flex items-center justify-between w-[96%]">
                                                         <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
@@ -218,7 +236,7 @@ const Cart = () => {
                             <div className="lg:mt-16 md:mt-10 mt-8 flex flex-col lg:gap-4 md:gap-3 gap-2">
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Subtotal</p>
-                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {cartData?.total}</p>
+                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {`${cartData?.subTotal}`}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Shipping</p>
@@ -226,11 +244,11 @@ const Cart = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Tax</p>
-                                    <p className="font-semibold lg:text-lg md:text-base text-sm"> <span className="font-bold">$</span> {(cartData?.total * 0.05).toFixed(2)}</p>
+                                    <p className="font-semibold lg:text-lg md:text-base text-sm"> <span className="font-bold">$</span> {(cartData?.subTotal * 0.05).toFixed(2)}</p>
                                 </div>
                                 <div className="flex justify-between lg:pt-5 md:pt-4 pt-3 border-t-2">
                                     <p className="font-semibold lg:text-2xl md:text-xl text-lg">Total</p>
-                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}`}
+                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}`}
                                     </p>
                                 </div>
                             </div>

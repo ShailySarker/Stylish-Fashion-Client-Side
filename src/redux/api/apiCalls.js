@@ -1,4 +1,5 @@
 import { publicRequest } from "../../helpers/axios/requestMethod";
+import { clearCart } from "../cartRedux";
 import { loginFailure, loginStart, loginSuccess, logout, signUpFailure, signUpStart, signUpSuccess } from "../userRedux"
 
 export const login = async (dispatch, user) => {
@@ -26,4 +27,5 @@ export const signUp = async (dispatch, user) => {
 
 export const logOut = (dispatch) => {
     dispatch(logout());
+    dispatch(clearCart());
 };
