@@ -9,20 +9,19 @@ import { userRequest } from "../../helpers/axios/requestMethod";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { clearCart, deleteProduct } from "../../redux/cartRedux";
-import { deleteProductFromCart, fetchCart } from "../../redux/api/cartCalls";
+import { deleteAllProductsFromCart, deleteProductFromCart, fetchCart } from "../../redux/api/cartCalls";
 
 const Cart = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
     // console.log(currentUser);
     const cartData = useSelector(state => state?.cart);
-    // console.log(cartData)
+    console.log(cartData)
     // Get cart data from the Redux store
     const cartInfo = useSelector((state) => state?.cart);
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-
 
     // Log the current user ID
     useEffect(() => {
@@ -36,10 +35,6 @@ const Cart = () => {
     // useEffect(() => {
     //     console.log("Cart Info:", cartInfo);
     // }, [cartInfo]);
-    const handleToken = (token) => {
-        console.log("Stripe Token:", token);
-        setStripeToken(token);
-    };
 
     // delete cart product
     const handleDeleteProduct = (cartItemId) => {
@@ -80,25 +75,60 @@ const Cart = () => {
         }
     };
 
+    const handleToken = (token) => {
+        // console.log("Stripe Token:", token);
+        setStripeToken(token);
+    };
+
     // handling payment
-    const makePaymentRequest = async (token, cartData) => {
+    const makePaymentRequest = async (token, cartInfo) => {
         try {
             console.log("Sending payment request to backend");
 
             const amount = Math.round(
-                (cartData?.total +
-                    (cartData?.cartQuantity * 5) +
-                    parseFloat((cartData?.total * 0.05).toFixed(2))) * 100
+                (cartInfo?.subTotal +
+                    (cartInfo?.cartQuantity * 5) +
+                    parseFloat((cartInfo?.subTotal * 0.05).toFixed(2)))
             );
-
+            console.log(amount)
+            // payment info
             const res = await userRequest.post("/checkout/payment", {
                 tokenId: token?.id,
                 amount: amount,
+                // amount: ((cartInfo?.subTotal + (cartInfo?.cartQuantity * 5) + parseFloat((cartInfo?.subTotal * 0.05).toFixed(2))) * 100),
             });
-
             console.log("Payment Response:", res?.data);
 
             if (res?.data?.status === "succeeded") {
+                // order info
+                const orderInfo = {
+                    userId: currentUser?._id, // Ensure userId is correctly set
+                    products: cartInfo?.products,
+                    amount: res?.data?.amount,
+                    address: {
+                        billingAddress: {
+                            username: res?.data?.billing_details?.name,
+                            address: res?.data?.billing_details?.address?.line1,
+                            city: res?.data?.billing_details?.address?.city,
+                            postcode: res?.data?.billing_details?.address?.postal_code,
+                            country: res?.data?.billing_details?.address?.country
+                        },
+                        shippingAddress: {
+                            username: res?.data?.billing_details?.name,
+                            address: res?.data?.source?.address_line1,
+                            city: res?.data?.source?.address_city,
+                            postcode: res?.data?.source?.address_zip,
+                            country: res?.data?.source?.address_country,
+                        }
+                    },
+                    status: "pending",
+
+                };
+                console.log(orderInfo);
+                // Call the order post API
+                const orderRes = await userRequest.post("/orders", orderInfo);
+                console.log("Order Response:", orderRes?.data);
+
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -107,6 +137,8 @@ const Cart = () => {
                     timer: 3000,
                 });
 
+                // clear all cart info for current user
+                deleteAllProductsFromCart(currentUser?._id);
                 dispatch(clearCart()); // Clear cart after successful payment
                 navigate("/");
             } else {
@@ -293,8 +325,8 @@ const Cart = () => {
                                 shippingAddress
                                 // description={`Your total is $${cartData?.total}`}
                                 // amount={cartData?.total * 100}
-                                description={`Your total is ${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}`}
-                                amount={`${(cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))}` * 100}
+                                description={`Your total is ${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}`}
+                                amount={`${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}` * 100}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >
