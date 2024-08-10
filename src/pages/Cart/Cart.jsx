@@ -139,8 +139,8 @@ const Cart = () => {
 
                 // clear all cart info for current user
                 deleteAllProductsFromCart(currentUser?._id);
-                dispatch(clearCart()); // Clear cart after successful payment
-                navigate("/");
+                dispatch(clearCart()); // Clear cart redux after successful payment
+                navigate("/orderTracking");
             } else {
                 Swal.fire({
                     position: "center",
