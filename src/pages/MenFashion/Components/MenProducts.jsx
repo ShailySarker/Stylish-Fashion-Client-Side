@@ -1,110 +1,28 @@
-import { FaSearch, FaShoppingCart } from "react-icons/fa";
-import product1 from "../../../assets/Images/MenFashion/MenProducts_menCap.jpg";
-import product2 from "../../../assets/Images/MenFashion/MenProducts_menHudi.jpg";
-import product3 from "../../../assets/Images/MenFashion/MenProducts_menJacket.jpg";
-import product4 from "../../../assets/Images/MenFashion/MenProducts_menPant.jpg";
-import product5 from "../../../assets/Images/MenFashion/MenProducts_menShirt.jpg";
-import product6 from "../../../assets/Images/MenFashion/MenProducts_menShorts.jpg";
-import product7 from "../../../assets/Images/MenFashion/MenProducts_menSuit.jpg";
-import product8 from "../../../assets/Images/MenFashion/MenProducts_menTshirt.jpg";
-import product9 from "../../../assets/Images/MenFashion/MenProducts_menWinterCoat.jpg";
-import { FaAngleLeft, FaAngleRight, FaRegHeart } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaHeart, FaRegHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-
-const menProductsData = [
-    {
-        id: 1,
-        image: product1,
-    },
-    {
-        id: 2,
-        image: product2,
-    },
-    {
-        id: 3,
-        image: product3,
-    },
-    {
-        id: 4,
-        image: product4,
-    },
-    {
-        id: 5,
-        image: product5,
-    },
-    {
-        id: 6,
-        image: product6,
-    },
-    {
-        id: 7,
-        image: product7,
-    },
-    {
-        id: 8,
-        image: product8,
-    },
-    {
-        id: 9,
-        image: product9,
-    },
-    {
-        id: 10,
-        image: product1,
-    },
-    {
-        id: 11,
-        image: product1,
-    },
-    {
-        id: 12,
-        image: product2,
-    },
-    {
-        id: 13,
-        image: product3,
-    },
-    {
-        id: 14,
-        image: product4,
-    },
-    {
-        id: 15,
-        image: product5,
-    },
-    {
-        id: 16,
-        image: product6,
-    },
-    {
-        id: 17,
-        image: product7,
-    },
-    {
-        id: 18,
-        image: product8,
-    },
-    {
-        id: 19,
-        image: product9,
-    },
-
-];
+import { useDispatch, useSelector } from "react-redux";
+import { publicRequest } from "../../../helpers/axios/requestMethod";
+import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
+import Swal from "sweetalert2";
+import { TiShoppingCart } from "react-icons/ti";
 
 
 const MenProducts = () => {
+    const dispatch = useDispatch();
+    const currentUser = useSelector(state => state?.user?.currentUser);
+    const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
 
     // filter work
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState("newest");
 
     const handleFilters = (event) => {
-        const selectedValue = event.target.value;
+        const selectedValue = event?.target?.value;
         setFilters({
             ...filters,
-            [event.target.name]: selectedValue
+            [event?.target?.name]: selectedValue
         });
     };
 
@@ -118,7 +36,7 @@ const MenProducts = () => {
     useEffect(() => {
         const getMenProducts = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/products?category=${category}`);
+                const res = await publicRequest.get(`/products?category=${category}`);
                 // console.log(res?.data);
                 setMenProducts(res?.data);
             } catch (error) {
@@ -155,6 +73,81 @@ const MenProducts = () => {
             )
         }
     }, [menProducts, sort, filters]);
+
+    // Fetch wishlist when user is logged in
+    useEffect(() => {
+        if (currentUser?._id) {
+            dispatch(fetchWishlist(currentUser?._id));
+        }
+    }, [currentUser, dispatch, wishlistInfo]);
+
+
+    // Handle adding product to wishlist
+    const handleAddToWishlist = async (product) => {
+        if (currentUser?._id) {
+            const wishlistInfo = {
+                selectedProductId: product?._id,
+                title: product?.title,
+                desc: product?.desc,
+                image: product?.image,
+                price: product?.price,
+            };
+            try {
+                const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+                if (res?.status === 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Added to wishlist!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Failed to add to wishlist",
+                    showConfirmButton: true,
+                });
+            }
+        } else {
+            alert("Please log in to add items to your wishlist.");
+        }
+    };
+
+    // Handle removing product from wishlist
+    const handleRemoveFromWishlist = async (productId) => {
+        if (currentUser?._id) {
+            try {
+                const res = await dispatch(removeFromWishlist(currentUser?._id, productId));
+                if (res?.status === 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Removed from wishlist!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Failed to remove from wishlist",
+                    showConfirmButton: true,
+                });
+            }
+        } else {
+            alert("Please log in to remove items from your wishlist.");
+        }
+    };
+
+    const isProductInWishlist = (productId) => {
+        console.log("Wishlist:", wishlistInfo);
+        // console.log("Type of wishlist:", typeof wishlistInfo);
+        return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
+    };
 
 
     // State to manage current page
@@ -261,11 +254,23 @@ const MenProducts = () => {
                                             <div key={menProduct?._id} className="relative group duration-500 transform hover:scale-105">
                                                 <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={menProduct?.image} alt="men product image" />
                                                 <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                                    <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    <Link to={`/product/${menProduct?._id}`}>
+                                                        <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    </Link>
                                                     <Link to={`/product/${menProduct?._id}`}>
                                                         <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
                                                     </Link>
-                                                    <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
+                                                    {isProductInWishlist(menProduct?._id) ? (
+                                                        <FaHeart
+                                                            onClick={() => handleRemoveFromWishlist(menProduct?._id)}
+                                                            className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110"
+                                                        />
+                                                    ) : (
+                                                        <FaRegHeart
+                                                            onClick={() => handleAddToWishlist(menProduct)}
+                                                            className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110"
+                                                        />
+                                                    )}
                                                 </div>
                                             </div>
                                         ))
@@ -315,82 +320,6 @@ const MenProducts = () => {
                         }
                     </>
             }
-            {/* <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product1} alt="product1" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <Link to="/singleProductDetails">
-                            <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        </Link>
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product2} alt="product2" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product3} alt="product3" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product4} alt="product4" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product5} alt="product5" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product6} alt="product6" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product7} alt="product7" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product8} alt="product8" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product9} alt="product9" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 };
