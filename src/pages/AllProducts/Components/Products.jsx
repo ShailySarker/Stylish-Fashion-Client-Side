@@ -33,7 +33,8 @@ import { publicRequest } from "../../../helpers/axios/requestMethod";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { TiShoppingCart } from "react-icons/ti";
-import { addToWishlist, fetchWishlist } from "../../../redux/api/wishlistCalls";
+import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
+import { store } from "../../../redux/store";
 
 // const productsData = [
 //     {
@@ -210,7 +211,7 @@ const Products = () => {
     // };
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
-    const wishlist = useSelector(state => state?.wishlist?.wishlist || []);
+    const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
     const [allProducts, setAllProducts] = useState([]);
 
     // Fetch all products on mount
@@ -225,6 +226,15 @@ const Products = () => {
         };
         getAllProducts();
     }, []);
+
+
+    // Fetch wishlist when user is logged in
+    useEffect(() => {
+        if (currentUser?._id) {
+            dispatch(fetchWishlist(currentUser?._id));
+        }
+    }, [currentUser, dispatch, wishlistInfo]);
+
 
     // Handle adding product to wishlist
     const handleAddToWishlist = async (product) => {
@@ -260,26 +270,42 @@ const Products = () => {
         }
     };
 
-    // handling remove product from wishlist
-    const handleRemoveFromWishlist = async (product) => {
-        // Logic to remove the product from wishlist
+    // Handle removing product from wishlist
+    const handleRemoveFromWishlist = async (productId) => {
+        if (currentUser?._id) {
+            try {
+                const res = await dispatch(removeFromWishlist(currentUser._id, productId));
+                if (res?.status === 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Removed from wishlist!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Failed to remove from wishlist",
+                    showConfirmButton: true,
+                });
+            }
+        } else {
+            alert("Please log in to remove items from your wishlist.");
+        }
     };
 
-    // Fetch wishlist when user is logged in
-    useEffect(() => {
-        if (currentUser?._id) {
-            dispatch(fetchWishlist(currentUser?._id));
-        }
-    }, [currentUser, dispatch]);
 
     // Check if a product is in the wishlist
     // const isProductInWishlist = (productId) => Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
     const isProductInWishlist = (productId) => {
-        console.log("Wishlist:", wishlist);
-        console.log("Type of wishlist:", typeof wishlist);
-        return Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
+        console.log("Wishlist:", wishlistInfo);
+        // console.log("Type of wishlist:", typeof wishlistInfo);
+        return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };
-
+    
 
     // useEffect(() => {
     //     if (currentUser?._id && wishlistInfo && product?._id) {
@@ -428,7 +454,7 @@ const Products = () => {
                                                         </Link>
                                                         {isProductInWishlist(product?._id) ? (
                                                             <FaHeart
-                                                                onClick={() => handleRemoveFromWishlist(product)}
+                                                                onClick={() => handleRemoveFromWishlist(product?._id)}
                                                                 className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
                                                             />
                                                         ) : (

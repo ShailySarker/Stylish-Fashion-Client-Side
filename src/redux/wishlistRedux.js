@@ -47,6 +47,10 @@ const wishlistSlice = createSlice({
             }
             state.isLoading = false;
         },
+        removeProductFromWishlist: (state, action) => {
+            state.wishlist = state.wishlist.filter(item => item?.selectedProductId !== action.payload);
+            state.isLoading = false;
+        },
         // addProductToWishlist: (state, action) => {
         //     const productExists = state.wishlist.some(item => item.selectedProductId === action.payload.selectedProductId);
         //     if (!productExists) {
@@ -65,5 +69,5 @@ const wishlistSlice = createSlice({
 });
 
 
-export const { setWishlist, addProductToWishlist, setLoading, setError } = wishlistSlice.actions;
+export const { setWishlist, addProductToWishlist, removeProductFromWishlist, setLoading, setError } = wishlistSlice.actions;
 export default wishlistSlice.reducer;

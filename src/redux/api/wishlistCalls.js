@@ -1,6 +1,6 @@
 import { userRequest } from "../../helpers/axios/requestMethod";
 import { setError, setLoading } from "../orderRedux";
-import { addProductToWishlist, setWishlist } from "../wishlistRedux";
+import { addProductToWishlist, removeProductFromWishlist, setWishlist } from "../wishlistRedux";
 
 // export const addToWishlist = (userId, product) => async (dispatch) => {
 //     dispatch(setLoading());
@@ -26,6 +26,7 @@ import { addProductToWishlist, setWishlist } from "../wishlistRedux";
 //         return { status: 'error', message: error.message };
 //     }
 // };
+
 
 // add product into wishlist
 export const addToWishlist = (userId, product) => async (dispatch, getState) => {
@@ -68,7 +69,6 @@ export const addToWishlist = (userId, product) => async (dispatch, getState) => 
 
 
 //get product from wishlist
-// Ensure the API returns an array
 export const fetchWishlist = (userId) => async (dispatch) => {
     dispatch(setLoading());
     try {
@@ -81,6 +81,32 @@ export const fetchWishlist = (userId) => async (dispatch) => {
         console.error("Failed to fetch wishlist:", error);
     }
 };
+
+// Remove product from wishlist
+export const removeFromWishlist = (userId, productId) => async (dispatch) => {
+    dispatch(setLoading());
+    try {
+        const res = await userRequest.delete(`/wishlist/remove/${userId}`, {
+            data: { productId }
+        });
+
+        // Directly update the Redux state with the updated wishlist
+        dispatch(removeProductFromWishlist(productId)); // This updates the wishlist in Redux
+        dispatch(setWishlist(res?.data)); // This sets the wishlist from the server response
+
+        console.log("Wishlist updated:", res?.data);
+        return { status: 'success', data: res?.data };
+
+    } catch (error) {
+        dispatch(setError(error.message));
+        console.error("Failed to remove product from wishlist:", error);
+        return { status: 'error', message: error.message };
+    }
+};
+
+
+
+
 
 // export const fetchWishlist = (userId) => async (dispatch) => {
 //     dispatch(setLoading());
