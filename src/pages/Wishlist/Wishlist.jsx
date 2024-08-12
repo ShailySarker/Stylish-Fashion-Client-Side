@@ -1,26 +1,49 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWishlist } from "../../redux/api/wishlistCalls";
+import { fetchWishlist, removeFromWishlist } from "../../redux/api/wishlistCalls";
 import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const Wishlist = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
     const wishlistInfo = useSelector(state => state?.wishlist?.wishlist);
     const isLoading = useSelector(state => state?.wishlist?.isLoading);
-    const error = useSelector(state => state?.wishlist?.error);
 
     useEffect(() => {
         if (currentUser?._id) {
             dispatch(fetchWishlist(currentUser?._id));
         }
-    }, [currentUser, dispatch]);
+    }, [currentUser, dispatch, wishlistInfo]);
 
-    const handleDeleteProduct = () => {
+    const handleDeleteProduct = async (productId) => {
+        if (currentUser?._id) {
+            try {
+                const res = await dispatch(removeFromWishlist(currentUser._id, productId));
+                if (res?.status === 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Removed from wishlist!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Failed to remove from wishlist",
+                    showConfirmButton: true,
+                });
+            }
+        } else {
+            alert("Please log in to remove items from your wishlist.");
+        }
+    };
 
-    }
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
@@ -58,7 +81,7 @@ const Wishlist = () => {
                                                             </div>
                                                             <div className="md:block hidden">
                                                                 <Link to={`/product/${product?.selectedProductId}`}>
-                                                                    <button className="lg:py-2 py-1 lg:w-40 md:w-28 w-28 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">Show Details</button>
+                                                                    <button className="lg:py-2 py-1 lg:w-40 md:w-32 w-28 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">Show Details</button>
                                                                 </Link>
                                                             </div>
                                                         </div>
