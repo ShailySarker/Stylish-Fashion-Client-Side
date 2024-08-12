@@ -259,9 +259,8 @@ const Cart = () => {
                                 </div>
                                 <div className="flex justify-between lg:pt-5 md:pt-4 pt-3 border-t-2">
                                     <p className="font-semibold lg:text-2xl md:text-xl text-lg">Total</p>
-                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05)}`}
+                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span>{`${Math.round((cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05))}`}                                    </p>
                                     {/* <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`} */}
-                                    </p>
                                 </div>
                             </div>
                             <StripeCheckout
@@ -271,8 +270,11 @@ const Cart = () => {
                                 shippingAddress
                                 // description={`Your total is $${cartInfo?.total}`}
                                 // amount={cartInfo?.total * 100}
-                                description={`Your total is ${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`}
-                                amount={`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}` * 100}
+                                description={`Your total is ${Math.round((cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05))}`}
+                                amount={`${Math.round((cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05))}` * 100}
+
+                                // description={`Your total is ${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`}
+                                // amount={`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}` * 100}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >

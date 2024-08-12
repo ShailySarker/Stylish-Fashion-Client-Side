@@ -144,71 +144,6 @@ import { store } from "../../../redux/store";
 // ];
 
 const Products = () => {
-    // const dispatch = useDispatch();
-    // const currentUser = useSelector((state) => state?.user?.currentUser);
-    // const wishlist = useSelector((state) => state?.wishlist?.wishlist) || []; // Default to empty array
-    // const [allProducts, setAllProducts] = useState([]);
-
-    // // Fetch all products on mount
-    // useEffect(() => {
-    //     const getAllProducts = async () => {
-    //         try {
-    //             const res = await publicRequest.get("/products");
-    //             setAllProducts(res?.data);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     getAllProducts();
-    // }, []);
-
-    // // Fetch wishlist on mount
-    // useEffect(() => {
-    //     if (currentUser?._id) {
-    //         dispatch(fetchWishlist(currentUser?._id));
-    //     }
-    // }, [dispatch, currentUser?._id]);
-
-    // // Check if a product is in the wishlist
-    // const isProductInWishlist = (productId) => {
-    //     return wishlist?.products?.some(item => item?.selectedProductId === productId) || false;
-    // };
-
-    // // Handling ADD wishlist product
-    // const handleAddToWishlist = async (product) => {
-    //     if (currentUser?._id) {
-    //         const wishlistInfo = {
-    //             selectedProductId: product?._id,
-    //             title: product?.title,
-    //             desc: product?.desc,
-    //             image: product?.image,
-    //             price: product?.price,
-    //         };
-
-    //         try {
-    //             const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
-
-    //             if (res?.status === 'success') {
-    //                 Swal.fire({
-    //                     position: "center",
-    //                     icon: "success",
-    //                     title: "Added to wishlist!",
-    //                     showConfirmButton: false,
-    //                     timer: 1500,
-    //                 });
-    //             }
-    //         } catch (error) {
-    //             Swal.fire({
-    //                 position: "center",
-    //                 icon: "error",
-    //                 title: "Failed to add to wishlist",
-    //                 showConfirmButton: true,
-    //             });
-    //         }
-    //     } else {
-    //         alert("Please log in to add items to your wishlist.");
-    //     }
-    // };
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
     const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
@@ -274,7 +209,7 @@ const Products = () => {
     const handleRemoveFromWishlist = async (productId) => {
         if (currentUser?._id) {
             try {
-                const res = await dispatch(removeFromWishlist(currentUser._id, productId));
+                const res = await dispatch(removeFromWishlist(currentUser?._id, productId));
                 if (res?.status === 'success') {
                     Swal.fire({
                         position: "center",
@@ -297,15 +232,14 @@ const Products = () => {
         }
     };
 
-
-    // Check if a product is in the wishlist
-    // const isProductInWishlist = (productId) => Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
     const isProductInWishlist = (productId) => {
         console.log("Wishlist:", wishlistInfo);
         // console.log("Type of wishlist:", typeof wishlistInfo);
         return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };
     
+    // Check if a product is in the wishlist
+    // const isProductInWishlist = (productId) => Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
 
     // useEffect(() => {
     //     if (currentUser?._id && wishlistInfo && product?._id) {
