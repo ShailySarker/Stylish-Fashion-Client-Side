@@ -1,3 +1,4 @@
+
 import { FaRegHeart, FaSearch, FaShoppingCart } from "react-icons/fa";
 import product1 from "../../../assets/Images/AllProducts/Products_menCap.jpg";
 import product2 from "../../../assets/Images/AllProducts/Products_menHudi.jpg";
@@ -26,132 +27,335 @@ import product24 from "../../../assets/Images/AllProducts/Products_girlFrog.jpg"
 import product25 from "../../../assets/Images/AllProducts/Products_girlSkirtSet.jpg";
 import product26 from "../../../assets/Images/AllProducts/Products_girlWinterDress.jpg";
 import { useEffect, useState } from "react";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-import axios from "axios";
+import { FaAirbnb, FaAngleLeft, FaAngleRight, FaHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { publicRequest } from "../../../helpers/axios/requestMethod";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { TiShoppingCart } from "react-icons/ti";
+import { addToWishlist, fetchWishlist } from "../../../redux/api/wishlistCalls";
 
-const productsData = [
-    {
-        id: 1,
-        image: product1,
-    },
-    {
-        id: 2,
-        image: product2,
-    },
-    {
-        id: 3,
-        image: product3,
-    },
-    {
-        id: 4,
-        image: product4,
-    },
-    {
-        id: 5,
-        image: product5,
-    },
-    {
-        id: 6,
-        image: product6,
-    },
-    {
-        id: 7,
-        image: product7,
-    },
-    {
-        id: 8,
-        image: product8,
-    },
-    {
-        id: 9,
-        image: product9,
-    },
-    {
-        id: 10,
-        image: product10,
-    },
-    {
-        id: 11,
-        image: product11,
-    },
-    {
-        id: 12,
-        image: product12,
-    },
-    {
-        id: 13,
-        image: product13,
-    },
-    {
-        id: 14,
-        image: product14,
-    },
-    {
-        id: 15,
-        image: product15,
-    },
-    {
-        id: 16,
-        image: product16,
-    },
-    {
-        id: 17,
-        image: product17,
-    },
-    {
-        id: 18,
-        image: product18,
-    },
-    {
-        id: 19,
-        image: product19,
-    },
-    {
-        id: 20,
-        image: product20,
-    },
-    {
-        id: 21,
-        image: product21,
-    },
-    {
-        id: 22,
-        image: product22,
-    },
-    {
-        id: 23,
-        image: product23,
-    },
-    {
-        id: 24,
-        image: product24,
-    },
-    {
-        id: 25,
-        image: product25,
-    },
-    {
-        id: 26,
-        image: product26,
-    }
-];
+// const productsData = [
+//     {
+//         id: 1,
+//         image: product1,
+//     },
+//     {
+//         id: 2,
+//         image: product2,
+//     },
+//     {
+//         id: 3,
+//         image: product3,
+//     },
+//     {
+//         id: 4,
+//         image: product4,
+//     },
+//     {
+//         id: 5,
+//         image: product5,
+//     },
+//     {
+//         id: 6,
+//         image: product6,
+//     },
+//     {
+//         id: 7,
+//         image: product7,
+//     },
+//     {
+//         id: 8,
+//         image: product8,
+//     },
+//     {
+//         id: 9,
+//         image: product9,
+//     },
+//     {
+//         id: 10,
+//         image: product10,
+//     },
+//     {
+//         id: 11,
+//         image: product11,
+//     },
+//     {
+//         id: 12,
+//         image: product12,
+//     },
+//     {
+//         id: 13,
+//         image: product13,
+//     },
+//     {
+//         id: 14,
+//         image: product14,
+//     },
+//     {
+//         id: 15,
+//         image: product15,
+//     },
+//     {
+//         id: 16,
+//         image: product16,
+//     },
+//     {
+//         id: 17,
+//         image: product17,
+//     },
+//     {
+//         id: 18,
+//         image: product18,
+//     },
+//     {
+//         id: 19,
+//         image: product19,
+//     },
+//     {
+//         id: 20,
+//         image: product20,
+//     },
+//     {
+//         id: 21,
+//         image: product21,
+//     },
+//     {
+//         id: 22,
+//         image: product22,
+//     },
+//     {
+//         id: 23,
+//         image: product23,
+//     },
+//     {
+//         id: 24,
+//         image: product24,
+//     },
+//     {
+//         id: 25,
+//         image: product25,
+//     },
+//     {
+//         id: 26,
+//         image: product26,
+//     }
+// ];
 
 const Products = () => {
+    // const dispatch = useDispatch();
+    // const currentUser = useSelector((state) => state?.user?.currentUser);
+    // const wishlist = useSelector((state) => state?.wishlist?.wishlist) || []; // Default to empty array
+    // const [allProducts, setAllProducts] = useState([]);
+
+    // // Fetch all products on mount
+    // useEffect(() => {
+    //     const getAllProducts = async () => {
+    //         try {
+    //             const res = await publicRequest.get("/products");
+    //             setAllProducts(res?.data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    //     getAllProducts();
+    // }, []);
+
+    // // Fetch wishlist on mount
+    // useEffect(() => {
+    //     if (currentUser?._id) {
+    //         dispatch(fetchWishlist(currentUser?._id));
+    //     }
+    // }, [dispatch, currentUser?._id]);
+
+    // // Check if a product is in the wishlist
+    // const isProductInWishlist = (productId) => {
+    //     return wishlist?.products?.some(item => item?.selectedProductId === productId) || false;
+    // };
+
+    // // Handling ADD wishlist product
+    // const handleAddToWishlist = async (product) => {
+    //     if (currentUser?._id) {
+    //         const wishlistInfo = {
+    //             selectedProductId: product?._id,
+    //             title: product?.title,
+    //             desc: product?.desc,
+    //             image: product?.image,
+    //             price: product?.price,
+    //         };
+
+    //         try {
+    //             const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+
+    //             if (res?.status === 'success') {
+    //                 Swal.fire({
+    //                     position: "center",
+    //                     icon: "success",
+    //                     title: "Added to wishlist!",
+    //                     showConfirmButton: false,
+    //                     timer: 1500,
+    //                 });
+    //             }
+    //         } catch (error) {
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "error",
+    //                 title: "Failed to add to wishlist",
+    //                 showConfirmButton: true,
+    //             });
+    //         }
+    //     } else {
+    //         alert("Please log in to add items to your wishlist.");
+    //     }
+    // };
+    const dispatch = useDispatch();
+    const currentUser = useSelector(state => state?.user?.currentUser);
+    const wishlist = useSelector(state => state?.wishlist?.wishlist || []);
     const [allProducts, setAllProducts] = useState([]);
-    // for normal data show
+
+    // Fetch all products on mount
     useEffect(() => {
         const getAllProducts = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/products");
-                console.log(res?.data);
+                const res = await publicRequest.get("/products");
                 setAllProducts(res?.data);
             } catch (error) {
-                console.log(error)
+                console.error("Failed to fetch products:", error);
             }
         };
         getAllProducts();
     }, []);
+
+    // Handle adding product to wishlist
+    const handleAddToWishlist = async (product) => {
+        if (currentUser?._id) {
+            const wishlistInfo = {
+                selectedProductId: product?._id,
+                title: product?.title,
+                desc: product?.desc,
+                image: product?.image,
+                price: product?.price,
+            };
+            try {
+                const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+                if (res?.status === 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Added to wishlist!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Failed to add to wishlist",
+                    showConfirmButton: true,
+                });
+            }
+        } else {
+            alert("Please log in to add items to your wishlist.");
+        }
+    };
+
+    // handling remove product from wishlist
+    const handleRemoveFromWishlist = async (product) => {
+        // Logic to remove the product from wishlist
+    };
+
+    // Fetch wishlist when user is logged in
+    useEffect(() => {
+        if (currentUser?._id) {
+            dispatch(fetchWishlist(currentUser?._id));
+        }
+    }, [currentUser, dispatch]);
+
+    // Check if a product is in the wishlist
+    // const isProductInWishlist = (productId) => Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
+    const isProductInWishlist = (productId) => {
+        console.log("Wishlist:", wishlist);
+        console.log("Type of wishlist:", typeof wishlist);
+        return Array.isArray(wishlist) && wishlist.some(item => item?.selectedProductId === productId);
+    };
+
+
+    // useEffect(() => {
+    //     if (currentUser?._id && wishlistInfo && product?._id) {
+    //         const productInWishlist = wishlistInfo.some((item) => item.selectedProductId === product?._id);
+    //         setIsInWishlist(productInWishlist);
+    //     }
+    // }, [currentUser?._id, wishlistInfo, product?._id]);
+
+    // // Check if the product is in the wishlist on load
+    // useEffect(() => {
+    //     if (currentUser?._id) {
+    //         dispatch(fetchWishlist(currentUser?._id));
+    //     }
+    // }, [dispatch, currentUser?._id]);
+
+
+    //     const dispatch = useDispatch();
+    //     const currentUser = useSelector(state => state?.user?.currentUser);
+    //     const [isInWishlist, setIsInWishlist] = useState(false);
+    //     const [allProducts, setAllProducts] = useState([]);
+    //     // for normal data show
+    //     useEffect(() => {
+    //         const getAllProducts = async () => {
+    //             try {
+    //                 const res = await publicRequest.get("/products");
+    //                 console.log(res?.data);
+    //                 setAllProducts(res?.data);
+    //             } catch (error) {
+    //                 console.log(error)
+    //             }
+    //         };
+    //         getAllProducts();
+    //     }, []);
+
+    //     // Handling wishlist product
+    //     const handleAddToWishlist = async (product) => {
+    //         if (currentUser?._id) {
+    //             const wishlistInfo = {
+    //                 selectedProductId: product?._id,
+    //                 title: product?.title,
+    //                 desc: product?.desc,
+    //                 image: product?.image,
+    //                 price: product?.price,
+    //             };
+
+    //             try {
+    //                 // Call the addToWishlist action and await the result
+    //                 const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+
+    //                 // Check if the API call was successful
+    //                 if (res?.status === 'success') {
+    //                     setIsInWishlist(true); // Update the icon to filled heart
+    //                     Swal.fire({
+    //                         position: "center",
+    //                         icon: "success",
+    //                         title: "Added to wishlist!",
+    //                         showConfirmButton: false,
+    //                         timer: 1500,
+    //                     });
+    //                 }
+    //             } catch (error) {
+    //                 Swal.fire({
+    //                     position: "center",
+    //                     icon: "error",
+    //                     title: "Failed to add to wishlist",
+    //                     showConfirmButton: true,
+    //                 });
+    //             }
+    //         } else {
+    //             alert("Please log in to add items to your wishlist.");
+    //         }
+    //     };
+    // const handleRemoveFromWishlist = (product) => {
+
+    // }
+
 
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
@@ -192,6 +396,8 @@ const Products = () => {
             endPage = currentPage + Math.floor(maxVisibleButtons / 2);
         }
     }
+
+
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
@@ -214,11 +420,49 @@ const Products = () => {
                                                 <div key={product?._id} className="relative group">
                                                     <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
                                                     <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                                                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                        <Link to={`/product/${product?._id}`}>
+                                                            <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                        </Link>
                                                         <Link to={`/product/${product?._id}`}>
                                                             <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
                                                         </Link>
-                                                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                        {isProductInWishlist(product?._id) ? (
+                                                            <FaHeart
+                                                                onClick={() => handleRemoveFromWishlist(product)}
+                                                                className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                            />
+                                                        ) : (
+                                                            <FaRegHeart
+                                                                onClick={() => handleAddToWishlist(product)}
+                                                                className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                            />
+                                                        )}
+                                                        {/* {isInWishlist ? (
+                                                        <FaHeart
+                                                            onClick={() => handleRemoveFromWishlist(product?._id)}
+                                                            className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                        />
+                                                    ) : (
+                                                        <FaRegHeart
+                                                            onClick={() => handleAddToWishlist(product)}
+                                                            className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                        />
+                                                    )} */}
+                                                        {/* {isProductInWishlist(product?._id) ? (
+                                                        <FaHeart
+                                                            onClick={() => handleRemoveFromWishlist(product?._id)}
+                                                            className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                        />
+                                                    ) : (
+                                                        <FaRegHeart
+                                                            onClick={() => handleAddToWishlist(product)}
+                                                            className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                        />
+                                                    )} */}
+
+
+
+                                                        {/* <FaRegHeart onClick={() => handleAddToWishlist(product)} className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" /> */}
                                                     </div>
                                                 </div>
                                             ))
@@ -268,10 +512,190 @@ const Products = () => {
                                 </>
                             }
                         </>
+                    // (
+                    //     <>
+                    //         {currentItems?.length > 0 && (
+                    //             <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+                    //                 {currentItems.map((product) => {
+                    //                     const isInWishlist = wishlist.some((item) => item?.selectedProductId === product?._id);
+
+                    //                     return (
+                    //                         <div key={product?._id} className="relative group">
+                    //                             <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
+                    //                             <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                    //                                 <Link to={`/product/${product?._id}`}>
+                    //                                     <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                    //                                 </Link>
+                    //                                 <Link to={`/product/${product?._id}`}>
+                    //                                     <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                    //                                 </Link>
+                    //                                 {isInWishlist ? (
+                    //                                     <FaHeart
+                    //                                         onClick={() => handleRemoveFromWishlist(product?._id)}
+                    //                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                    //                                     />
+                    //                                 ) : (
+                    //                                     <FaRegHeart
+                    //                                         onClick={() => handleAddToWishlist(product)}
+                    //                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                    //                                     />
+                    //                                 )}
+                    //                             </div>
+                    //                         </div>
+                    //                     );
+                    //                 })}
+                    //             </div>
+                    //         )}
+
+                    //         {/* pagination */}
+                    //         <div className="lg:mt-14 md:mt-12 mt-10">
+                    //             <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
+                    //                 {/* Render Previous button */}
+
+                    //                 <button
+                    //                     onClick={goToPreviousPage}
+                    //                     disabled={currentPage === 1}
+                    //                     className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                    //                 >
+                    //                     <FaAngleLeft />
+                    //                 </button>
+
+
+                    //                 {/* Render pagination buttons */}
+                    //                 {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
+                    //                     const pageNumber = startPage + index;
+                    //                     return (
+                    //                         <li key={pageNumber}>
+                    //                             <button
+                    //                                 onClick={() => paginate(pageNumber)}
+                    //                                 className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
+                    //                             >
+                    //                                 {pageNumber}
+                    //                             </button>
+                    //                         </li>
+                    //                     );
+                    //                 })}
+
+
+                    //                 {/* Render Next button */}
+                    //                 <button
+                    //                     onClick={goToNextPage}
+                    //                     disabled={currentPage === totalPages}
+                    //                     className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
+                    //                 >
+                    //                     <FaAngleRight />
+                    //                 </button>
+
+                    //             </ul>
+                    //         </div>
+                    //     </>
+                    // )
                 }
             </div>
-        </div>
+        </div >
     );
 };
 
 export default Products;
+// {/* <>
+//     {
+//         currentItems?.length > 0 &&
+//         <>
+//             <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
+//                 {
+//                     currentItems?.map((product) => (
+//                         <div key={product?._id} className="relative group">
+//                             <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
+//                             <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+//                                 <Link to={`/product/${product?._id}`}>
+//                                     <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+//                                 </Link>
+//                                 <Link to={`/product/${product?._id}`}>
+//                                     <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+//                                 </Link>
+//                                 {isInWishlist ? (
+//                                     <FaHeart
+//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
+//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 ) : (
+//                                     <FaRegHeart
+//                                         onClick={() => handleAddToWishlist(product)}
+//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 )}
+//                                 {/* {isInWishlist ? (
+//                                     <FaHeart
+//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
+//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 ) : (
+//                                     <FaRegHeart
+//                                         onClick={() => handleAddToWishlist(product)}
+//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 )} */}
+//                                 {/* {isProductInWishlist(product?._id) ? (
+//                                     <FaHeart
+//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
+//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 ) : (
+//                                     <FaRegHeart
+//                                         onClick={() => handleAddToWishlist(product)}
+//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+//                                     />
+//                                 )} */}
+
+
+
+//                                 {/* <FaRegHeart onClick={() => handleAddToWishlist(product)} className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" /> */}
+//                             </div>
+//                         </div>
+//                     ))
+//                 }
+//             </div>
+//             {/* pagination */}
+//             <div className="lg:mt-14 md:mt-12 mt-10">
+//                 <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
+//                     {/* Render Previous button */}
+
+//                     <button
+//                         onClick={goToPreviousPage}
+//                         disabled={currentPage === 1}
+//                         className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
+//                     >
+//                         <FaAngleLeft />
+//                     </button>
+
+
+//                     {/* Render pagination buttons */}
+//                     {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
+//                         const pageNumber = startPage + index;
+//                         return (
+//                             <li key={pageNumber}>
+//                                 <button
+//                                     onClick={() => paginate(pageNumber)}
+//                                     className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
+//                                 >
+//                                     {pageNumber}
+//                                 </button>
+//                             </li>
+//                         );
+//                     })}
+
+
+//                     {/* Render Next button */}
+//                     <button
+//                         onClick={goToNextPage}
+//                         disabled={currentPage === totalPages}
+//                         className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
+//                     >
+//                         <FaAngleRight />
+//                     </button>
+
+//                 </ul>
+//             </div>
+//         </>
+//     }
+// </> */}
