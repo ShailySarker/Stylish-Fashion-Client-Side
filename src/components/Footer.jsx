@@ -26,20 +26,20 @@ const Footer = () => {
                                 {/* only visible for user signUp / signIn */}
                                 <div className="flex flex-col lg:gap-3 md:gap-2 gap-[6px] lg:text-lg md:text-base text-sm font-medium">
                                     <ul className="">
-                                        <NavLink to='/cart' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                        }>Cart</NavLink>
-                                    </ul>
-                                    <ul className="">
                                         <NavLink to='/myAccount' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
                                         }>My Account</NavLink>
                                     </ul>
                                     <ul className="">
-                                        <NavLink to='/orderTracking' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
-                                        }>Order Tracking</NavLink>
-                                    </ul>
-                                    <ul className="">
                                         <NavLink to='/wishlist' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
                                         }>Wishlist</NavLink>
+                                    </ul>
+                                    <ul className="">
+                                        <NavLink to='/cart' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>Cart</NavLink>
+                                    </ul>
+                                    <ul className="">
+                                        <NavLink to='/orderTracking' className={({ isActive }) => isActive ? "border-b-2 border-white" : ""
+                                        }>Order Tracking</NavLink>
                                     </ul>
                                 </div>
                             </>

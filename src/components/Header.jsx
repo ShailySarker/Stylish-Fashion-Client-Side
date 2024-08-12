@@ -3,7 +3,7 @@ import logo from "../assets/Images/Header/logo-removebg-preview.png";
 import logo1 from "../assets/Images/Header/logo.jpg";
 import { FaBars, FaSearch } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
 import Swal from "sweetalert2";
@@ -15,6 +15,7 @@ const Header = () => {
 
     // redux
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
+    const cartInfo = useSelector(state => state?.cart);
     console.log(cartQuantity);
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
     // console.log(userAvailability);
@@ -53,6 +54,7 @@ const Header = () => {
         }
     };
 
+    
     return (
         <div style={{ zIndex: 9999 }} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
             {/* <div className="flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2"> */}

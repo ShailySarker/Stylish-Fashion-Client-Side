@@ -14,10 +14,6 @@ import { deleteAllProductsFromCart, deleteProductFromCart, fetchCart } from "../
 const Cart = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
-    // console.log(currentUser);
-    const cartData = useSelector(state => state?.cart);
-    console.log(cartData)
-    // Get cart data from the Redux store
     const cartInfo = useSelector((state) => state?.cart);
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
@@ -31,7 +27,7 @@ const Cart = () => {
         }
     }, [currentUser?._id, dispatch]);
 
-    // // Log the cart information whenever it updates
+    // Log the cart information whenever it updates
     // useEffect(() => {
     //     console.log("Cart Info:", cartInfo);
     // }, [cartInfo]);
@@ -169,57 +165,6 @@ const Cart = () => {
         }
     }, [stripeToken]);
 
-    // useEffect(() => {
-    //     const makeRequest = async () => {
-    //         try {
-    //             console.log("Sending payment request to backend");
-    //             const res = await userRequest.post("/checkout/payment", {
-    //                 tokenId: stripeToken?.id,
-    //                 amount: ((cartData?.total) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.total) * 0.05).toFixed(2)))) * 100,
-    //                 // amount: cartData?.total * 100,
-    //             });
-    //             // cartData?.cartQuantity = 0;
-    //             console.log("Payment Response:", res?.data);
-    //             if (res?.data?.status === "succeeded") {
-    //                 Swal.fire({
-    //                     position: "center",
-    //                     icon: "success",
-    //                     title: "Payment is successful!",
-    //                     // text: res?.response?.data,
-    //                     showConfirmButton: false,
-    //                     timer: 3000,
-    //                 });
-    //             }
-    //             // window.location.reload();
-    //         } catch (error) {
-    //             console.error("Payment Error:", error);
-    //             Swal.fire({
-    //                 position: "center",
-    //                 icon: "error",
-    //                 title: "Payment failed!",
-    //                 text: error.response?.data?.message || error.message,
-    //                 showConfirmButton: true,
-    //             });
-    //         }
-    //     };
-    //     stripeToken && makeRequest();
-    //     // }, [stripeToken, cartData?.total, navigate]);
-    // }, [stripeToken, cartData?.total, cartData?.cartQuantity, navigate]);
-
-
-    // const [isToggle, setToggle] = useState(1);
-    // const handleToggleWork = (id) => {
-    //     setToggle(id);
-    // };
-    // const [productQuantity, setProductQuantity] = useState(1);
-    // const handleIncreaseProduct = () => {
-    //     setProductQuantity(productQuantity + 1);
-    // };
-    // const handleDecreaseProduct = () => {
-    //     if (productQuantity > 0) {
-    //         setProductQuantity(productQuantity - 1);
-    //     }
-    // };
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
@@ -294,7 +239,7 @@ const Cart = () => {
                 }
 
                 {
-                    cartData?.products?.length > 0 &&
+                    cartInfo?.products?.length > 0 &&
                     <>
                         {/* order summary */}
                         <div className="lg:w-1/3 md:w-2/3 w-full lg:h-[480px] lg:mx-0 mx-auto border-2 border-purple-800 rounded-xl lg:px-5 lg:py-7 md:p-6 p-4 shadow-lg">
@@ -302,19 +247,20 @@ const Cart = () => {
                             <div className="lg:mt-16 md:mt-10 mt-8 flex flex-col lg:gap-4 md:gap-3 gap-2">
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Subtotal</p>
-                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {`${cartData?.subTotal}`}</p>
+                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {`${cartInfo?.subTotal}`}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Shipping</p>
-                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {cartData?.cartQuantity * 5}</p>
+                                    <p className="font-semibold lg:text-lg md:text-base text-sm"><span className="font-bold">$</span> {cartInfo?.cartQuantity * 5}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="font-medium lg:text-lg md:text-base text-sm">Tax</p>
-                                    <p className="font-semibold lg:text-lg md:text-base text-sm"> <span className="font-bold">$</span> {(cartData?.subTotal * 0.05).toFixed(2)}</p>
+                                    <p className="font-semibold lg:text-lg md:text-base text-sm"> <span className="font-bold">$</span> {(cartInfo?.subTotal * 0.05).toFixed(2)}</p>
                                 </div>
                                 <div className="flex justify-between lg:pt-5 md:pt-4 pt-3 border-t-2">
                                     <p className="font-semibold lg:text-2xl md:text-xl text-lg">Total</p>
-                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}`}
+                                    <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05)}`}
+                                    {/* <p className="font-bold lg:text-2xl md:text-xl text-lg"><span className="font-bold">$</span> {`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`} */}
                                     </p>
                                 </div>
                             </div>
@@ -323,10 +269,10 @@ const Cart = () => {
                                 image="https://i.ibb.co/v4gKvy3/Icon.png"
                                 billingAddress
                                 shippingAddress
-                                // description={`Your total is $${cartData?.total}`}
-                                // amount={cartData?.total * 100}
-                                description={`Your total is ${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}`}
-                                amount={`${(cartData?.subTotal) + ((cartData?.cartQuantity) * 5) + (parseFloat(((cartData?.subTotal) * 0.05).toFixed(2)))}` * 100}
+                                // description={`Your total is $${cartInfo?.total}`}
+                                // amount={cartInfo?.total * 100}
+                                description={`Your total is ${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`}
+                                amount={`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}` * 100}
                                 token={handleToken}
                                 stripeKey={Stripe_Key}
                             >

@@ -75,15 +75,6 @@ const SingleProductDetails = () => {
             userRequest.post("/carts", addToCartInfo)
                 .then(response => {
                     console.log(response?.data);
-                    // const productToAdd = {
-                    //     ...product,
-                    //     cartItemId: uuidv4(), // unique id
-                    //     quantity: productQuantity,
-                    //     selectedColor,
-                    //     selectedSize
-                    // };
-
-                    // dispatch(addProduct(productToAdd));
                     dispatch(addProduct(addToCartInfo));
 
                     Swal.fire({
@@ -112,41 +103,6 @@ const SingleProductDetails = () => {
             alert("Please select both color and size");
         }
     };
-
-    // const handleAddToCart = () => {
-    //     if (selectedColor) {
-    //         if (selectedSize) {
-    //             console.log(selectedColor, selectedSize, productQuantity);
-
-    //             // api
-    //             const addToCartInfo = {
-    //                 ...product,
-    //                 productQuantity,
-    //                 selectedColor,
-    //                 selectedSize
-    //             };
-    //             dispatch(addProduct(addToCartInfo));
-
-    //             Swal.fire({
-    //                 position: "center",
-    //                 icon: "success",
-    //                 title: "The product is successfully added into cart!",
-    //                 showConfirmButton: false,
-    //                 timer: 2000
-    //             });
-    //             setSelectedColor("");
-    //             setSelectedSize("");
-    //             setProductQuantity(1);
-
-    //             navigate("/cart");
-
-    //         } else {
-    //             alert("kindly select size");
-    //         }
-    //     } else {
-    //         alert("kindly select color");
-    //     }
-    // };
 
     return (
         <div className="flex md:flex-row flex-col items-center lg:gap-8 md:gap-7 gap-6 lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
@@ -205,7 +161,6 @@ const SingleProductDetails = () => {
                     </div>
                 </div>
                 <div className="flex lg:gap-4 md:gap-3 gap-2 lg:mt-8 md:mt-7 mt-6">
-                    {/* <button className="lg:py-3 md:py-[10px] py-2 border-2 rounded-2xl bg-sky-700 text-white font-semibold lg:text-lg lg:w-44 md:w-40 w-36">Buy Now</button> */}
                     <button className="lg:py-3 md:py-[10px] py-2 border-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-800 text-white font-semibold lg:text-lg lg:w-44 md:w-40 w-36" onClick={handleAddToCart}>Add to Cart</button>
                 </div>
             </div>

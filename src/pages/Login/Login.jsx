@@ -12,6 +12,7 @@ const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const dispatch = useDispatch();
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
+    // const cartInfo = useSelector((state) => state?.cart);
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
