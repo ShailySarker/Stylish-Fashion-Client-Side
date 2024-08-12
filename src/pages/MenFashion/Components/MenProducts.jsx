@@ -230,7 +230,7 @@ const MenProducts = () => {
                 </div>
                 <div className="flex items-center lg:gap-3 md:gap-20 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Sort By:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={event => setSort(event.target.value)}>
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={event => setSort(event?.target?.value)}>
                         <option value="newest">New Arrival</option>
                         <option value="asc">Price Low to High</option>
                         <option value="desc">Price High to Low</option>

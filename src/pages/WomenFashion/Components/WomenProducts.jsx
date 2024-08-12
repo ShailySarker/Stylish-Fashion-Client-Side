@@ -1,113 +1,87 @@
-import { FaSearch, FaShoppingCart } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { FaAngleLeft, FaAngleRight, FaHeart, FaRegHeart } from "react-icons/fa6";
-import product10 from "../../../assets/Images/Home/OurProducts_womenBardotDress.jpg";
-import product11 from "../../../assets/Images/Home/OurProducts_womenFormal.jpg";
-import product12 from "../../../assets/Images/Home/OurProducts_womenMaxiCutDress.jpg";
-import product13 from "../../../assets/Images/Home/OurProducts_womenPantDress.jpg";
-import product14 from "../../../assets/Images/Home/OurProducts_womenShiftDress.jpg";
-import product15 from "../../../assets/Images/Home/OurProducts_womenSkirtDress.jpg";
-import product16 from "../../../assets/Images/Home/OurProducts_womenTopDress.jpg";
-import product17 from "../../../assets/Images/Home/OurProducts_womenWinterCap.jpg";
-import product18 from "../../../assets/Images/Home/OurProducts_womenWinterCoatDress.jpg";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { publicRequest } from "../../../helpers/axios/requestMethod";
 import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
 import Swal from "sweetalert2";
 import { TiShoppingCart } from "react-icons/ti";
 
-const womenProductsData = [
-    {
-        id: 1,
-        image: product10,
-    },
-    {
-        id: 2,
-        image: product12,
-    },
-    {
-        id: 3,
-        image: product13,
-    },
-    {
-        id: 4,
-        image: product14,
-    },
-    {
-        id: 5,
-        image: product15,
-    },
-    {
-        id: 6,
-        image: product16,
-    },
-    {
-        id: 7,
-        image: product17,
-    },
-    {
-        id: 8,
-        image: product18,
-    },
-    {
-        id: 9,
-        image: product10,
-    },
-    {
-        id: 10,
-        image: product11,
-    },
-    {
-        id: 11,
-        image: product11,
-    },
-    {
-        id: 12,
-        image: product12,
-    },
-    {
-        id: 13,
-        image: product13,
-    },
-    {
-        id: 14,
-        image: product14,
-    },
-    {
-        id: 15,
-        image: product15,
-    },
-    {
-        id: 16,
-        image: product16,
-    },
-    {
-        id: 17,
-        image: product17,
-    },
-    {
-        id: 18,
-        image: product18,
-    },
-
-];
 
 const WomenProducts = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state?.user?.currentUser);
     const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
 
-    // filter work
+    // // filter work
+    // const [filters, setFilters] = useState({});
+    // const [sort, setSort] = useState("newest");
+
+    // const handleFilters = (event) => {
+    //     const selectedValue = event?.target?.value;
+    //     setFilters({
+    //         ...filters,
+    //         [event?.target?.name]: selectedValue
+    //     });
+    // };
+
+    // console.log(filters);
+
+    // // product data show
+    // const [womenProducts, setWomenProducts] = useState([]);
+    // const [filteredWomenProducts, setFilteredWomenProducts] = useState([]);
+    // const category = "women";
+    // // for normal data show
+    // useEffect(() => {
+    //     const getWomenProducts = async () => {
+    //         try {
+    //             const res = await publicRequest.get(`/products?category=${category}`);
+    //             console.log(res?.data);
+    //             setWomenProducts(res?.data);
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     };
+    //     getWomenProducts();
+    // }, [category]);
+
+    // // for filtered data show
+    // useEffect(() => {
+    //     category && setFilteredWomenProducts(
+    //         womenProducts.filter((product) =>
+    //             Object.entries(filters).every(([key, value]) => (
+    //                 product[key].includes(value)
+    //             ))
+    //         )
+    //     )
+    // }, [womenProducts, category, filters]);
+
+    // for sort data show
+    // useEffect(() => {
+    //     if (sort === "newest") {
+    //         setFilteredWomenProducts((prev) =>
+    //             [...prev].sort((x, y) => new Date(y?.createdAt) - new Date(x?.createdAt))
+    //         )
+    //     } else if (sort === "asc") {
+    //         setFilteredWomenProducts((prev) =>
+    //             [...prev].sort((x, y) => x?.price - y?.price)
+    //         )
+    //     } else {
+    //         setFilteredWomenProducts((prev) =>
+    //             [...prev].sort((x, y) => y?.price - x?.price)
+    //         )
+    //     }
+    // }, [womenProducts, sort, filters]);
+
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState("newest");
 
     const handleFilters = (event) => {
-        const selectedValue = event.target.value;
+        const selectedValue = event?.target?.value;
         setFilters({
             ...filters,
-            [event.target.name]: selectedValue
+            [event?.target?.name]: selectedValue
         });
     };
 
@@ -117,6 +91,7 @@ const WomenProducts = () => {
     const [womenProducts, setWomenProducts] = useState([]);
     const [filteredWomenProducts, setFilteredWomenProducts] = useState([]);
     const category = "women";
+
     // for normal data show
     useEffect(() => {
         const getWomenProducts = async () => {
@@ -283,10 +258,10 @@ const WomenProducts = () => {
             </div>
 
             {/* queries */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row md:flex-wrap flex-col justify-between lg:items-center md:items-center items-end lg:gap-0 md:gap-y-4 gap-y-3">
+            {/* <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row md:flex-wrap flex-col justify-between lg:items-center md:items-center items-end lg:gap-0 md:gap-y-4 gap-y-3">
                 <div className="flex items-center lg:gap-3 md:gap-10 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Color:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="color">
                         <option disabled selected>Color</option>
                         <option value="">Blue</option>
                         <option value="">Pink</option>
@@ -301,7 +276,7 @@ const WomenProducts = () => {
                 </div>
                 <div className="flex items-center lg:gap-3 md:gap-12 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Size:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="size">
                         <option disabled selected>Size</option>
                         <option value="">XS</option>
                         <option value="">S</option>
@@ -313,10 +288,48 @@ const WomenProducts = () => {
                 </div>
                 <div className="flex items-center lg:gap-3 md:gap-20 gap-10">
                     <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Sort By:</h4>
-                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40">
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={event => setSort(event?.target?.value)}>
                         <option selected>New Arrival</option>
                         <option value="">Price Low to High</option>
                         <option value="">Price High to Low</option>
+                    </select>
+                </div>
+            </div> */}
+
+            <div className="bg-gradient-to-r from-blue-500 to-purple-800 lg:mt-12 md:mt-10 mt-7 lg:py-5 md:py-4 py-3 lg:px-6 md:px-5 px-4 flex lg:flex-row md:flex-wrap flex-col justify-between lg:items-center md:items-center items-end lg:gap-0 md:gap-y-4 gap-y-3">
+                <div className="flex items-center lg:gap-3 md:gap-10 gap-10">
+                    <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Color:</h4>
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="color">
+                        <option disabled selected>Color</option>
+                        <option value="blue">Blue</option>
+                        <option value="pink">Pink</option>
+                        <option value="gray">Gray</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                        <option value="red">Red</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="green">Green</option>
+                        <option value="orange">Orange</option>
+                    </select>
+                </div>
+                <div className="flex items-center lg:gap-3 md:gap-12 gap-10">
+                    <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Select Size:</h4>
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={handleFilters} name="size">
+                        <option disabled selected>Size</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="2XL">2XL</option>
+                    </select>
+                </div>
+                <div className="flex items-center lg:gap-3 md:gap-20 gap-10">
+                    <h4 className="text-white lg:text-xl md:text-lg text-base font-semibold">Sort By:</h4>
+                    <select className="lg:py-2 py-[6px] lg:px-4 md:px-3 px-2 lg:text-lg font-semibold rounded-lg lg:w-48 md:w-44 w-40" onChange={event => setSort(event?.target?.value)}>
+                        <option value="newest">New Arrival</option>
+                        <option value="asc">Price Low to High</option>
+                        <option value="desc">Price High to Low</option>
                     </select>
                 </div>
             </div>
@@ -402,80 +415,6 @@ const WomenProducts = () => {
                         }
                     </>
             }
-            {/* <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product10} alt="product10" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product11} alt="product11" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product12} alt="product12" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product13} alt="product13" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product14} alt="product14" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product15} alt="product6" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product16} alt="product16" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product17} alt="product17" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-                <div className="relative group">
-                    <img className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-60 h-52 w-full shadow-lg" src={product18} alt="product18" />
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-2 md:gap-[6px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <FaShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                        <FaRegHeart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-110" />
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 };
