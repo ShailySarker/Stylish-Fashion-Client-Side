@@ -1,12 +1,12 @@
-import Swal from "sweetalert2";
 import { userRequest } from "../../helpers/axios/requestMethod";
-import { clearCart, setCart } from "../cartRedux";
+import { setCart } from "../cartRedux";
 
 // cart product show
 export const fetchCart = (userId) => async (dispatch) => {
     try {
         const res = await userRequest.get(`/carts/find/${userId}`);
         dispatch(setCart(res?.data));
+        // localStorage.setItem("cart", JSON.stringify(res?.data))
     } catch (error) {
         console.error("Failed to fetch cart:", error);
     }
