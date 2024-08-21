@@ -8,11 +8,17 @@ const MyAccount = () => {
     const dispatch = useDispatch();
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
     // const cartInfo = useSelector((state) => state?.cart);
+    const [image, setImage] = useState(null);
 
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
 
+    const handleImageChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setImage(URL.createObjectURL(e.target.files[0]));
+        }
+    };
     const handleUpdateAccountInfo = async (event) => {
         event?.preventDefault();
         const form = event?.target;
@@ -21,25 +27,25 @@ const MyAccount = () => {
 
         // await login(dispatch, { username, password });
     };
-    useEffect(() => {
-        if (currentUser) {
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Login is successful!",
-                showConfirmButton: false,
-                timer: 3000,
-            });
-        } else {
-            Swal.fire({
-                position: "center",
-                icon: "error",
-                title: "Login failed!",
-                text: loginError,
-                showConfirmButton: true,
-            });
-        }
-    }, [currentUser]);
+    // useEffect(() => {
+    //     if (currentUser) {
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "success",
+    //             title: "Login is successful!",
+    //             showConfirmButton: false,
+    //             timer: 3000,
+    //         });
+    //     } else {
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "error",
+    //             title: "Login failed!",
+    //             text: loginError,
+    //             showConfirmButton: true,
+    //         });
+    //     }
+    // }, [currentUser]);
 
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
@@ -49,15 +55,31 @@ const MyAccount = () => {
                 {/* <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-48 md:my-40 my-32 text-black text-center font-semibold">Coming Soon!</p> */}
             </div>
             <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                        Upload Image
+                    </label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                    />
+                    {image && (
+                        <div className="mt-4">
+                            <img src={image} alt="Uploaded preview" className="lg:w-64 lg:h-72 rounded-lg shadow-md" />
+                        </div>
+                    )}
+                </div>
                 <form onSubmit={handleUpdateAccountInfo} className="lg:mt-8 md:mt-5 mt-6 w-[50%] flex flex-col items-center">
                     <div className="flex flex-col lg:gap-6 md:gap-5 gap-4 w-full">
                         <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                             <h4 className="lg:text-lg md:text-lg font-semibold text-black">UserName<span className="text-[#E41414]">*</span></h4>
-                            <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="username" id="username" value={currentUser?.username} required />
+                            <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="username" id="username" value={currentUser?.username} readOnly />
                         </div>
                         <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                             <h4 className="lg:text-lg md:text-lg font-semibold text-black">Email<span className="text-[#E41414]">*</span></h4>
-                            <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="email" name="email" id="" value={currentUser?.email} required />
+                            <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="email" name="email" id="" value={currentUser?.email} readOnly />
                         </div>
                         <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                             <h4 className="lg:text-lg md:text-lg font-semibold text-black">Password<span className="text-[#E41414]">*</span></h4>
