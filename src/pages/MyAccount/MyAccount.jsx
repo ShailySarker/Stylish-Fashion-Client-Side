@@ -197,7 +197,6 @@ const MyAccount = () => {
                             <button type="submit" className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-64 md:w-52 w-48 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg">Update User Info</button>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>

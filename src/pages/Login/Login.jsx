@@ -16,7 +16,7 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
-    
+
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
@@ -24,10 +24,16 @@ const Login = () => {
     const handleLogin = async (event) => {
         event?.preventDefault();
         const form = event?.target;
-        const username = form?.username?.value;
+        const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+        // const username = form?.username?.value;
+        const email = form?.email?.value;
         const password = form?.password?.value;
-
-        await login(dispatch, { username, password });
+        
+        if (!gmailRegex.test(email)) {
+            alert("Email is not in the correct format!");
+            return;
+        }
+        await login(dispatch, { email, password });
     };
 
     useEffect(() => {
@@ -52,6 +58,10 @@ const Login = () => {
         }
     }, [currentUser, loginError, from, navigate]);
 
+    const handleGoing = () => {
+        navigate("/otp");
+    }
+
     return (
         <div className="relative flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
             {isFetching && <Loader />} {/* Show loader when fetching */}
@@ -63,14 +73,14 @@ const Login = () => {
                     <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800 lg:mt-3 md:mt-2 mt-6">Login</h2>
                     <form onSubmit={handleLogin} className="lg:mt-8 md:mt-5 mt-6">
                         <div className="flex flex-col lg:gap-6 md:gap-5 gap-4 w-full lg:mx-0 mx-auto">
-                            <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
+                            {/* <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">UserName<span className="text-[#E41414]">*</span></h4>
                                 <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="text" name="username" id="username" required />
-                            </div>
-                            {/* <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
+                            </div> */}
+                            <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">Email<span className="text-[#E41414]">*</span></h4>
                                 <input className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" type="email" name="email" id="" required />
-                            </div> */}
+                            </div>
                             <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                 <h4 className="lg:text-lg md:text-lg font-semibold text-black">Password<span className="text-[#E41414]">*</span></h4>
                                 <div className="relative w-full">
@@ -87,7 +97,7 @@ const Login = () => {
                                 </div>
                             </div>
                         </div>
-                        <p className="lg:mt-6 md:mt-5 mt-3 lg:text-base md:text-base text-sm md:font-bold font-semibold text-purple-800 text-right">Forget password?</p>
+                        <p onClick={handleGoing} className="lg:mt-6 md:mt-5 mt-3 lg:text-base md:text-base text-sm md:font-bold font-semibold text-purple-800 text-right">Forget password?</p>
 
                         <button type="submit" className="lg:mt-10 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-52 md:w-44 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto">Login</button>
                     </form>

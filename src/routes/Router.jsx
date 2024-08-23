@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
 import PrivateRouter from "./PrivateRouter";
+import OTP from "../pages/OTP/OTP";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -155,6 +156,13 @@ const router = createBrowserRouter(
                 },
                 
             ]
+        },
+        {
+            path: "/otp",
+            element: <Suspense fallback={
+                <LazyLoader />}>
+                <OTP />
+            </Suspense>
         },
         {
             path: "/login",
