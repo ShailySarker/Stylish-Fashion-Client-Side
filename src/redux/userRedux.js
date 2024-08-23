@@ -40,9 +40,12 @@ const userSlice = createSlice({
             state.currentUser = null;
             localStorage.removeItem('user');
         },
+        updateUser(state, action) {
+            state.currentUser = action.payload;
+        },
     }
 });
 
 
-export const { loginStart, loginSuccess, loginFailure, signUpStart, signUpSuccess, signUpFailure, logout } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, signUpStart, signUpSuccess, signUpFailure, logout, updateUser } = userSlice.actions;
 export default userSlice.reducer;
