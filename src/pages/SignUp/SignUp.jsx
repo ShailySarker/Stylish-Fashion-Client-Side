@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import companyLogo from "../../assets/Images/SignUp/logo.jpg";
 import banner from "../../assets/Images/SignUp/SignUp_banner.png";
 import { useState } from "react";
