@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import banner from "../../assets/Images/Login/fashion-model-kids-free-photo-removebg-preview.png";
 import companyLogo from "../../assets/Images/Login/logo.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash, FaX } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/api/apiCalls";
@@ -14,8 +14,10 @@ const Login = () => {
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
     // const cartInfo = useSelector((state) => state?.cart);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [newPasswordVisible, setNewPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [forgetPasswordWindow, setForgetPasswordWindow] = useState(false);
-    const [otpWindow, setOtpWindow] = useState(true);
+    const [otpWindow, setOtpWindow] = useState(false);
     const [resetPasswordWindow, setResetPasswordWindow] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,6 +25,12 @@ const Login = () => {
 
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
+    };
+    const toggleNewPasswordVisibility = () => {
+        setNewPasswordVisible((prev) => !prev);
+    };
+    const toggleConfirmPasswordVisibility = () => {
+        setConfirmPasswordVisible((prev) => !prev);
     };
 
     const handleLogin = async (event) => {
@@ -63,7 +71,9 @@ const Login = () => {
     }, [currentUser, loginError, from, navigate]);
 
     const handleForgetPasswordWindowOpen = () => {
-        setForgetPasswordWindow(true);
+        // setForgetPasswordWindow(true);
+        // setOtpWindow(true);
+        setResetPasswordWindow(true)
     }
 
     const handleCloseModal = () => {
@@ -86,12 +96,101 @@ const Login = () => {
                 await generateOTP(email);
                 setForgetPasswordWindow(false);
                 setOtpWindow(true);
-
             }
         } else {
             alert("Kindly enter your email address!");
         }
     }
+
+    const [otpDigits, setOtpDigits] = useState(["", "", "", "", ""]);
+    const inputRefs = Array.from({ length: otpDigits?.length }, () => useRef(null));
+
+    const handleOtpDigitChange = (index, value) => {
+        if (/^\d*$/.test(value) && value.length <= 1) {
+            const newOtpDigits = [...otpDigits];
+            newOtpDigits[index] = value;
+            setOtpDigits(newOtpDigits);
+            if (index < otpDigits?.length - 1 && value?.length === 1) {
+                inputRefs[index + 1].current.focus();
+            }
+            if (index > 0 && value?.length === 0) {
+                inputRefs[index - 1].current.focus();
+            }
+        }
+    };
+
+    // verify otp
+    const handleOTPVerify = async (event, index) => {
+        event.preventDefault();
+        const singleDigit = event?.target?.value;
+        if (/^\d*$/.test(singleDigit) && singleDigit?.length <= 1) {
+            const newOtpDigits = [...otpDigits];
+            newOtpDigits[index] = singleDigit;
+            setOtpDigits(newOtpDigits);
+            if (index < otpDigits?.length - 1 && singleDigit?.length === 1) {
+                inputRefs[index + 1].current.focus();
+            }
+            if (index > 0 && singleDigit?.length === 0) {
+                inputRefs[index - 1].current.focus();
+            }
+        }
+        const otpCode = otpDigits.join(''); // Combine the OTP digits into a single string
+
+        if (otpCode?.length !== otpDigits?.length) {
+            alert("Please enter a valid OTP.");
+            return;
+        } else {
+            await handleOTPVerify(otpCode);
+            console.log(otpCode)
+        }
+        event?.target?.reset();
+    };
+
+    // resend otp
+    const handleResendOTP = async () => {
+        // localStorage.getItem();
+        // await generateOTP(email);
+
+    };
+
+    // reset password
+    const handleResetPasswordWindow = async (e) => {
+        e.preventDefault();
+        const form = e?.target;
+        const newPassword = form?.newPassword?.value;
+        const confirmPassword = form?.confirmPassword?.value;
+
+        if (!/(?=.*[A-Z].*[A-Z])/.test(newPassword)) {
+            alert('Please add at least two uppercase letters');
+            return;
+        }
+        if (!/(?=.*[0-9].*[0-9])/.test(newPassword)) {
+            alert('Please add at least two numbers');
+            return;
+        }
+        if (!/(?=.*[!@#$&*])/.test(newPassword)) {
+            alert('Please add a special character');
+            return;
+        }
+        if (newPassword.length < 8) {
+            alert('Password must be 8 characters long');
+            return;
+        }
+
+        if (newPassword && confirmPassword) {
+            if (newPassword === confirmPassword) {
+                // await 
+                console.log(newPassword , confirmPassword)
+                // alert("")
+            } else {
+                alert("New password is not matched with confirm password!")
+            }
+        } else {
+            alert("Kindly give all form info")
+        }
+    }
+
+
 
     return (
         <div className="relative flex justify-between items-center bg-[#b7b0b00a] bg-opacity-75 backdrop-filter backdrop-blur-lg h-screen lg:px-28 md:px-9 px-6 lg:py-2 md:py-7 py-5">
@@ -143,7 +242,7 @@ const Login = () => {
             {
                 forgetPasswordWindow && (
                     <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50">
-                        <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-3 py-5 m-10 rounded-xl bg-white md:w-[560px] w-11/12 mx-auto shadow-lg">
+                        <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-4 py-5 rounded-xl bg-white md:w-[560px] w-11/12 mx-auto shadow-lg">
                             <div className="flex justify-between">
                                 <div className="w-[12%]"></div>
                                 <h2 className="w-[76%] text-center lg:text-3xl/normal md:text-2xl text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Forget Password?</h2>
@@ -152,7 +251,7 @@ const Login = () => {
                                 </div>
                             </div>
                             <p className="text-center lg:text-lg md:text-base text-sm font-medium text-black">Kindly enter your gmail address to get the OTP</p>
-                            <form onSubmit={handleForgetPasswordWindow} className="lg:mt-16 md:mt-5 mt-6">
+                            <form onSubmit={handleForgetPasswordWindow} className="lg:mt-16 md:mt-10 mt-8">
                                 <div className="flex flex-col lg:gap-6 md:gap-5 gap-4 w-full lg:mx-0 mx-auto">
                                     <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
                                         <h4 className="lg:text-lg md:text-lg font-semibold text-black">Email<span className="text-[#E41414]">*</span></h4>
@@ -163,6 +262,105 @@ const Login = () => {
                             </form>
                         </div>
                     </div>
+                )
+            }
+            {/* otp Window */}
+            {
+                otpWindow && (
+                    <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50 ">
+                        <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-4 py-5 rounded-xl bg-white md:w-[560px] w-11/12 mx-auto shadow-lg">
+                            <div className="flex justify-between">
+                                <div className="w-[12%]"></div>
+                                <h2 className="w-[76%] text-center lg:text-3xl/normal md:text-2xl text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">OTP</h2>
+                                <div className="w-[12%] flex justify-end">
+                                    <FaX onClick={handleCloseModal} className=" bg-purple-800 text-white p-1 md:w-7 md:h-7 w-5 h-5 rounded-full " />
+                                </div>
+                            </div>
+                            <p className="text-center lg:text-lg md:text-base text-sm font-medium text-black">Kindly enter OTP digits which you got from gmail</p>
+                            <div>
+                                <form onSubmit={handleOTPVerify} className="lg:mt-16 md:mt-10 mt-8">
+                                    <div className="flex justify-center">
+                                        {otpDigits?.map((digit, index) => (
+                                            <input
+                                                key={index}
+                                                type="text"
+                                                maxLength="1"
+                                                className={`lg:w-14 md:w-12 w-10 h-10 lg:h-14 md:h-12 mx-2 text-center border-[3px] rounded-lg required ${digit ? "border-purple-800 text-purple-800" : "border-black"} md:text-2xl text-xl font-semibold`}
+                                                value={digit}
+                                                ref={inputRefs[index]}
+                                            />
+                                        ))}
+                                    </div>
+                                    <button type="submit" className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center">VERIFY</button>
+                                </form>
+                                {/* <button className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center" onClick={() => handleOTPVerify()}>VERIFY</button> */}
+                                <div className="text-center mt-5">
+                                    <p className="lg:text-lg md:text-base text-sm font-medium">
+                                        <span className="text-gray-400">Didn’t get the OTP? </span>
+                                        <span className="text-[#0044CC] font-semibold border-b-[3px] border-[#0044CC]">
+                                            <button onClick={handleResendOTP}>
+                                                Resend OTP
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )
+            }
+            {/* reset password */}
+            {
+                resetPasswordWindow && (
+                    <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50 ">
+                        <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-4 py-5 rounded-xl bg-white md:w-[560px] w-11/12 mx-auto shadow-lg">
+                            <div className="flex justify-between">
+                                <div className="w-[12%]"></div>
+                                <h2 className="w-[76%] text-center lg:text-3xl/normal md:text-2xl text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Reset Password</h2>
+                                <div className="w-[12%] flex justify-end">
+                                    <FaX onClick={handleCloseModal} className=" bg-purple-800 text-white p-1 md:w-7 md:h-7 w-5 h-5 rounded-full " />
+                                </div>
+                            </div>
+                            <p className="text-center lg:text-lg md:text-base text-sm font-medium text-black">Kindly set your new password</p>
+                            <form onSubmit={handleResetPasswordWindow} className="lg:mt-16 md:mt-10 mt-8">
+                                <div className="flex flex-col lg:gap-6 md:gap-5 gap-4 w-full lg:mx-0 mx-auto">
+                                    <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
+                                        <h4 className="lg:text-lg md:text-lg font-semibold text-black">New Password<span className="text-[#E41414]">*</span></h4>
+                                        <div className="relative w-full">
+                                            <input
+                                                type={newPasswordVisible ? 'text' : 'password'}
+                                                className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" name="newPassword" id="newPassword" required
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute md:right-5 right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                                                onClick={toggleNewPasswordVisibility}>
+                                                {newPasswordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-start lg:gap-2 gap-1 w-full">
+                                        <h4 className="lg:text-lg md:text-lg font-semibold text-black">Confirm Password<span className="text-[#E41414]">*</span></h4>
+                                        <div className="relative w-full">
+                                            <input
+                                                type={confirmPasswordVisible ? 'text' : 'password'}
+                                                className="md:py-2 py-[6px] lg:px-5 md:px-4 px-3 rounded-xl w-full lg:text-lg shadow-lg border-2 border-purple-800" name="confirmPassword" id="confirmPassword" required
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute md:right-5 right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                                                onClick={toggleConfirmPasswordVisibility}>
+                                                {confirmPasswordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+
                 )
             }
         </div>
