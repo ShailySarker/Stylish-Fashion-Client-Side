@@ -7,18 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/api/apiCalls";
 import Swal from "sweetalert2";
 import Loader from "../../components/Loader";
-import { generateOTP } from "../../redux/api/forgetToResetPasswordCalls";
+import { generateOTP, resetPassword, verifyOTP } from "../../redux/api/forgetToResetPasswordCalls";
 
 const Login = () => {
     const dispatch = useDispatch();
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
     // const cartInfo = useSelector((state) => state?.cart);
+    const [otpDigits, setOtpDigits] = useState(["", "", "", "", ""]);
+    const inputRefs = Array.from({ length: otpDigits?.length }, () => useRef(null));
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [newPasswordVisible, setNewPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [forgetPasswordWindow, setForgetPasswordWindow] = useState(false);
     const [otpWindow, setOtpWindow] = useState(false);
     const [resetPasswordWindow, setResetPasswordWindow] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
@@ -71,9 +74,7 @@ const Login = () => {
     }, [currentUser, loginError, from, navigate]);
 
     const handleForgetPasswordWindowOpen = () => {
-        // setForgetPasswordWindow(true);
-        // setOtpWindow(true);
-        setResetPasswordWindow(true)
+        setForgetPasswordWindow(true);
     }
 
     const handleCloseModal = () => {
@@ -93,63 +94,76 @@ const Login = () => {
                 alert("Email is not in the correct format!");
                 return;
             } else {
-                await generateOTP(email);
-                setForgetPasswordWindow(false);
-                setOtpWindow(true);
+                setIsLoading(true); // Start loading
+                try {
+                    await generateOTP(email);
+                    setForgetPasswordWindow(false);
+                    setOtpWindow(true);
+                } catch (error) {
+                    // console.error('Error during OTP generation:', error);
+                    alert('An error occurred while generating the OTP. Please try again.');
+                } finally {
+                    setIsLoading(false); // Stop loading
+                }
             }
         } else {
             alert("Kindly enter your email address!");
         }
     }
 
-    const [otpDigits, setOtpDigits] = useState(["", "", "", "", ""]);
-    const inputRefs = Array.from({ length: otpDigits?.length }, () => useRef(null));
+    // handle OTP verification
+    const handleOTPVerify = async (event) => {
+        event.preventDefault();
+        const otpCode = otpDigits.join('');
+
+        if (otpCode?.length !== 5) {
+            alert("Please enter the full 5-digit OTP");
+            return;
+        }
+
+        const isVerified = await verifyOTP(otpCode);
+
+        if (isVerified) {
+            setOtpDigits(["", "", "", "", ""]);
+            setOtpWindow(false);
+            setResetPasswordWindow(true);
+            event?.target?.reset();
+        }
+    };
 
     const handleOtpDigitChange = (index, value) => {
         if (/^\d*$/.test(value) && value.length <= 1) {
             const newOtpDigits = [...otpDigits];
             newOtpDigits[index] = value;
             setOtpDigits(newOtpDigits);
-            if (index < otpDigits?.length - 1 && value?.length === 1) {
+
+            // Focus the next input if a digit was entered
+            if (index < otpDigits.length - 1 && value.length === 1) {
                 inputRefs[index + 1].current.focus();
             }
-            if (index > 0 && value?.length === 0) {
+
+            // Focus the previous input if a digit was deleted
+            if (index > 0 && value.length === 0) {
                 inputRefs[index - 1].current.focus();
             }
         }
     };
 
-    // verify otp
-    const handleOTPVerify = async (event, index) => {
-        event.preventDefault();
-        const singleDigit = event?.target?.value;
-        if (/^\d*$/.test(singleDigit) && singleDigit?.length <= 1) {
-            const newOtpDigits = [...otpDigits];
-            newOtpDigits[index] = singleDigit;
-            setOtpDigits(newOtpDigits);
-            if (index < otpDigits?.length - 1 && singleDigit?.length === 1) {
-                inputRefs[index + 1].current.focus();
-            }
-            if (index > 0 && singleDigit?.length === 0) {
-                inputRefs[index - 1].current.focus();
-            }
-        }
-        const otpCode = otpDigits.join(''); // Combine the OTP digits into a single string
-
-        if (otpCode?.length !== otpDigits?.length) {
-            alert("Please enter a valid OTP.");
-            return;
-        } else {
-            await handleOTPVerify(otpCode);
-            console.log(otpCode)
-        }
-        event?.target?.reset();
-    };
-
-    // resend otp
+    // handle Resend OTP
     const handleResendOTP = async () => {
-        // localStorage.getItem();
-        // await generateOTP(email);
+        setOtpDigits(["", "", "", "", ""]);
+
+        const userData = JSON.parse(localStorage.getItem('userData'));
+
+        if (!userData?.email) {
+            alert("User data not found. Please try again.");
+            return;
+        }
+
+        const email = userData?.email;
+
+        // Call the generateOTP function to resend OTP
+        await generateOTP(email);
 
     };
 
@@ -160,36 +174,46 @@ const Login = () => {
         const newPassword = form?.newPassword?.value;
         const confirmPassword = form?.confirmPassword?.value;
 
+        // Password validation
         if (!/(?=.*[A-Z].*[A-Z])/.test(newPassword)) {
-            alert('Please add at least two uppercase letters');
+            alert('Please add at least two uppercase letters.');
             return;
         }
         if (!/(?=.*[0-9].*[0-9])/.test(newPassword)) {
-            alert('Please add at least two numbers');
+            alert('Please add at least two numbers.');
             return;
         }
         if (!/(?=.*[!@#$&*])/.test(newPassword)) {
-            alert('Please add a special character');
+            alert('Please add a special character.');
             return;
         }
         if (newPassword.length < 8) {
-            alert('Password must be 8 characters long');
+            alert('Password must be at least 8 characters long.');
             return;
         }
 
+        // Check if new password and confirm password match
         if (newPassword && confirmPassword) {
             if (newPassword === confirmPassword) {
-                // await 
-                console.log(newPassword , confirmPassword)
-                // alert("")
+                // Retrieve user data (email) from local storage
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData?.email) {
+                    alert("User data not found. Please try again.");
+                    return;
+                }
+
+                const email = userData?.email;
+                await resetPassword(email, newPassword);
+                // Remove user data from local storage after the API call
+                localStorage.removeItem('userData');
+                setResetPasswordWindow(false);
             } else {
-                alert("New password is not matched with confirm password!")
+                alert("New password does not match with confirm password!");
             }
         } else {
-            alert("Kindly give all form info")
+            alert("Please fill in all the required fields.");
         }
-    }
-
+    };
 
 
     return (
@@ -227,9 +251,9 @@ const Login = () => {
                                 </div>
                             </div>
                         </div>
-                        <p onClick={handleForgetPasswordWindowOpen} className="lg:mt-6 md:mt-5 mt-3 lg:text-base md:text-base text-sm md:font-bold font-semibold text-purple-800 text-right">Forget password?</p>
+                        <p onClick={handleForgetPasswordWindowOpen} className="lg:mt-5 md:mt-5 mt-3 lg:text-base md:text-base text-sm md:font-bold font-semibold text-purple-800 text-right">Forget password?</p>
 
-                        <button type="submit" className="lg:mt-10 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-52 md:w-44 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto">Login</button>
+                        <button type="submit" className="lg:mt-11 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-52 md:w-44 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto">Login</button>
                     </form>
                     <p className="lg:w-[400px] md:w-[500px] text-gray-800 lg:mt-4 md:mt-3 mt-2 lg:text-base md:text-base text-sm mx-auto md:font-medium lg:mb-10">Are you new here? <span className="text-purple-800 lg:font-extrabold font-bold border-b-2 border-purple-800"><Link to="/signUp"> SignUp</Link></span> now!</p>
                 </div>
@@ -260,6 +284,7 @@ const Login = () => {
                                 </div>
                                 <button type="submit" className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center">Submit</button>
                             </form>
+                            {isLoading && <p className="text-center font-semibold mt-5">Loading...</p>}
                         </div>
                     </div>
                 )
@@ -267,16 +292,16 @@ const Login = () => {
             {/* otp Window */}
             {
                 otpWindow && (
-                    <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50 ">
+                    <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50">
                         <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-4 py-5 rounded-xl bg-white md:w-[560px] w-11/12 mx-auto shadow-lg">
                             <div className="flex justify-between">
                                 <div className="w-[12%]"></div>
                                 <h2 className="w-[76%] text-center lg:text-3xl/normal md:text-2xl text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">OTP</h2>
                                 <div className="w-[12%] flex justify-end">
-                                    <FaX onClick={handleCloseModal} className=" bg-purple-800 text-white p-1 md:w-7 md:h-7 w-5 h-5 rounded-full " />
+                                    <FaX onClick={() => setOtpWindow(false)} className="bg-purple-800 text-white p-1 md:w-7 md:h-7 w-5 h-5 rounded-full" />
                                 </div>
                             </div>
-                            <p className="text-center lg:text-lg md:text-base text-sm font-medium text-black">Kindly enter OTP digits which you got from gmail</p>
+                            <p className="text-center lg:text-lg md:text-base text-sm font-medium text-black">Kindly enter OTP digits which you got from Gmail</p>
                             <div>
                                 <form onSubmit={handleOTPVerify} className="lg:mt-16 md:mt-10 mt-8">
                                     <div className="flex justify-center">
@@ -285,28 +310,25 @@ const Login = () => {
                                                 key={index}
                                                 type="text"
                                                 maxLength="1"
-                                                className={`lg:w-14 md:w-12 w-10 h-10 lg:h-14 md:h-12 mx-2 text-center border-[3px] rounded-lg required ${digit ? "border-purple-800 text-purple-800" : "border-black"} md:text-2xl text-xl font-semibold`}
+                                                className={`lg:w-14 md:w-12 w-10 h-10 lg:h-14 md:h-12 mx-2 text-center border-[3px] rounded-lg ${digit ? "border-purple-800 text-purple-800" : "border-black"} md:text-2xl text-xl font-semibold`}
                                                 value={digit}
+                                                onChange={(e) => handleOtpDigitChange(index, e?.target?.value)}
                                                 ref={inputRefs[index]}
                                             />
                                         ))}
                                     </div>
                                     <button type="submit" className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center">VERIFY</button>
                                 </form>
-                                {/* <button className="lg:mt-14 md:mt-12 mt-8 bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-44 md:w-40 w-36 px-4 lg:py-[10px] py-2 rounded-xl lg:text-xl md:text-lg text-base font-semibold shadow-lg mx-auto flex justify-center" onClick={() => handleOTPVerify()}>VERIFY</button> */}
                                 <div className="text-center mt-5">
                                     <p className="lg:text-lg md:text-base text-sm font-medium">
                                         <span className="text-gray-400">Didn’t get the OTP? </span>
                                         <span className="text-[#0044CC] font-semibold border-b-[3px] border-[#0044CC]">
-                                            <button onClick={handleResendOTP}>
-                                                Resend OTP
-                                            </button>
+                                            <button onClick={handleResendOTP}>Resend OTP</button>
                                         </span>
                                     </p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 )
             }

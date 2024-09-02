@@ -4,12 +4,17 @@ import { publicRequest } from "../../helpers/axios/requestMethod";
 export async function getUser({ email }) {
     try {
         const { data } = await publicRequest.get(`/auth/login/${email}`);
-        console.log(data)
+        // console.log(data);
+
+        // Store user data into local storage
+        localStorage.setItem('userData', JSON.stringify(data));
+
         return { data };
     } catch (error) {
         return { error: "User not found!" };
     }
 }
+
 
 // Forget password for generating OTP
 export async function generateOTP(email) {
@@ -18,9 +23,9 @@ export async function generateOTP(email) {
         const response = await publicRequest.get(`/auth/generateOTP?email=${encodeURIComponent(email)}`);
 
         // Handle successful response
-        if (response.status === 201) {
+        if (response?.status === 201) {
             const data = response?.data;
-            console.log('OTP generated:', data?.code);
+            // console.log('OTP generated:', data?.code);
 
             // Get user information and send OTP email
             const { data: userData } = await getUser({ email });
@@ -32,11 +37,11 @@ export async function generateOTP(email) {
                 subject: "Password Recovery OTP"
             });
 
-            console.log('Email sent:', mailSending?.data?.message);
+            // console.log('Email sent:', mailSending?.data?.message);
             alert(`OTP sent to your email: ${email}`);
 
         } else {
-            console.error('Error:', response?.data?.message);
+            // console.error('Error:', response?.data?.message);
             alert(`Error: ${response?.data?.message}`);
         }
 
@@ -47,45 +52,48 @@ export async function generateOTP(email) {
 }
 
 // otp check
-export async function handleOTPVerify(email, otpCode) {
+export async function verifyOTP(otpCode) {
     try {
-        // Make a GET request to verify the OTP
-        const response = await publicRequest.get(`/verifyOTP?email=${email}&code=${otpCode}`);
+        const response = await publicRequest.get(`/auth/verifyOTP?code=${otpCode}`);
 
-        // Handle the response
         if (response?.status === 200) {
-            console.log('OTP verified successfully:', response?.data?.message);
+            // console.log('OTP verified successfully:', response?.data?.message);
             alert('OTP verified successfully! Proceed to reset your password.');
-            // Proceed to the reset password page or enable the password reset functionality
+            return true; // Indicate success
+        } else if (response?.status === 400) {
+            // console.log('Invalid OTP:', response?.data?.message);
+            alert(response?.data?.message);
+            return false; // Indicate failure
         } else {
-            console.error('OTP verification failed:', response?.data?.message);
+            // console.error('OTP verification failed:', response?.data?.message);
             alert(`Error: ${response?.data?.message}`);
+            return false; // Indicate failure
         }
+
     } catch (error) {
-        console.error('Error during OTP verification:', error?.response || error?.message || error);
-        alert('An error occurred while verifying the OTP. Please try again.');
+        // console.error('Error during OTP verification:', error?.response);
+        // alert('Error during OTP verification:', error?.response?.data?.message);
+        alert(error?.response?.data?.message);
+        // alert('An error occurred while verifying the OTP. Please try again.');
+        return false; // Indicate failure
     }
 }
 
 
 // reset password
-export async function handleResetPassword(email, password) {
+export async function resetPassword(email, password) {
     try {
-        // Make a GET request to verify the OTP
-        const response = await publicRequest.get("/resetPassword");
+        const response = await publicRequest.put("/auth/resetPassword", { email, password });
 
-        // Handle the response
-        if (response?.status === 200) {
-            console.log('OTP verified successfully:', response?.data?.message);
-            alert('OTP verified successfully! Proceed to reset your password.');
-            // Proceed to the reset password page or enable the password reset functionality
+        if (response?.status === 201) {
+            alert("Password updated successfully!");
+            // Redirect user to the login page or another page if needed
         } else {
-            console.error('OTP verification failed:', response?.data?.message);
-            alert(`Error: ${response?.data?.message}`);
+            alert("Failed to reset password. Please try again.");
         }
     } catch (error) {
-        console.error('Error during OTP verification:', error?.response || error?.message || error);
-        alert('An error occurred while verifying the OTP. Please try again.');
+        console.error("Error during password reset:", error?.response || error?.message || error);
+        alert("An error occurred while resetting the password. Please try again.");
     }
 }
 
