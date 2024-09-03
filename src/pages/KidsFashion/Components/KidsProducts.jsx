@@ -37,7 +37,7 @@ const KidsProducts = () => {
         const getKidsProducts = async () => {
             try {
                 const res = await publicRequest.get(`/products?category=${category}`);
-                console.log(res?.data);
+                // console.log(res?.data);
                 setKidsProducts(res?.data);
             } catch (error) {
                 console.log(error)

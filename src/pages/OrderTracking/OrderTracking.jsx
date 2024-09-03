@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "../../redux/api/orderCalls";
-import Loader from "../../components/Loader";
 
 const OrderTracking = () => {
     const dispatch = useDispatch();

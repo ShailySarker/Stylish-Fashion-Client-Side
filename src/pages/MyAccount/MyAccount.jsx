@@ -8,7 +8,7 @@ import { updateUser } from "../../redux/userRedux";
 
 const MyAccount = () => {
     const dispatch = useDispatch();
-    const { currentUser } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state?.user);
 
     // State variables
     const [username, setUsername] = useState(currentUser?.username || '');
