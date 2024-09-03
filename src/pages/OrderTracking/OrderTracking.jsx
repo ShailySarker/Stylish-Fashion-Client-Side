@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 const OrderTracking = () => {
     const dispatch = useDispatch();
     const orderInfo = useSelector((state) => state?.order?.orders);
-    console.log(orderInfo)
+    // console.log(orderInfo)
     const { isLoading } = useSelector((state) => state?.order?.isLoading);
     const currentUser = useSelector((state) => state?.user?.currentUser);
 

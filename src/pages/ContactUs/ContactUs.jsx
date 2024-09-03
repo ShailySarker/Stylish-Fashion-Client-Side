@@ -39,7 +39,7 @@ const ContactUs = () => {
                 form.current.reset();
             }
         } catch (error) {
-            console.error(error);
+            // console.error(error);
 
             setIsSending(false);
             Swal.fire({

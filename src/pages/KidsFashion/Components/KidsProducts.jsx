@@ -25,7 +25,7 @@ const KidsProducts = () => {
         });
     };
 
-    console.log(filters);
+    // console.log(filters);
 
     // product data show
     const [kidsProducts, setKidsProducts] = useState([]);
@@ -144,7 +144,7 @@ const KidsProducts = () => {
     };
 
     const isProductInWishlist = (productId) => {
-        console.log("Wishlist:", wishlistInfo);
+        // console.log("Wishlist:", wishlistInfo);
         // console.log("Type of wishlist:", typeof wishlistInfo);
         return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };

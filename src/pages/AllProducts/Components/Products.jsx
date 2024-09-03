@@ -1,147 +1,12 @@
-
-import { FaRegHeart, FaSearch, FaShoppingCart } from "react-icons/fa";
-import product1 from "../../../assets/Images/AllProducts/Products_menCap.jpg";
-import product2 from "../../../assets/Images/AllProducts/Products_menHudi.jpg";
-import product3 from "../../../assets/Images/AllProducts/Products_menJacket.jpg";
-import product4 from "../../../assets/Images/AllProducts/Products_menPant.jpg";
-import product5 from "../../../assets/Images/AllProducts/Products_menShirt.jpg";
-import product6 from "../../../assets/Images/AllProducts/Products_menShorts.jpg";
-import product7 from "../../../assets/Images/AllProducts/Products_menSuit.jpg";
-import product8 from "../../../assets/Images/AllProducts/Products_menTshirt.jpg";
-import product9 from "../../../assets/Images/AllProducts/Products_menWinterCoat.jpg";
-import product10 from "../../../assets/Images/AllProducts/Products_womenBardotDress.jpg";
-import product11 from "../../../assets/Images/AllProducts/Products_womenFormal.jpg";
-import product12 from "../../../assets/Images/AllProducts/Products_womenMaxiCutDress.jpg";
-import product13 from "../../../assets/Images/AllProducts/Products_womenPantDress.jpg";
-import product14 from "../../../assets/Images/AllProducts/Products_womenShiftDress.jpg";
-import product15 from "../../../assets/Images/AllProducts/Products_womenSkirtDress.jpg";
-import product16 from "../../../assets/Images/AllProducts/Products_womenTopDress.jpg";
-import product17 from "../../../assets/Images/AllProducts/Products_womenWinterCap.jpg";
-import product18 from "../../../assets/Images/AllProducts/Products_womenWinterCoatDress.jpg";
-import product19 from "../../../assets/Images/AllProducts/Products_boyCap.jpg";
-import product20 from "../../../assets/Images/AllProducts/Products_boySuit.jpg";
-import product21 from "../../../assets/Images/AllProducts/Products_boyTshirtSet.jpg";
-import product22 from "../../../assets/Images/AllProducts/Products_boyWinterDress.jpg";
-import product23 from "../../../assets/Images/AllProducts/Products_girlCap.jpg";
-import product24 from "../../../assets/Images/AllProducts/Products_girlFrog.jpg";
-import product25 from "../../../assets/Images/AllProducts/Products_girlSkirtSet.jpg";
-import product26 from "../../../assets/Images/AllProducts/Products_girlWinterDress.jpg";
+import { FaRegHeart, FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { FaAirbnb, FaAngleLeft, FaAngleRight, FaHeart } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight, FaHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { publicRequest } from "../../../helpers/axios/requestMethod";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { TiShoppingCart } from "react-icons/ti";
 import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
-import { store } from "../../../redux/store";
-
-// const productsData = [
-//     {
-//         id: 1,
-//         image: product1,
-//     },
-//     {
-//         id: 2,
-//         image: product2,
-//     },
-//     {
-//         id: 3,
-//         image: product3,
-//     },
-//     {
-//         id: 4,
-//         image: product4,
-//     },
-//     {
-//         id: 5,
-//         image: product5,
-//     },
-//     {
-//         id: 6,
-//         image: product6,
-//     },
-//     {
-//         id: 7,
-//         image: product7,
-//     },
-//     {
-//         id: 8,
-//         image: product8,
-//     },
-//     {
-//         id: 9,
-//         image: product9,
-//     },
-//     {
-//         id: 10,
-//         image: product10,
-//     },
-//     {
-//         id: 11,
-//         image: product11,
-//     },
-//     {
-//         id: 12,
-//         image: product12,
-//     },
-//     {
-//         id: 13,
-//         image: product13,
-//     },
-//     {
-//         id: 14,
-//         image: product14,
-//     },
-//     {
-//         id: 15,
-//         image: product15,
-//     },
-//     {
-//         id: 16,
-//         image: product16,
-//     },
-//     {
-//         id: 17,
-//         image: product17,
-//     },
-//     {
-//         id: 18,
-//         image: product18,
-//     },
-//     {
-//         id: 19,
-//         image: product19,
-//     },
-//     {
-//         id: 20,
-//         image: product20,
-//     },
-//     {
-//         id: 21,
-//         image: product21,
-//     },
-//     {
-//         id: 22,
-//         image: product22,
-//     },
-//     {
-//         id: 23,
-//         image: product23,
-//     },
-//     {
-//         id: 24,
-//         image: product24,
-//     },
-//     {
-//         id: 25,
-//         image: product25,
-//     },
-//     {
-//         id: 26,
-//         image: product26,
-//     }
-// ];
 
 const Products = () => {
     const dispatch = useDispatch();
@@ -233,12 +98,12 @@ const Products = () => {
     };
 
     const isProductInWishlist = (productId) => {
-        console.log("Wishlist:", wishlistInfo);
+        // console.log("Wishlist:", wishlistInfo);
         // console.log("Type of wishlist:", typeof wishlistInfo);
         return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };
-    
-    
+
+
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;

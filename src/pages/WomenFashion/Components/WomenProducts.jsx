@@ -14,66 +14,6 @@ const WomenProducts = () => {
     const currentUser = useSelector(state => state?.user?.currentUser);
     const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
 
-    // // filter work
-    // const [filters, setFilters] = useState({});
-    // const [sort, setSort] = useState("newest");
-
-    // const handleFilters = (event) => {
-    //     const selectedValue = event?.target?.value;
-    //     setFilters({
-    //         ...filters,
-    //         [event?.target?.name]: selectedValue
-    //     });
-    // };
-
-    // console.log(filters);
-
-    // // product data show
-    // const [womenProducts, setWomenProducts] = useState([]);
-    // const [filteredWomenProducts, setFilteredWomenProducts] = useState([]);
-    // const category = "women";
-    // // for normal data show
-    // useEffect(() => {
-    //     const getWomenProducts = async () => {
-    //         try {
-    //             const res = await publicRequest.get(`/products?category=${category}`);
-    //             console.log(res?.data);
-    //             setWomenProducts(res?.data);
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     };
-    //     getWomenProducts();
-    // }, [category]);
-
-    // // for filtered data show
-    // useEffect(() => {
-    //     category && setFilteredWomenProducts(
-    //         womenProducts.filter((product) =>
-    //             Object.entries(filters).every(([key, value]) => (
-    //                 product[key].includes(value)
-    //             ))
-    //         )
-    //     )
-    // }, [womenProducts, category, filters]);
-
-    // for sort data show
-    // useEffect(() => {
-    //     if (sort === "newest") {
-    //         setFilteredWomenProducts((prev) =>
-    //             [...prev].sort((x, y) => new Date(y?.createdAt) - new Date(x?.createdAt))
-    //         )
-    //     } else if (sort === "asc") {
-    //         setFilteredWomenProducts((prev) =>
-    //             [...prev].sort((x, y) => x?.price - y?.price)
-    //         )
-    //     } else {
-    //         setFilteredWomenProducts((prev) =>
-    //             [...prev].sort((x, y) => y?.price - x?.price)
-    //         )
-    //     }
-    // }, [womenProducts, sort, filters]);
-
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState("newest");
 
@@ -85,7 +25,7 @@ const WomenProducts = () => {
         });
     };
 
-    console.log(filters);
+    // console.log(filters);
 
     // product data show
     const [womenProducts, setWomenProducts] = useState([]);
@@ -97,7 +37,7 @@ const WomenProducts = () => {
         const getWomenProducts = async () => {
             try {
                 const res = await publicRequest.get(`/products?category=${category}`);
-                console.log(res?.data);
+                // console.log(res?.data);
                 setWomenProducts(res?.data);
             } catch (error) {
                 console.log(error)
@@ -204,7 +144,7 @@ const WomenProducts = () => {
     };
 
     const isProductInWishlist = (productId) => {
-        console.log("Wishlist:", wishlistInfo);
+        // console.log("Wishlist:", wishlistInfo);
         // console.log("Type of wishlist:", typeof wishlistInfo);
         return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };

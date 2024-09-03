@@ -79,21 +79,21 @@ const Cart = () => {
     // handling payment
     const makePaymentRequest = async (token, cartInfo) => {
         try {
-            console.log("Sending payment request to backend");
+            // console.log("Sending payment request to backend");
 
             const amount = Math.round(
                 (cartInfo?.subTotal +
                     (cartInfo?.cartQuantity * 5) +
                     parseFloat((cartInfo?.subTotal * 0.05).toFixed(2)))
             );
-            console.log(amount)
+            // console.log(amount)
             // payment info
             const res = await userRequest.post("/checkout/payment", {
                 tokenId: token?.id,
                 amount: amount,
                 // amount: ((cartInfo?.subTotal + (cartInfo?.cartQuantity * 5) + parseFloat((cartInfo?.subTotal * 0.05).toFixed(2))) * 100),
             });
-            console.log("Payment Response:", res?.data);
+            // console.log("Payment Response:", res?.data);
 
             if (res?.data?.status === "succeeded") {
                 // order info
@@ -120,10 +120,10 @@ const Cart = () => {
                     status: "pending",
 
                 };
-                console.log(orderInfo);
+                // console.log(orderInfo);
                 // Call the order post API
                 const orderRes = await userRequest.post("/orders", orderInfo);
-                console.log("Order Response:", orderRes?.data);
+                // console.log("Order Response:", orderRes?.data);
 
                 Swal.fire({
                     position: "center",

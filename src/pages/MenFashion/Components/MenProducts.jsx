@@ -144,7 +144,7 @@ const MenProducts = () => {
     };
 
     const isProductInWishlist = (productId) => {
-        console.log("Wishlist:", wishlistInfo);
+        // console.log("Wishlist:", wishlistInfo);
         // console.log("Type of wishlist:", typeof wishlistInfo);
         return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
     };
