@@ -97,7 +97,8 @@ const FeaturedBrands = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14">
             <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Featured Brands</h1>
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">Featured Brands</h1>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Featured Brands</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover the top brands that define style, quality, and fashion for men. From timeless classics to modern trends, explore a curated selection of the best names in men's wear.</p>
             </div>
             <div className='slider2 lg:py-14 md:py-10 py-8'>

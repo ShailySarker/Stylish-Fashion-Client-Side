@@ -7,8 +7,8 @@ const Category = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-20 md:mt-16 mt-14">
             <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Categories of Products</h1>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Categories of Products</h1> */}
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">Categories of Products</h1>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Categories of Products</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Explore our categories and find the perfect outfits for every member of your family at Stylish Fashion!</p>
             </div>
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 md:gap-5 gap-4 lg:mt-14 md:mt-8 mt-5">
