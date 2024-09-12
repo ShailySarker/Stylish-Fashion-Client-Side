@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addProduct } from "../../redux/cartRedux";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCart } from "../../redux/api/cartCalls";
 import { v4 as uuidv4 } from 'uuid';
 
 const SingleProductDetails = () => {
@@ -18,9 +17,7 @@ const SingleProductDetails = () => {
     const navigate = useNavigate();
     // Get user info and cart data from Redux store
     const currentUser = useSelector((state) => state?.user?.currentUser);
-    console.log("Current User:", currentUser);
-
-    const cartData = useSelector((state) => state?.cart);
+    // console.log("Current User:", currentUser);
 
     const [product, setProduct] = useState({});
     const [selectedSize, setSelectedSize] = useState("");
