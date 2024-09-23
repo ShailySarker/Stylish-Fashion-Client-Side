@@ -122,10 +122,10 @@ const SingleProductDetails = () => {
                                     eachColor => (
                                         <span
                                             key={eachColor}
-                                            className={`lg:w-6 lg:h-6 w-4 h-4 rounded-full ${selectedColor === eachColor ? ' border-2 border-purple-800' : 'border border-gray-300'}`}
-                                            style={{ backgroundColor: eachColor }}
-                                            title={eachColor}
-                                            onClick={() => setSelectedColor(eachColor)}
+                                            className={`lg:w-6 lg:h-6 w-4 h-4 rounded-full ${selectedColor === eachColor?.colorName ? ' border-2 border-purple-800' : 'border border-gray-300'}`}
+                                            style={{ backgroundColor: eachColor?.colorValue }}
+                                            title={eachColor?.colorName}
+                                            onClick={() => setSelectedColor(eachColor?.colorName)}
                                         />
                                     )
                                 )
