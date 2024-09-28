@@ -5,7 +5,7 @@ import { fetchOrders } from "../../redux/api/orderCalls";
 const OrderTracking = () => {
     const dispatch = useDispatch();
     const orderInfo = useSelector((state) => state?.order?.orders);
-    // console.log(orderInfo)
+    console.log(orderInfo)
     const { isLoading } = useSelector((state) => state?.order?.isLoading);
     const currentUser = useSelector((state) => state?.user?.currentUser);
 
@@ -50,7 +50,8 @@ const OrderTracking = () => {
                                                     <table className="min-w-full divide-y divide-gray-300 border-2 border-purple-800 rounded-b-2xl">
                                                         <thead className="bg-purple-800 sticky top-0 z-50">
                                                             <tr className="" >
-                                                                <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Order ID</th>
+                                                                <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">ID</th>
+                                                                <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Date</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Product</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Quantity</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Status</th>
@@ -59,34 +60,41 @@ const OrderTracking = () => {
                                                         </thead>
                                                         <tbody className="bg-white divide-y divide-gray-200">
                                                             {
-                                                                orderInfo?.map((order, index) => (
-                                                                    <tr key={order?._id} className={index % 2 === 0 ? 'bg-purple-200 text-black shadow-md' : 'bg-white text-black'}>
-                                                                        <td className="lg:px-6 md:px-4 px-3 lg:py-4 md:py-4 py-3 whitespace-nowrap text-sm font-medium ">{order?._id}</td>
-                                                                        <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap md:text-sm text-xs flex flex-col lg:gap-3 md:gap-4 gap-3">
-                                                                            {
-                                                                                order?.products?.map(product =>
-                                                                                    <div key={product?.cartItemId} className="flex lg:flex-row flex-col lg:items-center lg:gap-3 md:gap-2 gap-1">
-                                                                                        <img src={product?.image} alt={order?.name} className="lg:w-16 md:w-14 w-10 lg:h-20 md:h-16 h-12 object-cover rounded" />
-                                                                                        <div>
-                                                                                            <p>Name: {product?.title}</p>
-                                                                                            <p>Size: {product?.selectedSize}</p>
-                                                                                            <p>Color: {product?.selectedColor}</p>
+                                                                orderInfo?.map((order, index) => {
+                                                                    const formattedDate = new Date(order?.createdAt).toLocaleDateString("en-US", {
+                                                                        month: "short",
+                                                                        day: "2-digit",
+                                                                        year: "numeric"
+                                                                    });
+                                                                    return (
+                                                                        <tr key={order?._id} className={index % 2 === 0 ? 'bg-purple-200 text-black shadow-md' : 'bg-white text-black'}>
+                                                                            <td className="lg:px-6 md:px-4 px-3 lg:py-4 md:py-4 py-3 whitespace-nowrap text-sm font-medium ">{index + 1}</td>
+                                                                            <td className="lg:px-6 md:px-4 px-3 lg:py-4 md:py-4 py-3 whitespace-nowrap text-sm font-medium ">{formattedDate}</td>
+                                                                            <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap md:text-sm text-xs flex flex-col lg:gap-3 md:gap-4 gap-3">
+                                                                                {
+                                                                                    order?.products?.map(product =>
+                                                                                        <div key={product?.cartItemId} className="flex lg:flex-row flex-col lg:items-center lg:gap-3 md:gap-2 gap-1">
+                                                                                            <img src={product?.image} alt={order?.name} className="lg:w-16 md:w-14 w-10 lg:h-20 md:h-16 h-12 object-cover rounded" />
+                                                                                            <div>
+                                                                                                <p>Name: {product?.title}</p>
+                                                                                                <p>Size: {product?.selectedSize}</p>
+                                                                                                <p>Color: {product?.selectedColor}</p>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                )
-                                                                            }
-                                                                        </td>
-                                                                        <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm">{order?.products?.length}</td>
-                                                                        <td className={`lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm font-medium capitalize 
-                                                             ${order?.status === 'pending' && 'text-amber-500'} 
-                                                            ${order?.status === 'processing' && 'text-green-600'} 
-                                                            ${order?.status === 'delivered' && 'text-purple-600'}`}>
-                                                                            {order?.status}
-                                                                        </td>
-                                                                        <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm"><span className="font-semibold">$</span> {order?.amount}</td>
-                                                                    </tr>
-                                                                ))
-                                                            }
+                                                                                    )
+                                                                                }
+                                                                            </td>
+                                                                            <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm">{order?.products?.length}</td>
+                                                                            <td className={`lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm font-semibold capitalize
+                                                                                 ${order?.status === 'pending' && 'text-amber-500'}
+                                                                                ${order?.status === 'processing' && 'text-blue-500'}
+                                                                                ${order?.status === 'delivered' && 'text-green-500'}`}>
+                                                                                {order?.status}
+                                                                            </td>
+                                                                            <td className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 whitespace-nowrap text-sm"><span className="font-semibold">$</span> {order?.amount}</td>
+                                                                        </tr>
+                                                                    )
+                                                                })}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -94,10 +102,8 @@ const OrderTracking = () => {
 
                                         }
                                     </>
-
                             }
                         </div>
-
                 }
 
             </div>
@@ -106,3 +112,4 @@ const OrderTracking = () => {
 };
 
 export default OrderTracking;
+
