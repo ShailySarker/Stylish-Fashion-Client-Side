@@ -19,6 +19,7 @@ const Products = () => {
     const [selectedFilters, setSelectedFilters] = useState({
         sortBy: '', // Change to a string to hold only one sorting option
         category: [],
+        subCategory: [],
     });
 
     // Fetch all products on mount
@@ -56,6 +57,15 @@ const Products = () => {
             return { ...prevFilters, category: newCategories };
         });
     };
+    // Handle filter change for sub categories
+    const handleSubCategoryChange = (value) => {
+        setSelectedFilters((prevFilters) => {
+            const newCategories = prevFilters?.subCategory.includes(value)
+                ? prevFilters?.subCategory.filter((item) => item !== value)
+                : [...prevFilters.subCategory, value];
+            return { ...prevFilters, subCategory: newCategories };
+        });
+    };
 
     useEffect(() => {
         let filtered = [...allProducts];
@@ -64,6 +74,12 @@ const Products = () => {
         if (selectedFilters?.category?.length > 0) {
             filtered = filtered.filter((product) =>
                 selectedFilters?.category.includes(product?.category)
+            );
+        }
+        // Apply subCategory Filter
+        if (selectedFilters?.subCategory?.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedFilters?.subCategory.includes(product?.subCategory)
             );
         }
 
@@ -288,51 +304,124 @@ const Products = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* <div>
-                                                        <h4 className="font-bold">Category</h4>
-                                                        <div className="mt-3 flex items-center gap-4 font-medium text-black">
-                                                            <div className="flex flex-row  gap-1">
-                                                                <input type="checkbox" name="category" id="" />
-                                                                <p>Men</p>
-                                                            </div>
-                                                            <div className="flex flex-row  gap-1">
-                                                                <input type="checkbox" name="category" id="" />
-                                                                <p>Women</p>
-                                                            </div>
-                                                            <div className="flex flex-row  gap-1">
-                                                                <input type="checkbox" name="category" id="" />
-                                                                <p>Kids</p>
-                                                            </div>
-                                                        </div>
-                                                    </div> */}
                                             {/* sub category */}
                                             <div>
                                                 <h4 className="font-bold">Sub-Category</h4>
                                                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Cap")}
+                                                        />
                                                         <p>Cap</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Coat")}
+                                                        />
                                                         <p>Coat</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Hudi")}
+                                                        />
                                                         <p>Hudi</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Jacket")}
+                                                        />
                                                         <p>Jacket</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Pant")}
+                                                        />
                                                         <p>Pant</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="subCategory" id="" />
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Shirt")}
+                                                        />
                                                         <p>Shirt</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Shorts")}
+                                                        />
+                                                        <p>Shorts</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Suit")}
+                                                        />
+                                                        <p>Suit</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Tshirt")}
+                                                        />
+                                                        <p>Tshirt</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Frog")}
+                                                        />
+                                                        <p>Frog</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Plazzo")}
+                                                        />
+                                                        <p>Plazzo</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Bardot")}
+                                                        />
+                                                        <p>Bardot</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Formal")}
+                                                        />
+                                                        <p>Formal</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Top")}
+                                                        />
+                                                        <p>Top</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("TopSkirtSet")}
+                                                        />
+                                                        <p>Top Skirt Set</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("TopPantSet")}
+                                                        />
+                                                        <p>Top Pant Set</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("TshirtPantSet")}
+                                                        />
+                                                        <p>Tshirt Pant Set</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("WinterDressSet")}
+                                                        />
+                                                        <p>Winter Dress Set</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input type="checkbox"
+                                                            onChange={() => handleSubCategoryChange("Other")}
+                                                        />
+                                                        <p>Other</p>
                                                     </div>
                                                 </div>
                                             </div>
