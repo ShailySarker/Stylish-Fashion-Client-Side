@@ -53,7 +53,7 @@ const OrderTracking = () => {
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">ID</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Date</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Product</th>
-                                                                <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Quantity</th>
+                                                                <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Order Quantity</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Status</th>
                                                                 <th className="lg:px-6 md:px-4 px-3 lg:py-3 md:py-4 py-3 text-left lg:text-sm text-xs font-semibold text-white uppercase tracking-wider">Price</th>
                                                             </tr>
