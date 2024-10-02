@@ -23,6 +23,7 @@ const Products = () => {
         occasion: [],
         session: [],
         brand: [],
+        size: [],
     });
 
     // Fetch all products on mount
@@ -63,37 +64,46 @@ const Products = () => {
     // Handle filter change for sub categories
     const handleSubCategoryChange = (value) => {
         setSelectedFilters((prevFilters) => {
-            const newCategories = prevFilters?.subCategory.includes(value)
+            const newSubCategories = prevFilters?.subCategory.includes(value)
                 ? prevFilters?.subCategory.filter((item) => item !== value)
                 : [...prevFilters.subCategory, value];
-            return { ...prevFilters, subCategory: newCategories };
+            return { ...prevFilters, subCategory: newSubCategories };
         });
     };
     // Handle filter change for occasion
     const handleOccasionChange = (value) => {
         setSelectedFilters((prevFilters) => {
-            const newCategories = prevFilters?.occasion.includes(value)
+            const newOccasions = prevFilters?.occasion.includes(value)
                 ? prevFilters?.occasion.filter((item) => item !== value)
                 : [...prevFilters.occasion, value];
-            return { ...prevFilters, occasion: newCategories };
+            return { ...prevFilters, occasion: newOccasions };
         });
     };
     // Handle filter change for session
     const handleSessionChange = (value) => {
         setSelectedFilters((prevFilters) => {
-            const newCategories = prevFilters?.session.includes(value)
+            const newSessions = prevFilters?.session.includes(value)
                 ? prevFilters?.session.filter((item) => item !== value)
                 : [...prevFilters.session, value];
-            return { ...prevFilters, session: newCategories };
+            return { ...prevFilters, session: newSessions };
         });
     };
     // Handle filter change for brand
     const handleBrandChange = (value) => {
         setSelectedFilters((prevFilters) => {
-            const newCategories = prevFilters?.brand.includes(value)
+            const newBrands = prevFilters?.brand.includes(value)
                 ? prevFilters?.brand.filter((item) => item !== value)
                 : [...prevFilters.brand, value];
-            return { ...prevFilters, brand: newCategories };
+            return { ...prevFilters, brand: newBrands };
+        });
+    };
+    // Handle filter change for size
+    const handleSizeChange = (value) => {
+        setSelectedFilters((prevFilters) => {
+            const newSizes = prevFilters?.size.includes(value)
+                ? prevFilters?.size.filter((item) => item !== value)
+                : [...prevFilters.size, value];
+            return { ...prevFilters, size: newSizes };
         });
     };
 
@@ -129,6 +139,12 @@ const Products = () => {
             filtered = filtered.filter((product) =>
                 selectedFilters?.brand.includes(product?.brand)
             );
+        }
+        // Apply size Filter
+        if (selectedFilters?.size?.length > 0) {
+            filtered = filtered.filter((product) =>
+                product?.size?.some((productSize) => selectedFilters?.size.includes(productSize))
+        );
         }
 
         // Helper function to check if a product is a new arrival (within last 30 days)
@@ -685,27 +701,45 @@ const Products = () => {
                                                 <h4 className="font-bold">Size</h4>
                                                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("XS")}
+                                                        />
                                                         <p>XS</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("S")}
+                                                        />
                                                         <p>S</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("M")}
+                                                        />
                                                         <p>M</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("L")}
+                                                        />
                                                         <p>L</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("XL")}
+                                                        />
                                                         <p>XL</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="size" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSizeChange("2XL")}
+                                                        />
                                                         <p>2XL</p>
                                                     </div>
                                                 </div>
