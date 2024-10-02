@@ -22,6 +22,7 @@ const Products = () => {
         subCategory: [],
         occasion: [],
         session: [],
+        brand: [],
     });
 
     // Fetch all products on mount
@@ -86,6 +87,15 @@ const Products = () => {
             return { ...prevFilters, session: newCategories };
         });
     };
+    // Handle filter change for brand
+    const handleBrandChange = (value) => {
+        setSelectedFilters((prevFilters) => {
+            const newCategories = prevFilters?.brand.includes(value)
+                ? prevFilters?.brand.filter((item) => item !== value)
+                : [...prevFilters.brand, value];
+            return { ...prevFilters, brand: newCategories };
+        });
+    };
 
     useEffect(() => {
         let filtered = [...allProducts];
@@ -112,6 +122,12 @@ const Products = () => {
         if (selectedFilters?.session?.length > 0) {
             filtered = filtered.filter((product) =>
                 selectedFilters?.session.includes(product?.session)
+            );
+        }
+        // Apply brand Filter
+        if (selectedFilters?.brand?.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedFilters?.brand.includes(product?.brand)
             );
         }
 
@@ -544,68 +560,123 @@ const Products = () => {
                                                 <h4 className="font-bold">Brand</h4>
                                                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Zara")}
+                                                        />
                                                         <p>Zara</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Levls")}
+                                                        />
                                                         <p>Levls</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Gucci")}
+                                                        />
                                                         <p>Gucci</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("OshkoshBgosh")}
+                                                        />
                                                         <p>Oshkosh B gosh</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("PoloRalphLauren")}
+                                                        />
                                                         <p>Polo Ralph Lauren</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Nordstorm")}
+                                                        />
                                                         <p>Nordstorm</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("H&M")}
+                                                        />
                                                         <p>H&M</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("BossHugoBoss")}
+                                                        />
                                                         <p>Boss Hugo Boss</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Gymboree")}
+                                                        />
                                                         <p>Gymboree</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("MiniBoden")}
+                                                        />
                                                         <p>Mini Boden</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Carters")}
+                                                        />
                                                         <p>Carters</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Tea")}
+                                                        />
                                                         <p>Tea</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("UniQlo")}
+                                                        />
                                                         <p>Uni Qlo</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("TheChildrensPlace")}
+                                                        />
                                                         <p>The Children's Place</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("TommyHilfighter")}
+                                                        />
                                                         <p>Tommy Hilfighter</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="brand" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("JCrew")}
+                                                        />
                                                         <p>J Crew</p>
+                                                    </div>
+                                                    <div className="flex flex-row  gap-1">
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleBrandChange("Other")}
+                                                        />
+                                                        <p>Other</p>
                                                     </div>
                                                 </div>
                                             </div>
