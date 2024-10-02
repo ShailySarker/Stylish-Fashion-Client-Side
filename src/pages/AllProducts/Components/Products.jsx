@@ -21,6 +21,7 @@ const Products = () => {
         category: [],
         subCategory: [],
         occasion: [],
+        session: [],
     });
 
     // Fetch all products on mount
@@ -76,6 +77,15 @@ const Products = () => {
             return { ...prevFilters, occasion: newCategories };
         });
     };
+    // Handle filter change for session
+    const handleSessionChange = (value) => {
+        setSelectedFilters((prevFilters) => {
+            const newCategories = prevFilters?.session.includes(value)
+                ? prevFilters?.session.filter((item) => item !== value)
+                : [...prevFilters.session, value];
+            return { ...prevFilters, session: newCategories };
+        });
+    };
 
     useEffect(() => {
         let filtered = [...allProducts];
@@ -96,6 +106,12 @@ const Products = () => {
         if (selectedFilters?.occasion?.length > 0) {
             filtered = filtered.filter((product) =>
                 selectedFilters?.occasion.includes(product?.occasion)
+            );
+        }
+        // Apply session Filter
+        if (selectedFilters?.session?.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedFilters?.session.includes(product?.session)
             );
         }
 
@@ -487,23 +503,38 @@ const Products = () => {
                                                 <h4 className="font-bold">Session</h4>
                                                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSessionChange("Summer")}
+                                                        />
                                                         <p>Summer</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSessionChange("Rainy")}
+                                                        />
                                                         <p>Rainy</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSessionChange("Autumn")}
+                                                        />
                                                         <p>Autumn</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSessionChange("Winter")}
+                                                        />
                                                         <p>Winter</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleSessionChange("Other")}
+                                                        />
                                                         <p>Other</p>
                                                     </div>
                                                 </div>
