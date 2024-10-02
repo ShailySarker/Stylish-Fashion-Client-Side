@@ -20,6 +20,7 @@ const Products = () => {
         sortBy: '', // Change to a string to hold only one sorting option
         category: [],
         subCategory: [],
+        occasion: [],
     });
 
     // Fetch all products on mount
@@ -66,6 +67,15 @@ const Products = () => {
             return { ...prevFilters, subCategory: newCategories };
         });
     };
+    // Handle filter change for occasion
+    const handleOccasionChange = (value) => {
+        setSelectedFilters((prevFilters) => {
+            const newCategories = prevFilters?.occasion.includes(value)
+                ? prevFilters?.occasion.filter((item) => item !== value)
+                : [...prevFilters.occasion, value];
+            return { ...prevFilters, occasion: newCategories };
+        });
+    };
 
     useEffect(() => {
         let filtered = [...allProducts];
@@ -80,6 +90,12 @@ const Products = () => {
         if (selectedFilters?.subCategory?.length > 0) {
             filtered = filtered.filter((product) =>
                 selectedFilters?.subCategory.includes(product?.subCategory)
+            );
+        }
+        // Apply occasion Filter
+        if (selectedFilters?.occasion?.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedFilters?.occasion.includes(product?.occasion)
             );
         }
 
@@ -430,23 +446,38 @@ const Products = () => {
                                                 <h4 className="font-bold">Occasion</h4>
                                                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleOccasionChange("Formal")}
+                                                        />
                                                         <p>Formal</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleOccasionChange("Clausal")}
+                                                        />
                                                         <p>Clausal</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleOccasionChange("Party")}
+                                                        />
                                                         <p>Party</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleOccasionChange("Wedding")}
+                                                        />
                                                         <p>Wedding</p>
                                                     </div>
                                                     <div className="flex flex-row  gap-1">
-                                                        <input type="checkbox" name="occasion" id="" />
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleOccasionChange("Other")}
+                                                        />
                                                         <p>Other</p>
                                                     </div>
                                                 </div>
@@ -864,7 +895,7 @@ const Products = () => {
                                 ) : (
                                     <div>
                                         <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">No product is available now!</h2>
-                                //     </div>
+                                    </div>
                                 )
                         )
 
