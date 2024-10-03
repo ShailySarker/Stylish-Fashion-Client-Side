@@ -1,13 +1,13 @@
 import { FaRegHeart, FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { FaAngleLeft, FaAngleRight, FaHeart } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight, FaHeart, FaX } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { publicRequest } from "../../../helpers/axios/requestMethod";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { TiShoppingCart } from "react-icons/ti";
 import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
-import { Range } from "react-range";
+import { IoFilter } from "react-icons/io5";
 
 const Products = () => {
     const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Products = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setModalOpen] = useState(false);
     // Fetch all products on mount
     useEffect(() => {
         const getAllProducts = async () => {
@@ -212,6 +213,14 @@ const Products = () => {
 
     }, [selectedFilters, allProducts]);
 
+    // handle modal
+    const handleFilterModal = () => {
+        setModalOpen(true);
+    }
+    // handle modal close
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    }
     // Fetch wishlist when user is logged in
     useEffect(() => {
         if (currentUser?._id) {
@@ -348,7 +357,8 @@ const Products = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">All Products</h1>
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">All Products</h1>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">All Products</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover the latest trends in men’s, women’s, and kids' wear. At Stylish Fashion, we offer a curated collection of stylish and affordable clothing to keep your wardrobe fresh and fashionable.</p>
             </div>
             <div>
@@ -360,13 +370,13 @@ const Products = () => {
                         (
                             <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">Loading...</p>
                         ) : (
-                            <div className="flex gap-12 lg:mt-12 md:mt-10 mt-7">
+                            <div className="flex lg:flex-row flex-col lg:gap-12 lg:mt-12 md:mt-10 mt-7">
                                 {/* filtering options */}
-                                <div className="w-[30%] flex flex-col gap-6">
+                                <div className="lg:w-[30%] lg:flex flex-col gap-6 lg:block hidden">
                                     {/* Sort By */}
                                     <div>
                                         <h4 className="font-bold">Sort By</h4>
-                                        <div className="mt-3 flex flex-wrap items-center gap-4 font-medium text-black">
+                                        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
                                             <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
@@ -997,7 +1007,6 @@ const Products = () => {
                                         <div className="flex justify-between w-[90%]">
                                             <h4 className="font-bold">Price</h4>
                                             <p className="font-medium text-black">${selectedFilters?.priceRange[0]} - ${selectedFilters?.priceRange[1]}</p>
-
                                         </div>
                                         <div className="mt-3">
                                             <input
@@ -1011,12 +1020,681 @@ const Products = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-[70%]">
+                                <div className="lg:hidden visible lg:mb-0 md:mb-2 mb-[6px]">
+                                    <button onClick={handleFilterModal} className="flex items-center gap-3 border-2 bg-purple-800 text-white rounded-xl md:px-5 px-4 py-1">
+                                        <IoFilter />
+                                        <span className="font-semibold ">Filter</span>
+                                    </button>
+                                    {isModalOpen && (
+                                        <div className="fixed inset-0 bg-[#ecf0f1bf] bg-opacity-75 overflow-y-auto flex items-center justify-center z-50">
+                                            <div className="relative lg:px-10 lg:py-8 md:px-10 md:py-7 px-4 py-5 rounded-xl bg-white md:w-[560px] w-11/12 md:h-[740px] h-[520px] overflow-y-auto mx-auto shadow-lg">
+                                                <div className="flex justify-between">
+                                                    <div className="w-[12%]"></div>
+                                                    <h2 className="w-[76%] text-center lg:text-3xl/normal md:text-2xl text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">Want to apply different filters?</h2>
+                                                    <div className="w-[12%] flex justify-end">
+                                                        <FaX onClick={handleCloseModal} className=" bg-purple-800 text-white p-1 md:w-7 md:h-7 w-5 h-5 rounded-full " />
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col md:gap-5 gap-[14px] lg:hidden block md:mt-8 mt-6">
+                                                    {/* Sort By */}
+                                                    <div>
+                                                        <h4 className="font-bold">Sort By</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedFilters.sortBy === 'New Arrival'}
+                                                                    onChange={() => handleSortChange('New Arrival')}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">New Arrival</p>
+                                                            </div>
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedFilters.sortBy === 'Price Low to High'}
+                                                                    onChange={() => handleSortChange('Price Low to High')}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Price Low to High</p>
+                                                            </div>
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedFilters.sortBy === 'Price High to Low'}
+                                                                    onChange={() => handleSortChange('Price High to Low')}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Price High to Low</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* category */}
+                                                    <div>
+                                                        <h4 className="font-bold">Category</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex items-center gap-4 font-medium text-black">
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleCategoryChange("Men")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Men</p>
+                                                            </div>
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleCategoryChange("Women")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Women</p>
+                                                            </div>
+                                                            <div className="flex flex-row gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleCategoryChange("Kids")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Kids</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* sub category */}
+                                                    <div>
+                                                        <h4 className="font-bold">Sub-Category</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Cap")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Cap</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Coat")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Coat</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Hudi")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Hudi</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Jacket")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Jacket</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Pant")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Pant</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Shirt")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Shirt</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Shorts")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Shorts</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Suit")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Suit</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Tshirt")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Tshirt</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Frog")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Frog</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Plazzo")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Plazzo</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Bardot")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Bardot</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Formal")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Formal</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Top")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Top</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("TopSkirtSet")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Top Skirt Set</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("TopPantSet")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Top Pant Set</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("TshirtPantSet")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Tshirt Pant Set</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("WinterDressSet")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Winter Dress Set</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input type="checkbox"
+                                                                    onChange={() => handleSubCategoryChange("Other")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Other</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Occasion */}
+                                                    <div>
+                                                        <h4 className="font-bold">Occasion</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleOccasionChange("Formal")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Formal</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleOccasionChange("Clausal")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Clausal</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleOccasionChange("Party")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Party</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleOccasionChange("Wedding")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Wedding</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleOccasionChange("Other")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Other</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Session */}
+                                                    <div>
+                                                        <h4 className="font-bold">Session</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSessionChange("Summer")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Summer</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSessionChange("Rainy")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Rainy</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSessionChange("Autumn")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Autumn</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSessionChange("Winter")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Winter</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSessionChange("Other")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Other</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Brand */}
+                                                    <div>
+                                                        <h4 className="font-bold">Brand</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Zara")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Zara</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Levls")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Levls</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Gucci")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Gucci</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("OshkoshBgosh")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Oshkosh B gosh</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("PoloRalphLauren")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Polo Ralph Lauren</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Nordstorm")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Nordstorm</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("H&M")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">H&M</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("BossHugoBoss")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Boss Hugo Boss</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Gymboree")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Gymboree</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("MiniBoden")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Mini Boden</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Carters")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Carters</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Tea")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Tea</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("UniQlo")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Uni Qlo</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("TheChildrensPlace")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">The Children's Place</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("TommyHilfighter")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Tommy Hilfighter</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("JCrew")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">J Crew</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleBrandChange("Other")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">Other</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Size */}
+                                                    <div>
+                                                        <h4 className="font-bold">Size</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("XS")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">XS</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("S")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">S</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("M")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">M</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("L")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">L</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("XL")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">XL</p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleSizeChange("2XL")}
+                                                                />
+                                                                <p className="md:text-base text-sm font-medium">2XL</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Color */}
+                                                    <div>
+                                                        <h4 className="font-bold">Color</h4>
+                                                        <div className="md:mt-2 mt-[7px] flex flex-wrap items-center gap-x-4 md:gap-y-2 gap-y-[6px] font-medium text-black">
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Red")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Red</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#dc2626]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Green")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Green</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#16a34a]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Blue")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Blue</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#1d4ed8]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Pink")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Pink</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#db2777]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Purple")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Purple</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#9333ea]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Black")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Black</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#000000]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("White")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">White</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#ffffff]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Indigo")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Indigo</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#4f46e5]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Teal")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Teal</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#14b8a6]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Gray")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Gray</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#9ca3af]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Peach")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Peach</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#fecdd3]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Yellow")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Yellow</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#facc15]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Orange")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Orange</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#f97316]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Sky")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Sky</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#38bdf8]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Brown")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Brown</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#78350f]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Olive")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Olive</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#3f6212]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Amber")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Amber</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#d97706]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Lemon")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Lemon</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#a3e635]"></span>
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex flex-row  gap-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    onChange={() => handleColorChange("Magenta")}
+                                                                />
+                                                                <p className="flex flex-row items-center gap-1">
+                                                                    <span className="md:text-base text-sm font-medium">Magenta</span>
+                                                                    <span className="md:w-4 w-3 md:h-4 h-3 rounded-full bg-[#e11d48]"></span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* Price */}
+                                                    <div className="">
+                                                        <div className="flex justify-between w-[100%]">
+                                                            <h4 className="font-bold">Price</h4>
+                                                            <p className="font-medium text-black">${selectedFilters?.priceRange[0]} - ${selectedFilters?.priceRange[1]}</p>
+                                                        </div>
+                                                        <div className="md:mt-2 mt-[7px]">
+                                                            <input
+                                                                type="range"
+                                                                className="w-[100%]"
+                                                                min={minPrice}
+                                                                max={maxPrice}
+                                                                value={selectedFilters?.priceRange[1]}
+                                                                onChange={handlePriceRangeChange}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="lg:w-[70%]">
                                     {
                                         currentItems?.length > 0 ? (
                                             <>
                                                 {/* Products display */}
-                                                <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4">
+                                                <div className="grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-6 md:gap-4 gap-4">
                                                     {currentItems?.map((product) => (
                                                         <div key={product?._id} className="relative group">
                                                             <img
@@ -1025,22 +1703,22 @@ const Products = () => {
                                                                 alt="product"
                                                             />
                                                             {/* Hover icons and wishlist logic */}
-                                                            <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                                            <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[6px] md:gap-[5px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
                                                                 <Link to={`/product/${product?._id}`}>
-                                                                    <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                                    <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125" />
                                                                 </Link>
                                                                 <Link to={`/product/${product?._id}`}>
-                                                                    <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
+                                                                    <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125" />
                                                                 </Link>
                                                                 {isProductInWishlist(product?._id) ? (
                                                                     <FaHeart
                                                                         onClick={() => handleRemoveFromWishlist(product?._id)}
-                                                                        className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                                        className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125"
                                                                     />
                                                                 ) : (
                                                                     <FaRegHeart
                                                                         onClick={() => handleAddToWishlist(product)}
-                                                                        className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
+                                                                        className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125"
                                                                     />
                                                                 )}
                                                             </div>

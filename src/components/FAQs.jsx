@@ -44,7 +44,7 @@ const FaqItem = ({ question, answer, id }) => {
             <button
                 className="flex items-center justify-between w-full lg:p-6 md:p-5 px-3 py-4 text-left focus:outline-none"
                 onClick={toggleAccordion}>
-                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-purple-800">Question 0{id}: </span>{question}</span>
+                <span className="w-[93%] lg:text-xl text-lg font-semibold"><span className="font-bold text-black">Question 0{id}: </span>{question}</span>
                 <span className='w-[5%] flex justify-end'>
                     <svg
                         className={`lg:w-5 md:w-4 w-3 lg:h-5 md:h-4 h-3 ${isOpen ? 'transform rotate-180' : ''}`}
