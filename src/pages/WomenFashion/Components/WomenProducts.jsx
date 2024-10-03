@@ -30,14 +30,14 @@ const WomenProducts = () => {
     // product data show
     const [womenProducts, setWomenProducts] = useState([]);
     const [filteredWomenProducts, setFilteredWomenProducts] = useState([]);
-    const category = "women";
+    const category = "Women";
 
     // for normal data show
     useEffect(() => {
         const getWomenProducts = async () => {
             try {
                 const res = await publicRequest.get(`/products?category=${category}`);
-                // console.log(res?.data);
+                console.log(res?.data);
                 setWomenProducts(res?.data);
             } catch (error) {
                 console.log(error)

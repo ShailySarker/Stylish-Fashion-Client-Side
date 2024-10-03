@@ -75,10 +75,10 @@ export const fetchWishlist = (userId) => async (dispatch) => {
         const response = await userRequest.get(`/wishlist/find/${userId}`);
         const wishlist = response?.data?.products || []; // Ensure you are accessing the correct field
         dispatch(setWishlist(wishlist));
-        console.log("Fetched wishlist:", wishlist);
+        // console.log("Fetched wishlist:", wishlist);
     } catch (error) {
         dispatch(setError(error.message));
-        console.error("Failed to fetch wishlist:", error);
+        // console.error("Failed to fetch wishlist:", error);
     }
 };
 
