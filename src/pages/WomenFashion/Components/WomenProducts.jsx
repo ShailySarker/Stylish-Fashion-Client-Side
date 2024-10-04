@@ -1697,12 +1697,15 @@ const WomenProducts = () => {
                                         ) : (
                                             <div>
                                                 {
-                                                    isFilteringApplied ?
-                                                        (
-                                                            <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">No products found based on selected filters.</h2>
-                                                        ) : (
-                                                            <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">No product is available now!</h2>
-                                                        )
+                                                    isFilteringApplied() ? (
+                                                        <h2 className="lg:text-2xl md:text-xl text-lg lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
+                                                            No products found based on selected filters.
+                                                        </h2>
+                                                    ) : (
+                                                        <h2 className="lg:text-2xl md:text-xl text-lg lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
+                                                            No product is available now!
+                                                        </h2>
+                                                    )
                                                 }
                                             </div>
                                         )
