@@ -107,13 +107,13 @@ const SingleProductDetails = () => {
             </div>
             <div className="lg:w-[60%] md:w-[65%]">
                 <div>
-                    <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">{product?.title}</h2>
+                    <h2 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-black">{product?.title}</h2>
                     <p className="lg:mt-3 md:mt-2 mt-1 lg:text-lg/normal text-justify">{product?.desc}</p>
-                    <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-purple-700 lg:mt-7 md:mt-5 mt-4">$ {product?.price}</h3>
+                    <h3 className="lg:text-4xl md:text-3xl text-2xl font-semibold text-black lg:mt-7 md:mt-5 mt-4">$ {product?.price}</h3>
                 </div>
-                <div className="lg:mt-7 md:mt-5 mt-4 flex md:flex-row md:flex-nowrap flex-wrap lg:gap-16 md:gap-8 gap-x-8 gap-y-3 md:justify-start">
+                <div className="lg:mt-7 md:mt-5 mt-4 flex md:flex-row md:flex-nowrap flex-wrap lg:gap-16 md:gap-4 gap-x-8 gap-y-3 md:justify-start">
                     {/* color */}
-                    <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                    <div className="lg:w-[34%] flex items-center lg:gap-3 md:gap-2 gap-1">
                         <p className="lg:text-lg font-semibold">Color: </p>
                         <div className="flex flex-wrap gap-2">
                             {
@@ -135,7 +135,7 @@ const SingleProductDetails = () => {
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <h4 className="lg:text-lg text-base font-semibold">Size:</h4>
                         <select
-                            className="lg:py-2 md:py-[6px] py-1 lg:px-4 md:px-3 px-1 lg:text-lg text-base font-medium rounded-lg lg:w-28 md:w-24 w-[60px] border-2 border-[#787878]"
+                            className="lg:py-2 md:py-[4px] py-[3px] lg:px-4 md:px-2 px-1 lg:text-lg text-base font-medium rounded-lg lg:w-28 md:w-16 w-20 border-2 border-[#787878]"
                             value={selectedSize}
                             onChange={(e) => setSelectedSize(e.target.value)}
                         >
@@ -149,7 +149,7 @@ const SingleProductDetails = () => {
                     {/* quantity */}
                     <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
                         <p className="lg:text-lg font-semibold">Quantity: </p>
-                        <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                        <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[7px] gap-2">
                             <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4>
                             <h4 className="text-purple-700 font-semibold">{productQuantity}</h4>
                             <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4>
@@ -157,7 +157,7 @@ const SingleProductDetails = () => {
                     </div>
                 </div>
                 <div className="flex lg:gap-4 md:gap-3 gap-2 lg:mt-8 md:mt-7 mt-6">
-                    <button className="lg:py-3 md:py-[10px] py-2 border-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-800 text-white font-semibold lg:text-lg lg:w-44 md:w-40 w-36" onClick={handleAddToCart}>Add to Cart</button>
+                    <button className="lg:py-3 md:py-[10px] py-2 border-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-800 text-white font-semibold lg:text-lg text-base lg:w-44 md:w-40 w-36" onClick={handleAddToCart}>Add to Cart</button>
                 </div>
             </div>
         </div>
