@@ -31,7 +31,7 @@ const MenProducts = () => {
                 setMenProducts(res?.data || []);
                 setFilteredMenProducts(res?.data || []); // Initialize filteredProducts with all products
             } catch (error) {
-                setError("Failed to fetch users");
+                setError("Failed to fetch product");
             } finally {
                 setLoading(false);
             }
@@ -341,8 +341,8 @@ const MenProducts = () => {
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-purple-800">Men Fashion</h1> */}
-                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">Men Fashion</h1>
+                <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">Men Fashion</h1>
+                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">Men Fashion</h1> */}
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">Men Fashion</h1> */}
                 <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">From sophisticated suits and formal wear to casual shirts and jeans, our men's collection offers a variety of options to suit every style.</p>
             </div>
@@ -1713,7 +1713,7 @@ const MenProducts = () => {
                             </div>
                         )
                 }
-            </div >
+            </div>
 
         </div>
     );

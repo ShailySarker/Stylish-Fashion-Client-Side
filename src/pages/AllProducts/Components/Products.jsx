@@ -28,7 +28,7 @@ const Products = () => {
                 setAllProducts(res?.data || []);
                 setFilteredProducts(res?.data || []); // Initialize filteredProducts with all products
             } catch (error) {
-                setError("Failed to fetch users");
+                setError("Failed to fetch product");
             } finally {
                 setLoading(false);
             }
