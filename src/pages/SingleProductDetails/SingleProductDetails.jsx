@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import product from "../../assets/Images/MenFashion/MenProducts_menCap.jpg";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
 import { publicRequest, userRequest } from "../../helpers/axios/requestMethod";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { addProduct } from "../../redux/cartRedux";
+import { addProductSuccess } from "../../redux/cartRedux";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -72,7 +71,7 @@ const SingleProductDetails = () => {
             userRequest.post("/carts", addToCartInfo)
                 .then(response => {
                     console.log(response?.data);
-                    dispatch(addProduct(addToCartInfo));
+                    dispatch(addProductSuccess(addToCartInfo));
 
                     Swal.fire({
                         position: "center",
