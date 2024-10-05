@@ -1,6 +1,6 @@
 import { userRequest } from "../../helpers/axios/requestMethod";
 import { setError, setLoading } from "../orderRedux";
-import { addProductToWishlist, removeProductFromWishlist, setWishlist } from "../wishlistRedux";
+import { addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistError, removeProductFromWishlistLoading, setWishlist, setWishlistError, setWishlistLoading } from "../wishlistRedux";
 
 // export const addToWishlist = (userId, product) => async (dispatch) => {
 //     dispatch(setLoading());
@@ -70,21 +70,21 @@ export const addToWishlist = (userId, product) => async (dispatch, getState) => 
 
 //get product from wishlist
 export const fetchWishlist = (userId) => async (dispatch) => {
-    dispatch(setLoading());
+    dispatch(setWishlistLoading());
     try {
         const response = await userRequest.get(`/wishlist/find/${userId}`);
         const wishlist = response?.data?.products || []; // Ensure you are accessing the correct field
         dispatch(setWishlist(wishlist));
         // console.log("Fetched wishlist:", wishlist);
     } catch (error) {
-        dispatch(setError(error.message));
+        dispatch(setWishlistError(error?.message));
         // console.error("Failed to fetch wishlist:", error);
     }
 };
 
 // Remove product from wishlist
 export const removeFromWishlist = (userId, productId) => async (dispatch) => {
-    dispatch(setLoading());
+    dispatch(removeProductFromWishlistLoading());
     try {
         const res = await userRequest.delete(`/wishlist/remove/${userId}`, {
             data: { productId }
@@ -92,13 +92,13 @@ export const removeFromWishlist = (userId, productId) => async (dispatch) => {
 
         // Directly update the Redux state with the updated wishlist
         dispatch(removeProductFromWishlist(productId)); // This updates the wishlist in Redux
-        dispatch(setWishlist(res?.data)); // This sets the wishlist from the server response
+        // dispatch(setWishlist(res?.data)); // This sets the wishlist from the server response
 
         console.log("Wishlist updated:", res?.data);
         return { status: 'success', data: res?.data };
 
     } catch (error) {
-        dispatch(setError(error.message));
+        dispatch(removeProductFromWishlistError(error.message));
         console.error("Failed to remove product from wishlist:", error);
         return { status: 'error', message: error.message };
     }
