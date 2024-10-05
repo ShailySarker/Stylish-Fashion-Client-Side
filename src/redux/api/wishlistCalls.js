@@ -1,6 +1,5 @@
 import { userRequest } from "../../helpers/axios/requestMethod";
-import { setError, setLoading } from "../orderRedux";
-import { addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistError, removeProductFromWishlistLoading, setWishlist, setWishlistError, setWishlistLoading } from "../wishlistRedux";
+import { addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistError, removeProductFromWishlistLoading, setError, setLoading, setWishlist, setWishlistError, setWishlistLoading } from "../wishlistRedux";
 
 // export const addToWishlist = (userId, product) => async (dispatch) => {
 //     dispatch(setLoading());
@@ -92,8 +91,6 @@ export const removeFromWishlist = (userId, productId) => async (dispatch) => {
 
         // Directly update the Redux state with the updated wishlist
         dispatch(removeProductFromWishlist(productId)); // This updates the wishlist in Redux
-        // dispatch(setWishlist(res?.data)); // This sets the wishlist from the server response
-
         console.log("Wishlist updated:", res?.data);
         return { status: 'success', data: res?.data };
 
@@ -103,23 +100,3 @@ export const removeFromWishlist = (userId, productId) => async (dispatch) => {
         return { status: 'error', message: error.message };
     }
 };
-
-
-
-
-
-// export const fetchWishlist = (userId) => async (dispatch) => {
-//     dispatch(setLoading());
-//     try {
-//         const response = await userRequest.get(`/wishlist/find/${userId}`);
-//         dispatch(setWishlist(response?.data));
-//         console.log("Fetched wishlist:", response?.data);
-//     } catch (error) {
-//         dispatch(setError(error.message));
-//         console.error("Failed to fetch wishlist:", error);
-//     }
-// };
-
-
-
-
