@@ -12,15 +12,15 @@ const orderSlice = createSlice({
             state.orders = action.payload;
             state.isLoading = false;
         },
-        setLoading: (state) => {
+        setOrdersLoading: (state) => {
             state.isLoading = true;
         },
-        setError: (state, action) => {
+        setOrdersError: (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
         },
     },
 });
 
-export const { setOrders, setLoading, setError } = orderSlice.actions;
+export const { setOrders, setOrdersLoading, setOrdersError } = orderSlice.actions;
 export default orderSlice.reducer;
