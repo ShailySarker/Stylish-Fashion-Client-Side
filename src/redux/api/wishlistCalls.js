@@ -59,7 +59,7 @@ export const addToWishlist = (userId, product) => async (dispatch, getState) => 
         return { status: 'success', data: res?.data };
 
     } catch (error) {
-        dispatch(setError(error.message));
+        dispatch(setError(error?.message));
         console.error("Failed to add product to wishlist:", error);
 
         return { status: 'error', message: error.message };

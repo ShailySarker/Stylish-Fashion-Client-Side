@@ -9,6 +9,7 @@ const FeaturedAttributes = React.lazy(() => import("./Components/FeaturedAttribu
 const FeaturedBrands = React.lazy(() => import("./Components/FeaturedBrands"));
 const OurProducts = React.lazy(() => import("./Components/OurProducts"));
 const WhyChooseUs = React.lazy(() => import("./Components/WhyChooseUs"));
+const NewArrival = React.lazy(() => import("./Components/NewArrival"));
 
 const Home = () => {
     return (
@@ -30,6 +31,9 @@ const Home = () => {
             </Suspense>
             <Suspense fallback={<LazyLoaderComponent />}>
                 <WhyChooseUs />
+            </Suspense>
+            <Suspense fallback={<LazyLoaderComponent />}>
+                <NewArrival />
             </Suspense>
             <Suspense fallback={<LazyLoaderComponent />}>
                 <Newsletter />

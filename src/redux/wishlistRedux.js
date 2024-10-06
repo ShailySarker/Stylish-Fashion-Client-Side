@@ -120,9 +120,12 @@ const wishlistSlice = createSlice({
             state.isLoading = false; // Stop loading on error
             state.error = action.payload;  // Store the error message
         },
+        clearWishlist: (state) => {
+            state.wishlist = [];
+        },
     },
 });
 
-export const { setWishlistLoading, setWishlistError, setWishlist, addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistLoading, removeProductFromWishlistError, setLoading, setError } = wishlistSlice.actions;
+export const { setWishlistLoading, setWishlistError, setWishlist, clearWishlist, addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistLoading, removeProductFromWishlistError, setLoading, setError } = wishlistSlice.actions;
 export default wishlistSlice.reducer;
 
