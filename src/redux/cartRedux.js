@@ -117,6 +117,7 @@ const cartSlice = createSlice({
             state.products = action.payload.products;
             state.cartQuantity = action.payload.products.length;
             state.subTotal = action.payload.products.reduce((total, product) => total + product?.total, 0);
+            state.isLoading = false;
         },
         // // Clear cart actions
         // clearCartStart: (state) => {
@@ -134,30 +135,31 @@ const cartSlice = createSlice({
         //     state.error = action.payload;
         // },
 
-        // // Set cart actions
-        // setCartStart: (state) => {
-        //     state.isLoading = true;
-        //     state.error = null;
-        // },
+        // Set cart actions
+        setCartStart: (state) => {
+            state.isLoading = true;
+            state.error = null;
+        },
         // setCartSuccess: (state, action) => {
         //     state.products = action.payload.products;
         //     state.cartQuantity = action.payload.products.length;
         //     state.subTotal = action.payload.products.reduce((total, product) => total + product?.total, 0);
         //     state.isLoading = false;
         // },
-        // setCartFailure: (state, action) => {
-        //     state.isLoading = false;
-        //     state.error = action.payload;
-        // },
+        setCartFailure: (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
     },
 });
 
 export const {
     addProductStart, addProductSuccess, addProductFailure,
     deleteProductStart, deleteProductSuccess, deleteProductFailure,
-    clearCart, setCart
+    clearCart, setCart,
     // clearCartStart, clearCartSuccess, clearCartFailure,
-    // setCartStart, setCartSuccess, setCartFailure
+    setCartStart, setCartFailure
+    // setCartSuccess
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

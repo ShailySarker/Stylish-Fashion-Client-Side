@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import { publicRequest } from "../../../helpers/axios/requestMethod";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegHeart, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { addToWishlist, fetchWishlist, removeFromWishlist } from "../../../redux/api/wishlistCalls";
-import Swal from "sweetalert2";
-import { TiShoppingCart } from "react-icons/ti";
 
 const NewArrival = () => {
-    const dispatch = useDispatch();
-    const currentUser = useSelector(state => state?.user?.currentUser);
-    const wishlistInfo = useSelector(state => state?.wishlist?.wishlist || []);
     const [allProducts, setAllProducts] = useState([]);
     const [newArrivals, setNewArrivals] = useState([]);
     const [visibleProducts, setVisibleProducts] = useState([]); // State to manage visible products
@@ -62,81 +55,6 @@ const NewArrival = () => {
         setShowMore(!showMore); // Toggle the showMore state
     };
 
-    // Fetch wishlist when user is logged in
-    useEffect(() => {
-        if (currentUser?._id) {
-            dispatch(fetchWishlist(currentUser?._id));
-        }
-    }, [currentUser, dispatch, wishlistInfo]);
-
-
-    // Handle adding product to wishlist
-    const handleAddToWishlist = async (product) => {
-        if (currentUser?._id) {
-            const wishlistInfo = {
-                selectedProductId: product?._id,
-                title: product?.title,
-                desc: product?.desc,
-                image: product?.image,
-                price: product?.price,
-            };
-            try {
-                const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
-                if (res?.status === 'success') {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Added to wishlist!",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            } catch (error) {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Failed to add to wishlist",
-                    showConfirmButton: true,
-                });
-            }
-        } else {
-            alert("Please log in to add items to your wishlist.");
-        }
-    };
-
-    // Handle removing product from wishlist
-    const handleRemoveFromWishlist = async (productId) => {
-        if (currentUser?._id) {
-            try {
-                const res = await dispatch(removeFromWishlist(currentUser?._id, productId));
-                if (res?.status === 'success') {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Removed from wishlist!",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            } catch (error) {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "Failed to remove from wishlist",
-                    showConfirmButton: true,
-                });
-            }
-        } else {
-            alert("Please log in to remove items from your wishlist.");
-        }
-    };
-
-    const isProductInWishlist = (productId) => {
-        // console.log("Wishlist:", wishlistInfo);
-        // console.log("Type of wishlist:", typeof wishlistInfo);
-        return Array.isArray(wishlistInfo) && wishlistInfo.some(item => item?.selectedProductId === productId);
-    };
-
     return (
         <>
             {
@@ -151,24 +69,10 @@ const NewArrival = () => {
                             visibleProducts?.map((product) => (
                                 <div key={product?._id} className="relative group">
                                     <img className="border-2 border-purple-800 rounded-xl lg:h-56 md:h-48 h-40 w-full shadow-lg" src={product?.image} alt="product image" />
-                                    <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[6px] md:gap-[5px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
+                                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
                                         <Link to={`/product/${product?._id}`}>
-                                            <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125" />
+                                            <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-11 md:w-10 w-9 lg:h-11 md:h-10 h-9 lg:p-3 md:p-[10px] p-2 duration-500 transform hover:scale-110" />
                                         </Link>
-                                        <Link to={`/product/${product?._id}`}>
-                                            <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125" />
-                                        </Link>
-                                        {isProductInWishlist(product?._id) ? (
-                                            <FaHeart
-                                                onClick={() => handleRemoveFromWishlist(product?._id)}
-                                                className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125"
-                                            />
-                                        ) : (
-                                            <FaRegHeart
-                                                onClick={() => handleAddToWishlist(product)}
-                                                className="icon-class bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-10 md:w-9 w-8 lg:h-10 md:h-9 h-8 lg:p-[9px] md:p-[8px] p-[6px] duration-500 transform hover:scale-125"
-                                            />
-                                        )}
                                     </div>
                                 </div>
                             ))

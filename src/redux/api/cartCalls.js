@@ -46,12 +46,14 @@ import {
     // setCartStart, setCartSuccess, setCartFailure,
     deleteProductStart, deleteProductSuccess, deleteProductFailure,
     setCart,
+    setCartStart,
+    setCartFailure,
     // clearCartStart, clearCartSuccess, clearCartFailure
 } from "../cartRedux";
 
 // Fetch cart products
 export const fetchCart = (userId) => async (dispatch) => {
-    // dispatch(setCartStart()); // Start loading
+    dispatch(setCartStart()); // Start loading
 
     try {
         const res = await userRequest.get(`/carts/find/${userId}`);
@@ -60,7 +62,7 @@ export const fetchCart = (userId) => async (dispatch) => {
         // localStorage.setItem("cart", JSON.stringify(res?.data))
     } catch (error) {
         console.error("Failed to fetch cart:", error);
-        // dispatch(setCartFailure("Failed to fetch cart")); // Dispatch failure with error message
+        dispatch(setCartFailure("Failed to fetch cart")); // Dispatch failure with error message
     }
 };
 

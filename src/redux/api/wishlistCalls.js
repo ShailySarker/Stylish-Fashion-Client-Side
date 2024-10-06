@@ -74,6 +74,7 @@ export const fetchWishlist = (userId) => async (dispatch) => {
         const response = await userRequest.get(`/wishlist/find/${userId}`);
         const wishlist = response?.data?.products || []; // Ensure you are accessing the correct field
         dispatch(setWishlist(wishlist));
+        // dispatch(setWishlist(response?.data?.products));
         // console.log("Fetched wishlist:", wishlist);
     } catch (error) {
         dispatch(setWishlistError(error?.message));

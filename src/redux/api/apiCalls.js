@@ -1,17 +1,27 @@
-import { publicRequest } from "../../helpers/axios/requestMethod";
-import { clearCart, setCart } from "../cartRedux";
-import { clearOrders, setOrders } from "../orderRedux";
+import { publicRequest, userRequest } from "../../helpers/axios/requestMethod";
+import { clearCart, setCart, setCartStart } from "../cartRedux";
+import { clearOrders, setOrders, setOrdersLoading } from "../orderRedux";
 import { loginFailure, loginStart, loginSuccess, logout, signUpFailure, signUpStart, signUpSuccess } from "../userRedux"
-import { clearWishlist, setWishlist } from "../wishlistRedux";
+import { clearWishlist, setWishlist, setWishlistLoading } from "../wishlistRedux";
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
+    // dispatch(setCartStart());
+    // dispatch(setWishlistLoading());
+    // dispatch(setOrdersLoading());
     try {
         const res = await publicRequest.post("/auth/login", user)
         dispatch(loginSuccess(res?.data));
-        dispatch(setCart());
-        dispatch(setWishlist());
-        dispatch(setOrders());
+        // console.log(res?.data)
+        // const cartRes = await userRequest.get(`/carts/find/${res?.data?._id}`);
+        // dispatch(setCart(cartRes?.data));
+        // console.log(cartRes?.data)
+        // const wishlistRes = await userRequest.get(`/wishlist/find/${res?.data?._id}`);
+        // dispatch(setWishlist(wishlistRes?.data));
+        // console.log(wishlistRes?.data)
+        // const orderRes = await userRequest.get(`/orders/find/${res?.data?._id}`);
+        // dispatch(setOrders(orderRes?.data));
+        // console.log(orderRes?.data)
     } catch (error) {
         dispatch(loginFailure(error?.response?.data?.message || error?.message));
     }
