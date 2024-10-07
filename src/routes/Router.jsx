@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
 import PrivateRouter from "./PrivateRouter";
+import NewArrivalProducts from "../pages/NewArrivalProducts/NewArrivalProducts";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -82,6 +83,13 @@ const router = createBrowserRouter(
                     element: <Suspense fallback={
                         <LazyLoader />}>
                         <AllProducts />
+                    </Suspense>
+                },
+                {
+                    path: "/newArrivalProducts",
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <NewArrivalProducts/>
                     </Suspense>
                 },
                 {

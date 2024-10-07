@@ -8,7 +8,7 @@ const NewArrival = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [newArrivals, setNewArrivals] = useState([]);
     const [visibleProducts, setVisibleProducts] = useState([]); // State to manage visible products
-    const [showMore, setShowMore] = useState(false); // For toggling between "See More" and "See Less"
+    // const [showMore, setShowMore] = useState(false); // For toggling between "See More" and "See Less"
 
     // Fetch all products
     useEffect(() => {
@@ -44,16 +44,16 @@ const NewArrival = () => {
     }, [allProducts]);
 
     // Toggle between showing 12 products and all products
-    const handleToggleProducts = () => {
-        if (showMore) {
-            // If currently showing all products, show only the first 12
-            setVisibleProducts(newArrivals.slice(0, 12));
-        } else {
-            // If currently showing 12, show all products
-            setVisibleProducts(newArrivals);
-        }
-        setShowMore(!showMore); // Toggle the showMore state
-    };
+    // const handleToggleProducts = () => {
+    //     if (showMore) {
+    //         // If currently showing all products, show only the first 12
+    //         setVisibleProducts(newArrivals.slice(0, 12));
+    //     } else {
+    //         // If currently showing 12, show all products
+    //         setVisibleProducts(newArrivals);
+    //     }
+    //     setShowMore(!showMore); // Toggle the showMore state
+    // };
 
     return (
         <>
@@ -78,12 +78,17 @@ const NewArrival = () => {
                             ))
                         }
                     </div>
-                    <button
+                    <Link to="/newArrivalProducts">
+                        <button className="bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-56 md:w-48 w-44 py-2 rounded-2xl lg:text-lg text-base font-semibold flex justify-center mx-auto lg:mt-14 md:mt-12 mt-10 items-center md:gap-2 gap-1">
+                            Explore Now <MdArrowOutward className="lg:text-xl text-lg" />
+                        </button>
+                    </Link>
+                    {/* <button
                         onClick={handleToggleProducts}
                         className="bg-gradient-to-r from-blue-600 to-purple-800 text-white lg:w-56 md:w-48 w-44 py-2 rounded-2xl lg:text-lg text-base font-semibold flex justify-center mx-auto lg:mt-14 md:mt-12 mt-10 items-center md:gap-2 gap-1"
                     >
                         {showMore ? 'See Less' : 'See More'} <MdArrowOutward className="lg:text-xl text-lg" />
-                    </button>
+                    </button> */}
                 </div >
             }
         </>
