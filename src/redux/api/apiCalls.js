@@ -1,27 +1,21 @@
-import { publicRequest, userRequest } from "../../helpers/axios/requestMethod";
-import { clearCart, setCart, setCartStart } from "../cartRedux";
-import { clearOrders, setOrders, setOrdersLoading } from "../orderRedux";
+import { publicRequest } from "../../helpers/axios/requestMethod";
+import { clearCart } from "../cartRedux";
+import { clearOrders } from "../orderRedux";
 import { loginFailure, loginStart, loginSuccess, logout, signUpFailure, signUpStart, signUpSuccess } from "../userRedux"
-import { clearWishlist, setWishlist, setWishlistLoading } from "../wishlistRedux";
+import { clearWishlist } from "../wishlistRedux";
+import { fetchCart } from "./cartCalls";
+import { fetchOrders } from "./orderCalls";
+import { fetchWishlist } from "./wishlistCalls";
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
-    // dispatch(setCartStart());
-    // dispatch(setWishlistLoading());
-    // dispatch(setOrdersLoading());
     try {
-        const res = await publicRequest.post("/auth/login", user)
+        const res = await publicRequest.post("/auth/login", user);
         dispatch(loginSuccess(res?.data));
-        // console.log(res?.data)
-        // const cartRes = await userRequest.get(`/carts/find/${res?.data?._id}`);
-        // dispatch(setCart(cartRes?.data));
-        // console.log(cartRes?.data)
-        // const wishlistRes = await userRequest.get(`/wishlist/find/${res?.data?._id}`);
-        // dispatch(setWishlist(wishlistRes?.data));
-        // console.log(wishlistRes?.data)
-        // const orderRes = await userRequest.get(`/orders/find/${res?.data?._id}`);
-        // dispatch(setOrders(orderRes?.data));
-        // console.log(orderRes?.data)
+        // Fetch wishlist, cart and order after login
+        // dispatch(fetchWishlist(res?.data?._id));
+        // dispatch(fetchCart(res?.data?._id));
+        // dispatch(fetchOrders(res?.data?._id));
     } catch (error) {
         dispatch(loginFailure(error?.response?.data?.message || error?.message));
     }
@@ -41,8 +35,8 @@ export const signUp = async (dispatch, user) => {
 };
 
 export const logOut = (dispatch) => {
-    dispatch(logout());
-    dispatch(clearCart());
     dispatch(clearWishlist());
+    dispatch(clearCart());
     dispatch(clearOrders());
+    dispatch(logout());
 };

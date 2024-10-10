@@ -35,6 +35,7 @@ const Header = () => {
         try {
             await logOut(dispatch);
             // await dispatch(logout());
+            window.location.reload(true);
             Swal.fire({
                 position: "center",
                 icon: "success",

@@ -8,10 +8,18 @@ import { login } from "../../redux/api/apiCalls";
 import Swal from "sweetalert2";
 import Loader from "../../components/Loader";
 import { generateOTP, resetPassword, verifyOTP } from "../../redux/api/forgetToResetPasswordCalls";
+import { fetchWishlist } from "../../redux/api/wishlistCalls";
+import { fetchCart } from "../../redux/api/cartCalls";
+import { fetchOrders } from "../../redux/api/orderCalls";
 
 const Login = () => {
     const dispatch = useDispatch();
     const { currentUser, isFetching, loginError } = useSelector((state) => state?.user);
+    const { products } = useSelector((state) => state?.cart);
+    const { orders } = useSelector((state) => state?.order);
+    const { wishlist } = useSelector((state) => state?.wishlist);
+    console.log(wishlist)
+
     // const cartInfo = useSelector((state) => state?.cart);
     const [otpDigits, setOtpDigits] = useState(["", "", "", "", ""]);
     const inputRefs = Array.from({ length: otpDigits?.length }, () => useRef(null));
@@ -36,20 +44,117 @@ const Login = () => {
         setConfirmPasswordVisible((prev) => !prev);
     };
 
+    // const handleLogin = async (event) => {
+    //     event?.preventDefault();
+    //     const form = event?.target;
+    //     const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+    //     // const username = form?.username?.value;
+    //     const email = form?.email?.value;
+    //     const password = form?.password?.value;
+
+    //     if (!gmailRegex.test(email)) {
+    //         alert("Email is not in the correct format!");
+    //         return;
+    //     }
+    //     await login(dispatch, { email, password });
+    // };
+
+    // useEffect(() => {
+    //     if (currentUser) {
+    //         // // Fetch the wishlist for the logged-in user
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "success",
+    //             title: "Login is successful!",
+    //             showConfirmButton: false,
+    //             timer: 3000,
+    //         });
+    //         if (currentUser?.accessToken) {
+
+    //             const wishlistData = dispatch(fetchWishlist(currentUser?._id)); // Fetch wishlist after login
+    //             console.log("wishlistData", wishlistData)
+    //             navigate(from, { replace: true });
+    //             // navigate('/');
+    //         } else {
+    //             alert("Not found accessToken")
+    //         }
+    //     } else if (loginError) {
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "error",
+    //             title: "Login failed!",
+    //             text: loginError,
+    //             showConfirmButton: true,
+    //         });
+    //     }
+    // }, [currentUser, loginError, from, navigate, dispatch]);
+
     const handleLogin = async (event) => {
-        event?.preventDefault();
-        const form = event?.target;
+        event.preventDefault();
+        const form = event.target;
         const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
-        // const username = form?.username?.value;
         const email = form?.email?.value;
         const password = form?.password?.value;
 
+        // Check if email matches the required format
         if (!gmailRegex.test(email)) {
             alert("Email is not in the correct format!");
             return;
         }
+
+        // Trigger the login process
         await login(dispatch, { email, password });
     };
+
+    // useEffect(() => {
+    //     if (currentUser) {
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "success",
+    //             title: "Login is successful!",
+    //             showConfirmButton: false,
+    //             timer: 3000,
+    //         });
+
+    //         if (currentUser?.accessToken) {
+    //             // Fetch the wishlist after login using the user's ID
+    //             dispatch(fetchWishlist(currentUser?._id))
+    //                 .then((wishlistData) => {
+    //                     console.log("Wishlist Data:", wishlistData); // You can handle wishlist data here
+    //                 })
+    //                 .catch((error) => {
+    //                     console.error("Failed to fetch wishlist:", error);  // Handle error case
+    //                 });
+
+    //             // dispatch(fetchCart(currentUser?._id))
+    //             //     .then((CartData) => {
+    //             //         console.log("Cart Data:", CartData); // You can handle Cart data here
+    //             //     })
+    //             //     .catch((error) => {
+    //             //         console.error("Failed to fetch Cart:", error);  // Handle error case
+    //             //     });
+    //             // dispatch(fetchOrders(currentUser?._id));
+    //             //     .then((ordersData) => {
+    //             //         console.log("Wishlist Data:", ordersData); // You can handle orders data here
+    //             //     })
+    //             //     .catch((error) => {
+    //             //         console.error("Failed to fetch orders:", error);  // Handle error case
+    //             // });
+    //             // Navigate to the desired page
+    //             navigate(from, { replace: true });
+    //         } else {
+    //             alert("Access token not found");
+    //         }
+    //     } else if (loginError) {
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "error",
+    //             title: "Login failed!",
+    //             text: loginError,
+    //             showConfirmButton: true,
+    //         });
+    //     }
+    // }, [currentUser, loginError, from, navigate, dispatch]);
 
     useEffect(() => {
         if (currentUser) {
@@ -60,8 +165,48 @@ const Login = () => {
                 showConfirmButton: false,
                 timer: 3000,
             });
-            navigate(from, { replace: true });
-            // navigate('/');
+            // window.location.reload(true);
+
+            if (currentUser?.accessToken) {
+                console.log(currentUser?.accessToken)
+                // const user = JSON.parse(localStorage.getItem('user'));
+                // console.log(user?.accessToken);
+                localStorage.setItem('token', currentUser?.accessToken); // Store token
+
+                // setTimeout(() => {
+                const wishlistData = dispatch(fetchWishlist(currentUser?._id))
+                    .then((response) => {
+                        console.log("Wishlist fetched successfully:", response);
+                    })
+                    .catch((error) => {
+                        console.error("Failed to fetch wishlist:", error.response || error.message);
+                        // alert(`Failed to fetch wishlist: ${error.response?.data?.message || error.message}`);
+                    });
+                const cartData = dispatch(fetchCart(currentUser?._id))
+                    .then((response) => {
+                        console.log("Cart fetched successfully:", response);
+                    })
+                    .catch((error) => {
+                        console.error("Failed to fetch cart:", error.response || error.message);
+                        // alert(`Failed to fetch cart: ${error.response?.data?.message || error.message}`);
+                    });
+                const orderData = dispatch(fetchOrders(currentUser?._id))
+                    .then((response) => {
+                        console.log("Order fetched successfully:", response);
+                    })
+                    .catch((error) => {
+                        console.error("Failed to fetch order:", error.response || error.message);
+                        // alert(`Failed to fetch order: ${error.response?.data?.message || error.message}`);
+                    });
+                // }, 500);
+                navigate(from, { replace: true });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Access token not found!',
+                })
+            }
         } else if (loginError) {
             Swal.fire({
                 position: "center",
@@ -71,7 +216,7 @@ const Login = () => {
                 showConfirmButton: true,
             });
         }
-    }, [currentUser, loginError, from, navigate]);
+    }, [currentUser, loginError, from, navigate, dispatch]);
 
     const handleForgetPasswordWindowOpen = () => {
         setForgetPasswordWindow(true);

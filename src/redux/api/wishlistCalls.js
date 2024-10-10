@@ -74,11 +74,11 @@ export const fetchWishlist = (userId) => async (dispatch) => {
         const response = await userRequest.get(`/wishlist/find/${userId}`);
         const wishlist = response?.data?.products || []; // Ensure you are accessing the correct field
         dispatch(setWishlist(wishlist));
-        // dispatch(setWishlist(response?.data?.products));
-        // console.log("Fetched wishlist:", wishlist);
+        return wishlist;  // This is needed for handling in the component
     } catch (error) {
         dispatch(setWishlistError(error?.message));
-        // console.error("Failed to fetch wishlist:", error);
+        console.error("Failed to fetch wishlist:", error);
+        throw error;  // Re-throw the error to handle it in the component
     }
 };
 

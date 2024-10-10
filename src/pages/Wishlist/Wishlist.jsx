@@ -48,17 +48,14 @@ const Wishlist = () => {
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">My Wishlist</h1>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">My Wishlist</h1> */}
             </div>
             <div className="lg:mt-12 md:mt-10 mt-6 lg:max-h-[520px] md:max-h-[540px] max-h-[580px] overflow-y-auto">
                 {
                     isLoading ? (
-                        // Display loading message while loading
                         <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
                             Loading...
                         </p>
                     ) : error ? (
-                        // Display error message if an error occurred
                         <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
                             {error}
                         </p>
