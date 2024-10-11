@@ -109,14 +109,20 @@ const KidsProducts = () => {
         });
     };
     // Handle filter change for color
-    const handleColorChange = (value) => {
+    const handleColorChange = (selectedColor) => {
         setSelectedFilters((prevFilters) => {
-            const newColors = prevFilters?.color.includes(value)
-                ? prevFilters?.color.filter((item) => item !== value)
-                : [...prevFilters.color, value];
+            const isSelected = prevFilters?.color?.some(
+                (filterColor) => filterColor?.colorName === selectedColor?.colorName
+            );
+
+            const newColors = isSelected
+                ? prevFilters?.color.filter((filterColor) => filterColor?.colorName !== selectedColor?.colorName)
+                : [...(prevFilters?.color || []), selectedColor]; // Add the selected color
+
             return { ...prevFilters, color: newColors };
         });
     };
+
     // Handle price range change
     const handlePriceRangeChange = (event) => {
         const value = Number(event?.target?.value);
@@ -165,7 +171,11 @@ const KidsProducts = () => {
         // Apply color Filter
         if (selectedFilters?.color?.length > 0) {
             filtered = filtered.filter((product) =>
-                product?.color?.some((productSize) => selectedFilters?.color.includes(productSize))
+                product?.color?.some((productColor) =>
+                    selectedFilters?.color.some(
+                        (filterColor) => filterColor?.colorName === productColor?.colorName
+                    )
+                )
             );
         }
 
@@ -770,20 +780,30 @@ const KidsProducts = () => {
                                     <div>
                                         <h4 className="font-bold">Color</h4>
                                         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
-                                            <div className="flex flex-row  gap-1">
+                                            <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Red")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Red",
+                                                            colorValue: "#dc2626",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Red</span>
                                                     <span className="w-4 h-4 rounded-full bg-[#dc2626]"></span>
                                                 </p>
                                             </div>
-                                            <div className="flex flex-row  gap-1">
+                                            <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Green")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Green",
+                                                            colorValue: "#16a34a",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Green</span>
@@ -793,7 +813,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Blue")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Blue",
+                                                            colorValue: "#1d4ed8",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Blue</span>
@@ -803,7 +828,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Pink")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Pink",
+                                                            colorValue: "#db2777",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Pink</span>
@@ -813,7 +843,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Purple")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Purple",
+                                                            colorValue: "#9333ea",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Purple</span>
@@ -823,7 +858,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Black")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Black",
+                                                            colorValue: "#000000",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Black</span>
@@ -833,7 +873,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("White")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "White",
+                                                            colorValue: "#ffffff",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>White</span>
@@ -843,7 +888,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Indigo")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Indigo",
+                                                            colorValue: "#4f46e5",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Indigo</span>
@@ -853,7 +903,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Teal")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Teal",
+                                                            colorValue: "#14b8a6",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Teal</span>
@@ -863,7 +918,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Gray")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Gray",
+                                                            colorValue: "#9ca3af",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Gray</span>
@@ -873,7 +933,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Peach")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Peach",
+                                                            colorValue: "#fecdd3",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Peach</span>
@@ -883,7 +948,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Yellow")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Yellow",
+                                                            colorValue: "#facc15",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Yellow</span>
@@ -893,7 +963,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Orange")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Orange",
+                                                            colorValue: "#f97316",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Orange</span>
@@ -903,7 +978,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Sky")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Sky",
+                                                            colorValue: "#38bdf8",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Sky</span>
@@ -913,7 +993,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Brown")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Brown",
+                                                            colorValue: "#78350f",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Brown</span>
@@ -923,7 +1008,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Olive")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Olive",
+                                                            colorValue: "#3f6212",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Olive</span>
@@ -933,7 +1023,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Amber")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Amber",
+                                                            colorValue: "#d97706",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Amber</span>
@@ -943,7 +1038,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Lemon")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Lemon",
+                                                            colorValue: "#a3e635",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Lemon</span>
@@ -953,7 +1053,12 @@ const KidsProducts = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Magenta")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Magenta",
+                                                            colorValue: "#e11d48",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Magenta</span>

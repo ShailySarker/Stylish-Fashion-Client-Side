@@ -115,11 +115,16 @@ const Products = () => {
         });
     };
     // Handle filter change for color
-    const handleColorChange = (value) => {
+    const handleColorChange = (selectedColor) => {
         setSelectedFilters((prevFilters) => {
-            const newColors = prevFilters?.color.includes(value)
-                ? prevFilters?.color.filter((item) => item !== value)
-                : [...prevFilters.color, value];
+            const isSelected = prevFilters?.color?.some(
+                (filterColor) => filterColor?.colorName === selectedColor?.colorName
+            );
+
+            const newColors = isSelected
+                ? prevFilters?.color.filter((filterColor) => filterColor?.colorName !== selectedColor?.colorName)
+                : [...(prevFilters?.color || []), selectedColor]; // Add the selected color
+
             return { ...prevFilters, color: newColors };
         });
     };
@@ -177,10 +182,13 @@ const Products = () => {
         // Apply color Filter
         if (selectedFilters?.color?.length > 0) {
             filtered = filtered.filter((product) =>
-                product?.color?.some((productSize) => selectedFilters?.color.includes(productSize))
+                product?.color?.some((productColor) =>
+                    selectedFilters?.color.some(
+                        (filterColor) => filterColor?.colorName === productColor?.colorName
+                    )
+                )
             );
         }
-
         // Apply price range filter
         const [minPrice, maxPrice] = selectedFilters.priceRange;
         filtered = filtered.filter(
@@ -360,7 +368,7 @@ const Products = () => {
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">All Products</h1>
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">All Products</h1> */}
-                <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover the latest trends in men’s, women’s, and kids' wear. At Stylish Fashion, we offer a curated collection of stylish and affordable clothing to keep your wardrobe fresh and fashionable.</p>
+                {/* <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover the latest trends in men’s, women’s, and kids' wear. At Stylish Fashion, we offer a curated collection of stylish and affordable clothing to keep your wardrobe fresh and fashionable.</p> */}
             </div>
             <div>
                 {
@@ -811,20 +819,30 @@ const Products = () => {
                                     <div>
                                         <h4 className="font-bold">Color</h4>
                                         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium text-black">
-                                            <div className="flex flex-row  gap-1">
+                                            <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Red")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Red",
+                                                            colorValue: "#dc2626",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Red</span>
                                                     <span className="w-4 h-4 rounded-full bg-[#dc2626]"></span>
                                                 </p>
                                             </div>
-                                            <div className="flex flex-row  gap-1">
+                                            <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Green")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Green",
+                                                            colorValue: "#16a34a",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Green</span>
@@ -834,7 +852,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Blue")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Blue",
+                                                            colorValue: "#1d4ed8",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Blue</span>
@@ -844,7 +867,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Pink")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Pink",
+                                                            colorValue: "#db2777",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Pink</span>
@@ -854,7 +882,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Purple")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Purple",
+                                                            colorValue: "#9333ea",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Purple</span>
@@ -864,7 +897,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Black")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Black",
+                                                            colorValue: "#000000",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Black</span>
@@ -874,7 +912,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("White")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "White",
+                                                            colorValue: "#ffffff",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>White</span>
@@ -884,7 +927,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Indigo")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Indigo",
+                                                            colorValue: "#4f46e5",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Indigo</span>
@@ -894,7 +942,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Teal")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Teal",
+                                                            colorValue: "#14b8a6",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Teal</span>
@@ -904,7 +957,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Gray")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Gray",
+                                                            colorValue: "#9ca3af",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Gray</span>
@@ -914,7 +972,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Peach")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Peach",
+                                                            colorValue: "#fecdd3",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Peach</span>
@@ -924,7 +987,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Yellow")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Yellow",
+                                                            colorValue: "#facc15",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Yellow</span>
@@ -934,7 +1002,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Orange")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Orange",
+                                                            colorValue: "#f97316",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Orange</span>
@@ -944,7 +1017,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Sky")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Sky",
+                                                            colorValue: "#38bdf8",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Sky</span>
@@ -954,7 +1032,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Brown")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Brown",
+                                                            colorValue: "#78350f",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Brown</span>
@@ -964,7 +1047,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Olive")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Olive",
+                                                            colorValue: "#3f6212",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Olive</span>
@@ -974,7 +1062,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Amber")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Amber",
+                                                            colorValue: "#d97706",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Amber</span>
@@ -984,7 +1077,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Lemon")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Lemon",
+                                                            colorValue: "#a3e635",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Lemon</span>
@@ -994,7 +1092,12 @@ const Products = () => {
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
-                                                    onChange={() => handleColorChange("Magenta")}
+                                                    onChange={() =>
+                                                        handleColorChange({
+                                                            colorName: "Magenta",
+                                                            colorValue: "#e11d48",
+                                                        })
+                                                    }
                                                 />
                                                 <p className="flex flex-row items-center gap-1">
                                                     <span>Magenta</span>
@@ -1826,198 +1929,3 @@ const Products = () => {
 };
 
 export default Products;
-// {/* <div>
-//                 {/* Error message display */}
-//                 {error && (
-//                     <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
-//                         {error}
-//                     </p>
-//                 )}
-
-//                 {/* Loading state */}
-//                 {loading ? (
-//                     <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
-//                         Loading...
-//                     </p>
-//                 ) : (
-//                     <>
-//                         {/* Products display or filtering message */}
-
-//                         <div className="flex gap-12 lg:mt-12 md:mt-10 mt-7">
-//                             {/* Show filter options when no products are available due to filtering */}
-//                             <div className="price-range-slider">
-//                                 <h4 className="font-bold">Price Range</h4>
-//                                 <div className="mt-3">
-//                                     <Range
-//                                         step={10} // Adjust step as needed
-//                                         min={0}
-//                                         max={1000} // Customize based on product pricing
-//                                         values={selectedFilters?.priceRange}
-//                                         onChange={handlePriceRangeChange}
-//                                         renderTrack={({ props, children }) => (
-//                                             <div
-//                                                 {...props}
-//                                                 style={{
-//                                                     height: '6px',
-//                                                     width: '100%',
-//                                                     background: 'lightgray',
-//                                                 }}
-//                                             >
-//                                                 {children}
-//                                             </div>
-//                                         )}
-//                                         renderThumb={({ props }) => (
-//                                             <div
-//                                                 {...props}
-//                                                 style={{
-//                                                     height: '20px',
-//                                                     width: '20px',
-//                                                     backgroundColor: '#3b82f6',
-//                                                     borderRadius: '50%',
-//                                                 }}
-//                                             />
-//                                         )}
-//                                     />
-//                                     <div className="mt-2">
-//                                         <p>
-//                                             Price: ${selectedFilters?.priceRange[0]} - ${selectedFilters?.priceRange[1]}
-//                                         </p>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             {/* Products display */}
-//                             <div className="w-[70%]">
-//                                 {
-//                                     currentItems?.length > 0 ?
-//                                         (
-//                                             <>
-//                                                 <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4">
-//                                                     {currentItems?.map((product) => (
-//                                                         <div key={product?._id} className="relative group">
-//                                                             <img
-//                                                                 className="border-2 border-purple-800 rounded-xl lg:h-72 md:h-64 h-52 w-full shadow-lg"
-//                                                                 src={product?.image}
-//                                                                 alt="product"
-//                                                             />
-//                                                         </div>
-//                                                     ))}
-//                                                 </div>
-//                                             </>
-//                                         ) : (
-//                                             <div>
-//                                                 {isFilteringApplied &&
-//                                                     <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">
-//                                                         No products found based on selected filters.
-//                                                     </h2>
-//                                                 }
-//                                                 <h2 className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-44 md:my-36 my-28 text-black text-center font-semibold">No product is available now!</h2>
-//                                             </div>
-//                                         )
-//                                 }
-//                             </div>
-//                         </div>
-//                     </>
-//                 )}
-//             </div> */}
-// {/* <>
-//     {
-//         currentItems?.length > 0 &&
-//         <>
-//             <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 lg:gap-6 md:gap-5 gap-4 lg:mt-12 md:mt-10 mt-7">
-//                 {
-//                     currentItems?.map((product) => (
-//                         <div key={product?._id} className="relative group">
-//                             <img className="border-2 border-purple-800 rounded-xl lg:h-[350px] md:h-64 h-52 w-full shadow-lg" src={product?.image} alt="product image" />
-//                             <div className="absolute inset-0 bg-black bg-opacity-30 flex md:flex-row flex-col items-center justify-center lg:gap-[12px] md:gap-[10px] gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-//                                 <Link to={`/product/${product?._id}`}>
-//                                     <TiShoppingCart className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
-//                                 </Link>
-//                                 <Link to={`/product/${product?._id}`}>
-//                                     <FaSearch className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" />
-//                                 </Link>
-//                                 {isInWishlist ? (
-//                                     <FaHeart
-//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
-//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 ) : (
-//                                     <FaRegHeart
-//                                         onClick={() => handleAddToWishlist(product)}
-//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 )}
-//                                 {/* {isInWishlist ? (
-//                                     <FaHeart
-//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
-//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 ) : (
-//                                     <FaRegHeart
-//                                         onClick={() => handleAddToWishlist(product)}
-//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 )} */}
-//                                 {/* {isProductInWishlist(product?._id) ? (
-//                                     <FaHeart
-//                                         onClick={() => handleRemoveFromWishlist(product?._id)}
-//                                         className="bg-purple-800 border-2 border-purple-800 text-white rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 ) : (
-//                                     <FaRegHeart
-//                                         onClick={() => handleAddToWishlist(product)}
-//                                         className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125"
-//                                     />
-//                                 )} */}
-
-
-
-//                                 {/* <FaRegHeart onClick={() => handleAddToWishlist(product)} className="bg-white border-2 border-purple-800 text-purple-800 rounded-full lg:w-12 md:w-10 w-8 lg:h-12 md:h-10 h-8 lg:p-[10px] md:p-2 p-[6px] duration-500 transform hover:scale-125" /> */}
-//                             </div>
-//                         </div>
-//                     ))
-//                 }
-//             </div>
-//             {/* pagination */}
-//             <div className="lg:mt-14 md:mt-12 mt-10">
-//                 <ul className="flex justify-center lg:space-x-4 md:space-x-3 space-x-2">
-//                     {/* Render Previous button */}
-
-//                     <button
-//                         onClick={goToPreviousPage}
-//                         disabled={currentPage === 1}
-//                         className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === 1 ? 'text-gray-500 cursor-default' : 'text-black'}`}
-//                     >
-//                         <FaAngleLeft />
-//                     </button>
-
-
-//                     {/* Render pagination buttons */}
-//                     {Array.from({ length: endPage - startPage + 1 }).map((_, index) => {
-//                         const pageNumber = startPage + index;
-//                         return (
-//                             <li key={pageNumber}>
-//                                 <button
-//                                     onClick={() => paginate(pageNumber)}
-//                                     className={`lg:w-10 md:w-9 w-8 lg:h-9 px-3 py-1 rounded-md font-medium focus:outline-none ${currentPage === pageNumber ? 'bg-purple-800 text-white' : 'bg-purple-200 text-black hover:bg-gray-300'}`}
-//                                 >
-//                                     {pageNumber}
-//                                 </button>
-//                             </li>
-//                         );
-//                     })}
-
-
-//                     {/* Render Next button */}
-//                     <button
-//                         onClick={goToNextPage}
-//                         disabled={currentPage === totalPages}
-//                         className={`px-3 py-1 rounded-md focus:outline-none ${currentPage === totalPages ? 'text-gray-500 cursor-default' : 'text-black'}`}
-//                     >
-//                         <FaAngleRight />
-//                     </button>
-
-//                 </ul>
-//             </div>
-//         </>
-//     }
-// </> */}

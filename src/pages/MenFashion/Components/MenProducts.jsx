@@ -117,16 +117,14 @@ const MenProducts = () => {
     //         return { ...prevFilters, color: newColors };
     //     });
     // };
-    // Apply color filter
-    // Apply color filter
     const handleColorChange = (selectedColor) => {
         setSelectedFilters((prevFilters) => {
             const isSelected = prevFilters?.color?.some(
-                (filterColor) => filterColor.colorName === selectedColor.colorName
+                (filterColor) => filterColor?.colorName === selectedColor?.colorName
             );
 
             const newColors = isSelected
-                ? prevFilters?.color.filter((filterColor) => filterColor.colorName !== selectedColor.colorName)
+                ? prevFilters?.color.filter((filterColor) => filterColor?.colorName !== selectedColor?.colorName)
                 : [...(prevFilters?.color || []), selectedColor]; // Add the selected color
 
             return { ...prevFilters, color: newColors };
@@ -811,7 +809,6 @@ const MenProducts = () => {
                                                     <span className="w-4 h-4 rounded-full bg-[#dc2626]"></span>
                                                 </p>
                                             </div>
-
                                             <div className="flex flex-row gap-1">
                                                 <input
                                                     type="checkbox"
@@ -827,7 +824,6 @@ const MenProducts = () => {
                                                     <span className="w-4 h-4 rounded-full bg-[#16a34a]"></span>
                                                 </p>
                                             </div>
-
                                             <div className="flex flex-row  gap-1">
                                                 <input
                                                     type="checkbox"
