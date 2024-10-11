@@ -29,4 +29,4 @@ export const userRequest = axios.create({
   // headers: { token: `Bearer ${getToken()}` },
 });
 
-console.log(userRequest())
+// console.log(userRequest())

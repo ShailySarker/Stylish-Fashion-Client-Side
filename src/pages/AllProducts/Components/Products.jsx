@@ -348,6 +348,7 @@ const Products = () => {
             selectedFilters?.session.length > 0 ||
             selectedFilters?.brand.length > 0 ||
             selectedFilters?.size.length > 0 ||
+            selectedFilters?.color.length > 0 ||
             selectedFilters?.priceRange[0] > minPrice ||  // Check if min price is adjusted
             selectedFilters?.priceRange[1] < maxPrice     // Check if max price is adjusted
         );

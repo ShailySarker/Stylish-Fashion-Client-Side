@@ -286,7 +286,7 @@ const WomenProducts = () => {
 
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 15;
+    const itemsPerPage = 16;
 
     // Logic to calculate pagination
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -332,6 +332,7 @@ const WomenProducts = () => {
             selectedFilters?.session.length > 0 ||
             selectedFilters?.brand.length > 0 ||
             selectedFilters?.size.length > 0 ||
+            selectedFilters?.color.length > 0 ||
             selectedFilters?.priceRange[0] > minPrice ||  // Check if min price is adjusted
             selectedFilters?.priceRange[1] < maxPrice     // Check if max price is adjusted
         );
