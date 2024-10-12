@@ -356,7 +356,7 @@ const KidsProducts = () => {
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">Kids Fashion</h1>
                 {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-800">Kids Fashion</h1> */}
-                <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover our cute and comfortable clothing for boys and girls, designed to keep your little ones looking trendy and feeling great.</p>
+                {/* <p className="text-center lg:w-[60%] md:w-[75%] w-[90%] mx-auto lg:text-xl/relaxed md:text-lg/relaxed text-base/relaxed lg:mt-4 md:mt-3 mt-2 text-black">Discover our cute and comfortable clothing for boys and girls, designed to keep your little ones looking trendy and feeling great.</p> */}
             </div>
             <div>
                 {

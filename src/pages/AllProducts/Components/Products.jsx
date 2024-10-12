@@ -35,7 +35,7 @@ const Products = () => {
         };
         getAllProducts();
     }, []);
-    console.log(allProducts);
+    // console.log(allProducts);
 
     const prices = allProducts?.length ? allProducts?.map(product => product?.price) : [];
     // Safely calculate minPrice and maxPrice only when prices array is not empty
