@@ -3,7 +3,6 @@ import { createBrowserRouter } from "react-router-dom";
 import LazyLoader from "../components/LazyLoader";
 import MainLayout from "../layouts/MainLayout";
 import PrivateRouter from "./PrivateRouter";
-import NewArrivalProducts from "../pages/NewArrivalProducts/NewArrivalProducts";
 
 const Home = React.lazy(() => import("../pages/Home/Home"));
 const MenFashion = React.lazy(() => import("../pages/MenFashion/MenFashion"));
@@ -24,6 +23,7 @@ const NotFound = React.lazy(() => import("../pages/NotFound/NotFound"));
 const MyAccount = React.lazy(() => import("../pages/MyAccount/MyAccount"));
 const Wishlist = React.lazy(() => import("../pages/Wishlist/Wishlist"));
 const OrderTracking = React.lazy(() => import("../pages/OrderTracking/OrderTracking"));
+const NewArrivalProducts = React.lazy(() => import("../pages/NewArrivalProducts/NewArrivalProducts"));
 
 const router = createBrowserRouter(
     [
