@@ -17,6 +17,7 @@ const MyAccount = () => {
     const [address, setAddress] = useState(currentUser?.address || '');
     const [profilePhoto, setProfilePhoto] = useState(currentUser?.profilePhoto || '');
     const [uploading, setUploading] = useState(false);
+    console.log(username?.length)
 
     const handleImageChange = async (e) => {
         if (e?.target?.files && e?.target?.files[0]) {
@@ -42,39 +43,49 @@ const MyAccount = () => {
     const handleUpdateAccountInfo = async (e) => {
         e.preventDefault();
         if (/^\d{10}$/.test(mobile)) {
-            if (username && email && profilePhoto && mobile && address) {
-                const updatedAccountInfo = {
-                    username,
-                    email,
-                    profilePhoto,
-                    mobile: `+880${mobile}`,
-                    address,
-                };
-                try {
-                    const response = await userRequest.put(`/users/${currentUser?._id}`, updatedAccountInfo);
-                    // Update the Redux state with the new user information
-                    dispatch(updateUser(response?.data));
+            if (address?.length < 4) {
+                if (address?.length > 100) {
+                    if (username && email && profilePhoto && mobile && address) {
+                        const updatedAccountInfo = {
+                            // username,
+                            // email,
+                            profilePhoto,
+                            mobile: `+880${mobile}`,
+                            address
+                        };
+                        try {
+                            const response = await userRequest.put(`/users/${currentUser?._id}`, updatedAccountInfo);
+                            // Update the Redux state with the new user information
+                            dispatch(updateUser(response?.data));
 
-                    // Update local storage with the new user information
-                    localStorage.setItem('user', JSON.stringify(response?.data));
+                            // Update local storage with the new user information
+                            localStorage.setItem('user', JSON.stringify(response?.data));
 
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "User info updated successfully!",
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                } catch (error) {
-                    console.error('Failed to update user information:', error);
-                    Swal.fire({
-                        position: "center",
-                        icon: "error",
-                        title: "User info update failed!",
-                        text: error.message,
-                        showConfirmButton: true,
-                    });
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "User info updated successfully!",
+                                showConfirmButton: false,
+                                timer: 3000,
+                            });
+                        } catch (error) {
+                            console.error('Failed to update user information:', error);
+                            Swal.fire({
+                                position: "center",
+                                icon: "error",
+                                title: "User info update failed!",
+                                text: error.message,
+                                showConfirmButton: true,
+                            });
+                        }
+                    } else {
+                        alert("Kindly fully fill up the form!");
+                    }
+                } else {
+                    alert("Address should have a maximum of 100 characters!");
                 }
+            } else {
+                alert("Address should have at least 4 characters !");
             }
         } else {
             alert("Mobile number must be exactly 10 digits after the country code!");
@@ -90,13 +101,10 @@ const MyAccount = () => {
             setAddress(currentUser?.address || '');
         }
     }, [currentUser]);
-
     return (
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">My Account</h1>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">My Selecting Product</h1> */}
-                {/* <p className="lg:text-2xl/relaxed md:text-xl/relaxed text-lg/relaxed lg:my-48 md:my-40 my-32 text-black text-center font-semibold">Coming Soon!</p> */}
             </div>
             <div className="lg:mt-8 md:mt-5 mt-6 lg:w-2/3 mx-auto flex md:flex-row flex-col md:items-start items-center justify-center lg:gap-16 md:gap-10 gap-8">
                 <div className="flex flex-col items-center lg:mt-10 md:mt-7 mt-0 ">

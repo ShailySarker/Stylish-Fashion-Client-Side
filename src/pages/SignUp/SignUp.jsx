@@ -35,6 +35,15 @@ const SignUp = () => {
         const password = form?.password?.value;
         const confirmPassword = form?.confirmPassword?.value;
 
+        // validation
+        if (username?.length < 3) {
+            alert("Username should have at least 3 characters !");
+            return;
+        }
+        if (username?.length > 15) {
+            alert("Username should have a maximum of 15 characters !");
+            return;
+        }
         const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
         if (!gmailRegex.test(email)) {
             alert("Email is not in the correct format!");
