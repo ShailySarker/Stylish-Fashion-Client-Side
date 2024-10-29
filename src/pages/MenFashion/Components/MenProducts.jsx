@@ -54,7 +54,7 @@ const MenProducts = () => {
         color: [],
         priceRange: [minPrice, maxPrice]  // Use the dynamically calculated values
     });
-    console.log(selectedFilters)
+    // console.log(selectedFilters)
     // console.log(selectedFilters?.priceRange)
     // Handle filter change for sorting
     const handleSortChange = (value) => {

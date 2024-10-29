@@ -33,7 +33,8 @@ const SingleProductDetails = () => {
         const getProduct = async () => {
             try {
                 setLoading(true);
-                const res = await publicRequest.get("/products/find/" + id);
+                const res = await userRequest.get(`/products/find/${id}`);
+                // const res = await publicRequest.get("/products/find/" + id);
                 console.log(res?.data);
                 setProduct(res?.data);
             } catch (error) {

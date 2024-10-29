@@ -17,7 +17,7 @@ const MyAccount = () => {
     const [address, setAddress] = useState(currentUser?.address || '');
     const [profilePhoto, setProfilePhoto] = useState(currentUser?.profilePhoto || '');
     const [uploading, setUploading] = useState(false);
-    console.log(username?.length)
+    console.log(address?.length)
 
     const handleImageChange = async (e) => {
         if (e?.target?.files && e?.target?.files[0]) {

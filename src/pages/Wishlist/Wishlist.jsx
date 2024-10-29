@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWishlist, removeFromWishlist } from "../../redux/api/wishlistCalls";
-import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
 import Swal from "sweetalert2";
