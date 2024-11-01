@@ -61,7 +61,7 @@ const SignUp = () => {
             alert('Please add a special character');
             return;
         }
-        if (password.length < 8) {
+        if (password?.length < 8) {
             alert('Password must be 8 characters long');
             return;
         }
