@@ -21,7 +21,7 @@ const MyAccount = () => {
 
     const handleImageChange = async (e) => {
         if (e?.target?.files && e?.target?.files[0]) {
-            const image = e.target.files[0];
+            const image = e?.target?.files[0];
             if (image) {
                 try {
                     setUploading(true);
@@ -41,51 +41,52 @@ const MyAccount = () => {
 
     // handling user info updating
     const handleUpdateAccountInfo = async (e) => {
+        if (address?.length < 4) {
+            alert("Address should have at least 4 characters !");
+            return;
+        }
+        if ((address?.length > 100)) {
+            alert("Address should have a maximum of 100 characters!");
+            return;
+        }
+
         e.preventDefault();
         if (/^\d{10}$/.test(mobile)) {
-            if (address?.length < 4) {
-                if (address?.length > 100) {
-                    if (username && email && profilePhoto && mobile && address) {
-                        const updatedAccountInfo = {
-                            // username,
-                            // email,
-                            profilePhoto,
-                            mobile: `+880${mobile}`,
-                            address
-                        };
-                        try {
-                            const response = await userRequest.put(`/users/${currentUser?._id}`, updatedAccountInfo);
-                            // Update the Redux state with the new user information
-                            dispatch(updateUser(response?.data));
+            if (username && email && profilePhoto && mobile && address) {
+                const updatedAccountInfo = {
+                    // username,
+                    // email,
+                    profilePhoto,
+                    mobile: `+880${mobile}`,
+                    address
+                };
+                try {
+                    const response = await userRequest.put(`/users/${currentUser?._id}`, updatedAccountInfo);
+                    // Update the Redux state with the new user information
+                    dispatch(updateUser(response?.data));
 
-                            // Update local storage with the new user information
-                            localStorage.setItem('user', JSON.stringify(response?.data));
+                    // Update local storage with the new user information
+                    localStorage.setItem('user', JSON.stringify(response?.data));
 
-                            Swal.fire({
-                                position: "center",
-                                icon: "success",
-                                title: "User info updated successfully!",
-                                showConfirmButton: false,
-                                timer: 3000,
-                            });
-                        } catch (error) {
-                            console.error('Failed to update user information:', error);
-                            Swal.fire({
-                                position: "center",
-                                icon: "error",
-                                title: "User info update failed!",
-                                text: error.message,
-                                showConfirmButton: true,
-                            });
-                        }
-                    } else {
-                        alert("Kindly fully fill up the form!");
-                    }
-                } else {
-                    alert("Address should have a maximum of 100 characters!");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "User info updated successfully!",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                } catch (error) {
+                    console.error('Failed to update user information:', error);
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "User info update failed!",
+                        text: error.message,
+                        showConfirmButton: true,
+                    });
                 }
             } else {
-                alert("Address should have at least 4 characters !");
+                alert("Kindly fully fill up the form!");
             }
         } else {
             alert("Mobile number must be exactly 10 digits after the country code!");
