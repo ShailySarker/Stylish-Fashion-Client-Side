@@ -237,7 +237,7 @@ const WomenProducts = () => {
                 price: product?.price,
             };
             try {
-                const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+                const res = await dispatch(addToWishlist(wishlistInfo));
                 if (res?.status === 'success') {
                     Swal.fire({
                         position: "center",

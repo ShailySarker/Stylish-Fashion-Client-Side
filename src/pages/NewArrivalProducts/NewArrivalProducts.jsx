@@ -55,7 +55,7 @@ const NewArrivalProducts = () => {
         setNewArrivals(filteredNewArrivals); // Store filtered new arrivals
     }, [allProducts]);
 
-    console.log(newArrivals)
+    // console.log(newArrivals)
     const prices = newArrivals?.length ? newArrivals?.map(product => product?.price) : [];
     // Safely calculate minPrice and maxPrice only when prices array is not empty
     const minPrice = prices.length ? Math.min(...prices) : 0;
@@ -244,7 +244,7 @@ const NewArrivalProducts = () => {
                 price: product?.price,
             };
             try {
-                const res = await dispatch(addToWishlist(currentUser?._id, wishlistInfo));
+                const res = await dispatch(addToWishlist(wishlistInfo));
                 if (res?.status === 'success') {
                     Swal.fire({
                         position: "center",

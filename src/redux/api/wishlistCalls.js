@@ -1,51 +1,19 @@
 import { userRequest } from "../../helpers/axios/requestMethod";
 import { addProductToWishlist, removeProductFromWishlist, removeProductFromWishlistError, removeProductFromWishlistLoading, setError, setLoading, setWishlist, setWishlistError, setWishlistLoading } from "../wishlistRedux";
 
-// export const addToWishlist = (userId, product) => async (dispatch) => {
-//     dispatch(setLoading());
-//     try {
-//         console.log("Dispatching addToWishlist with:", { userId, product });
-
-//         const res = await userRequest.post("/wishlist", {
-//             userId,
-//             products: [product],
-//         });
-
-//         console.log("Response from addToWishlist API:", res?.data);
-
-//         if (res?.status === 200) {
-//             dispatch(addProductToWishlist(product));
-//             return { status: 'success', data: res?.data };
-//         } else {
-//             return { status: 'error', message: 'Unexpected response status' };
-//         }
-//     } catch (error) {
-//         console.error("Failed to add product to wishlist:", error);
-//         dispatch(setError(error.message));
-//         return { status: 'error', message: error.message };
-//     }
-// };
-
-
 // add product into wishlist
-export const addToWishlist = (userId, product) => async (dispatch, getState) => {
+export const addToWishlist = (product) => async (dispatch, getState) => {
     dispatch(setLoading());
     try {
-        const res = await userRequest.post("/wishlist", {
-            userId,
-            product,
-        });
-
+        const res = await userRequest.post("/wishlist",
+            {
+                products: product
+            }
+        );
         const { wishlist } = getState().wishlist;
-
-        // // Check if the product is already in the wishlist
-        // const productExists = wishlist.some(item => item?.selectedProductId === product?.selectedProductId);
-        // if (!productExists) {
-        //     dispatch(addProductToWishlist(product)); // Update Redux state with the new product
-        // }
         if (Array.isArray(wishlist)) {
             // Check if the product is already in the wishlist
-            const productExists = wishlist.some(item => item.selectedProductId === product.selectedProductId);
+            const productExists = wishlist.some(item => item?.selectedProductId === product?.selectedProductId);
             if (!productExists) {
                 dispatch(addProductToWishlist(product)); // Update Redux state with the new product
             }
@@ -54,7 +22,7 @@ export const addToWishlist = (userId, product) => async (dispatch, getState) => 
             console.error("Wishlist is not an array:", wishlist);
         }
 
-        console.log("Wishlist updated:", res?.data);
+        // console.log("Wishlist updated:", res?.data);
 
         return { status: 'success', data: res?.data };
 
