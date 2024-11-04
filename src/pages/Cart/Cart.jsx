@@ -14,15 +14,12 @@ const Cart = () => {
     const { isLoading, error } = useSelector((state) => state?.cart);
     const cartInfo = useSelector((state) => state?.cart);
     // console.log(cartInfo)
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(null);
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
     const Stripe_Key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
     // Log the current user ID
     useEffect(() => {
         if (currentUser?._id) {
-            // console.log("Current User ID:", currentUser?._id);
             dispatch(fetchCart(currentUser?._id));
         }
     }, [currentUser?._id, dispatch]);
@@ -67,7 +64,6 @@ const Cart = () => {
     };
 
     const handleToken = (token) => {
-        // console.log("Stripe Token:", token);
         setStripeToken(token);
     };
 
@@ -81,7 +77,6 @@ const Cart = () => {
                     (cartInfo?.cartQuantity * 5) +
                     parseFloat((cartInfo?.subTotal * 0.05).toFixed(2)))
             );
-            // console.log(amount)
             // payment info
             const res = await userRequest.post("/checkout/payment", {
                 tokenId: token?.id,
@@ -93,8 +88,19 @@ const Cart = () => {
             if (res?.data?.status === "succeeded") {
                 // order info
                 const orderInfo = {
-                    userId: currentUser?._id, // Ensure userId is correctly set
-                    products: cartInfo?.products,
+                    // userId: currentUser?._id, // Ensure userId is correctly set
+                    products: cartInfo?.products?.map((product) => ({
+                        cartItemId: product?.cartItemId,
+                        selectedProductId: product?.selectedProductId,
+                        title: product?.title,
+                        desc: product?.desc,
+                        image: product?.image,
+                        productQuantity: product?.productQuantity,
+                        selectedColor: product?.selectedColor,
+                        selectedSize: product?.selectedSize,
+                        price: product?.price,
+                        total: product?.total,
+                    })),
                     amount: res?.data?.amount,
                     address: {
                         billingAddress: {
@@ -115,10 +121,10 @@ const Cart = () => {
                     status: "pending",
 
                 };
-                // console.log(orderInfo);
+                console.log(orderInfo);
                 // Call the order post API
                 const orderRes = await userRequest.post("/orders", orderInfo);
-                // console.log("Order Response:", orderRes?.data);
+                console.log("Order Response:", orderRes?.data);
 
                 Swal.fire({
                     position: "center",
@@ -164,26 +170,7 @@ const Cart = () => {
         <div className="lg:px-20 md:px-12 px-6 lg:mt-5 md:mt-4 mt-3">
             <div>
                 <h1 className="lg:text-4xl/normal md:text-3xl/normal text-2xl/normal font-bold text-center text-black">My Cart</h1>
-                {/* <h1 className="lg:text-4xl/normal md:text-3xl//normal text-2xl/normal font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-900">My Cart</h1> */}
             </div>
-            {/* <div className="flex justify-between items-start lg:mt-16 md:mt-10 mt-8">
-                <button className="md:py-2 py-[6px] lg:w-44 md:w-40 w-40 font-semibold lg:text-lg rounded-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-800 border-2 border-purple-800 shadow-lg" >Continue Shopping</button>
-                <div className="md:block hidden md:flex lg:gap-8 md:gap-4">
-                    <div>
-                        <h4 onClick={() => handleToggleWork(1)} className={`font-semibold lg:text-xl md:text-lg md:px-2 px-1 text-center ${isToggle === 1 ? "text-black border-b-2 border-black myShopping" : "text-[#BDC3C7]"}`}>My Shopping(2)</h4>
-                        <div className={isToggle === 1 ? "myShopping" : "hidden"}>
-                            <MyShopping />
-                        </div>
-                    </div>
-                    <div>
-                        <h4 onClick={() => handleToggleWork(2)} className={`font-semibold lg:text-xl md:text-lg md:px-2 px-1 text-center ${isToggle === 2 ? "text-black border-b-2 border-black myWishlist" : "text-[#BDC3C7]"}`}>My Wishlist(0)</h4>
-                        <div className={isToggle === 2 ? "myWishlist" : "hidden"}>
-                            <MyWishlist />
-                        </div>
-                    </div>
-                </div>
-                <button className="md:py-2 py-[6px] lg:w-44 md:w-36 w-40 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 shadow-lg">Checkout Now</button>
-            </div> */}
             <div>
                 {/* product Details */}
                 {
@@ -277,7 +264,7 @@ const Cart = () => {
                                                     // amount={cartInfo?.total * 100}
                                                     description={`Your total is ${Math.round((cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05))}`}
                                                     amount={`${Math.round((cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + ((cartInfo?.subTotal) * 0.05))}` * 100}
-
+                                                    email={currentUser?.email}
                                                     // description={`Your total is ${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}`}
                                                     // amount={`${(cartInfo?.subTotal) + ((cartInfo?.cartQuantity) * 5) + (parseFloat(((cartInfo?.subTotal) * 0.05).toFixed(2)))}` * 100}
                                                     token={handleToken}
