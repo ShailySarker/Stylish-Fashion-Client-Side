@@ -106,56 +106,6 @@ const Login = () => {
         await login(dispatch, { email, password });
     };
 
-    // useEffect(() => {
-    //     if (currentUser) {
-    //         Swal.fire({
-    //             position: "center",
-    //             icon: "success",
-    //             title: "Login is successful!",
-    //             showConfirmButton: false,
-    //             timer: 3000,
-    //         });
-
-    //         if (currentUser?.accessToken) {
-    //             // Fetch the wishlist after login using the user's ID
-    //             dispatch(fetchWishlist(currentUser?._id))
-    //                 .then((wishlistData) => {
-    //                     console.log("Wishlist Data:", wishlistData); // You can handle wishlist data here
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error("Failed to fetch wishlist:", error);  // Handle error case
-    //                 });
-
-    //             // dispatch(fetchCart(currentUser?._id))
-    //             //     .then((CartData) => {
-    //             //         console.log("Cart Data:", CartData); // You can handle Cart data here
-    //             //     })
-    //             //     .catch((error) => {
-    //             //         console.error("Failed to fetch Cart:", error);  // Handle error case
-    //             //     });
-    //             // dispatch(fetchOrders(currentUser?._id));
-    //             //     .then((ordersData) => {
-    //             //         console.log("Wishlist Data:", ordersData); // You can handle orders data here
-    //             //     })
-    //             //     .catch((error) => {
-    //             //         console.error("Failed to fetch orders:", error);  // Handle error case
-    //             // });
-    //             // Navigate to the desired page
-    //             navigate(from, { replace: true });
-    //         } else {
-    //             alert("Access token not found");
-    //         }
-    //     } else if (loginError) {
-    //         Swal.fire({
-    //             position: "center",
-    //             icon: "error",
-    //             title: "Login failed!",
-    //             text: loginError,
-    //             showConfirmButton: true,
-    //         });
-    //     }
-    // }, [currentUser, loginError, from, navigate, dispatch]);
-
     useEffect(() => {
         if (currentUser) {
             Swal.fire({
