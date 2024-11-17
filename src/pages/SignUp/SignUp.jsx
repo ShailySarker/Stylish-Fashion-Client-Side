@@ -16,7 +16,7 @@ const SignUp = () => {
     // const location = useLocation();
     // const from = location.state?.from?.pathname || '/';
     const { isFetching, signUpError } = useSelector((state) => state?.user);
-    console.log(signUpError)
+    // console.log(signUpError)
     // password showing toggle
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
