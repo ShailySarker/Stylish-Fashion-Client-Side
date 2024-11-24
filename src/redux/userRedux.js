@@ -39,6 +39,7 @@ const userSlice = createSlice({
         logout: (state) => {
             state.currentUser = null;
             localStorage.removeItem('user');
+            // localStorage.removeItem('token');
         },
         updateUser(state, action) {
             state.currentUser = action.payload;
