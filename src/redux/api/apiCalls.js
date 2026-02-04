@@ -3,19 +3,12 @@ import { clearCart } from "../cartRedux";
 import { clearOrders } from "../orderRedux";
 import { loginFailure, loginStart, loginSuccess, logout, signUpFailure, signUpStart, signUpSuccess } from "../userRedux"
 import { clearWishlist } from "../wishlistRedux";
-import { fetchCart } from "./cartCalls";
-import { fetchOrders } from "./orderCalls";
-import { fetchWishlist } from "./wishlistCalls";
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
     try {
         const res = await publicRequest.post("/auth/login", user);
         dispatch(loginSuccess(res?.data));
-        // Fetch wishlist, cart and order after login
-        // dispatch(fetchWishlist(res?.data?._id));
-        // dispatch(fetchCart(res?.data?._id));
-        // dispatch(fetchOrders(res?.data?._id));
     } catch (error) {
         dispatch(loginFailure(error?.response?.data?.message || error?.message));
     }
