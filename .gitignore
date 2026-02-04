@@ -23,25 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-# CONTACT US -> Sgmail account info
-VITE_SERVICE_ID=service_0ot1pzm
-VITE_TEMPLATE_ID=template_53jywmn
-VITE_PUBLIC_KEY=dLHWFtUqX8Ec-AWk3
-
-# STRIPE Payment Info
-VITE_TOKEN_ID=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODQyNGNmNTIzNTA2ODNlMzgzODcwZSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MjE5Nzg4MjEsImV4cCI6MTcyMjIzODAyMX0.16nIrTSsCWRS8yU8L3mTcvgrHJCnNVvkNRfM0K6OLLQ
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51NJsGZGOm6tE3xJRNMxg0tL6kHtj4Uphpg6lqXi4ZN5QmrljSxFKejmm17OnKWt314G2A856BoPLEhI4yOAEPa8d00sR7yeCiU
-
-# FIREBASE Info
-VITE_API_KEY=AIzaSyBi8SurrjBq21mgNkxc2_Rf3NXFtOijdgw
-VITE_AUTH_DOMAIN=stylish-fashion-images.firebaseapp.com
-VITE_PROJECT_ID=stylish-fashion-images
-VITE_STORAGE_BUCKET=stylish-fashion-images.appspot.com
-VITE_MESSAGING_SENDER_ID=119791382863
-VITE_APP_ID=1:119791382863:web:d027eaf4918710e342d53a
-
-# AShaily@24
-# khushi@gmail.com
-# SFkhushi@24
-# "email": "valu@gmail.com",
-#     "password": "AValu@24"

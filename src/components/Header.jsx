@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Link, NavLink } from "react-router-dom";
 import logo1 from "../assets/Images/Header/logo.jpg";
-import { FaBars, FaSearch } from "react-icons/fa";
+import { FaBars} from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
 import Swal from "sweetalert2";
@@ -12,7 +13,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
     const cartInfo = useSelector(state => state?.cart);
-    console.log(cartQuantity);
+    // console.log(cartQuantity);
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
     const userInfo = useSelector(state => state?.user?.currentUser);
 
@@ -112,7 +113,7 @@ const Header = () => {
                                 <div>
                                     {
                                         userInfo && <p className="font-medium text-lg">
-                                            Welcome, <span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
+                                            Welcome, <span className="uppercase text-purple-800 font-bold"><Link to="/myAccount">{userInfo?.username}</Link></span>
                                         </p>
                                     }
                                 </div>
