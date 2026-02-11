@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import banner from "../../assets/Images/Login/fashion-model-kids-free-photo-removebg-preview.png";
 import companyLogo from "../../assets/Images/Login/logo.jpg";
 import { useEffect, useRef, useState } from "react";
@@ -115,6 +115,10 @@ const Login = () => {
                 showConfirmButton: false,
                 timer: 3000,
             });
+
+            if(currentUser?.role === "admin") {
+                navigate("/");
+            }
             // window.location.reload(true);
 
             if (currentUser?.accessToken) {
