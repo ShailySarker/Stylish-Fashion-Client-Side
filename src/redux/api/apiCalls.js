@@ -9,8 +9,10 @@ export const login = async (dispatch, user) => {
     try {
         const res = await publicRequest.post("/auth/login", user);
         dispatch(loginSuccess(res?.data));
+        return res?.data;
     } catch (error) {
         dispatch(loginFailure(error?.response?.data?.message || error?.message));
+        return error?.response?.data?.message || error?.message;
     }
 };
 

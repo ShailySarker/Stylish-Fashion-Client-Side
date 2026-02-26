@@ -1,19 +1,20 @@
 /* eslint-disable no-unused-vars */
 import { Link, NavLink } from "react-router-dom";
 import logo1 from "../assets/Images/Header/logo.jpg";
-import { FaBars} from "react-icons/fa";
-import { FaCartShopping, FaXmark } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa";
+import { FaCartShopping, FaXmark, FaGauge } from "react-icons/fa6";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { logOut } from "../redux/api/apiCalls";
 
+// Admin panel URL — update port if your admin app runs elsewhere
+const ADMIN_PANEL_URL = "http://localhost:3000";
+
 const Header = () => {
     const dispatch = useDispatch();
     const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
-    const cartInfo = useSelector(state => state?.cart);
-    // console.log(cartQuantity);
     const userAvailability = useSelector(state => state?.user?.currentUser !== null);
     const userInfo = useSelector(state => state?.user?.currentUser);
 
@@ -49,7 +50,6 @@ const Header = () => {
         }
     };
 
-
     return (
         <div style={{ zIndex: 9999 }} className="sticky top-0 bg-white flex justify-between items-center lg:px-10 md:px-7 px-5 lg:py-2 md:py-[6px] py-1 border-2">
             <div className="flex flex-row gap-16">
@@ -58,44 +58,48 @@ const Header = () => {
                         <img className="md:w-28 w-20" src={logo1} alt="Stylish Fashion" />
                     </Link>
                 </div>
-                {/* large device */}
-                <div className="lg:block hidden lg:flex items-center gap-10 text-black">
+                {/* large device nav links */}
+                <div className="lg:flex hidden items-center gap-10 text-black">
                     <ul className="text-black text-xl font-semibold">
-                        <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                        }>Men</NavLink>
+                        <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Men</NavLink>
                     </ul>
                     <ul className="text-black text-xl font-semibold">
-                        <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                        }>Women</NavLink>
+                        <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Women</NavLink>
                     </ul>
                     <ul className="text-black text-xl font-semibold">
-                        <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                        }>Kids</NavLink>
+                        <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Kids</NavLink>
                     </ul>
+                    {/* Dashboard link — only visible when logged in as admin */}
+                    {userAvailability && userInfo?.isAdmin && (
+                        <ul className="text-black text-xl font-semibold">
+                            <a
+                                href={`${ADMIN_PANEL_URL}/home`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-purple-800 font-bold hover:border-b-2 hover:border-purple-800 transition-all"
+                                id="admin-dashboard-link"
+                            >
+                                <FaGauge className="text-lg" />
+                                Dashboard
+                            </a>
+                        </ul>
+                    )}
                 </div>
             </div>
-            {/* medium device search bar */}
-            {/* <div className="relative flex border-2 rounded-lg lg:hidden md:block hidden">
-                <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500 lg:text-base text-sm" />
-                <input className="py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-72 w-10 lg:font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
-            </div> */}
+
             <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
-                {/* large device search bar */}
-                {/* <div className="relative flex border-2 rounded-lg lg:block hidden">
-                    <FaSearch className="absolute lg:left-5 md:left-4 left-[14px] top-1/2 transform -translate-y-1/2 text-gray-500" />
-                    <input className="md:py-2 py-[6px] pl-10 lg:px-12 md:px-11 px-14 rounded-lg lg:w-80 md:w-80 w-80 font-medium text-black" type="search" name="search" id="" placeholder="Search..." />
-                </div> */}
+                {/* mobile: show username + cart when logged in */}
                 <div className="flex lg:hidden visible">
-                    {
-                        userAvailability &&
+                    {userAvailability && (
                         <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
-                            {
-                                userInfo && <p className="font-medium lg:text-lg md:text-base text-sm flex gap-1">
-                                    <span className="md:block hidden">Welcome, </span><span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
+                            {userInfo && (
+                                <p className="font-medium lg:text-lg md:text-base text-sm flex gap-1">
+                                    <span className="md:block hidden">Welcome, </span>
+                                    <span className="uppercase text-purple-800 font-bold">{userInfo?.username}</span>
                                 </p>
-                            }
+                            )}
                             <Link to="/cart">
-                                <FaCartShopping className="lg:text-2xl  md:text-xl text-lg text-purple-800" />
+                                <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
                             </Link>
                             {cartQuantity > 0 && (
                                 <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
@@ -103,96 +107,103 @@ const Header = () => {
                                 </span>
                             )}
                         </div>
-                    }
+                    )}
                 </div>
-                {/* large device */}
+
+                {/* large device: user info + cart + logout / login */}
                 <div className="lg:block hidden">
-                    {
-                        userAvailability ?
-                            <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
-                                <div>
-                                    {
-                                        userInfo && <p className="font-medium text-lg">
-                                            Welcome, <span className="uppercase text-purple-800 font-bold"><Link to="/myAccount">{userInfo?.username}</Link></span>
-                                        </p>
-                                    }
-                                </div>
-                                <div className="flex">
-                                    <Link to="/cart">
-                                        <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
-                                    </Link>
-                                    {cartQuantity > 0 && (
-                                        <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
-                                            {cartQuantity}
-                                        </span>
-                                    )}
-                                </div>
-                                {/* <FaUserCircle className="lg:text-2xl  md:text-xl text-lg text-purple-800"/> */}
-                                <Link to="/">
-                                    <button onClick={handleLogout} className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
-                                        <FiLogOut />
-                                        Logout
-                                    </button>
+                    {userAvailability ? (
+                        <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
+                            <div>
+                                {userInfo && (
+                                    <p className="font-medium text-lg">
+                                        Welcome, <span className="uppercase text-purple-800 font-bold"><Link to="/myAccount">{userInfo?.username}</Link></span>
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex">
+                                <Link to="/cart">
+                                    <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
                                 </Link>
-                            </div> :
-                            <>
-                                <Link to="/login">
-                                    <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                                        Login
-                                    </button>
-                                </Link>
-                            </>
-                    }
-                    {/* <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 via-pink-700 to-purple-700">
-                        Login
-                    </button> */}
+                                {cartQuantity > 0 && (
+                                    <span className="relative bottom-1 md:right-2 right-[6px] md:-mr-2 -mr-[6px] lg:px-2 md:px-[6px] px-[5px] lg:py-1 md:py-[2px] py-[1px] text-xs font-semibold text-white bg-red-600 rounded-full -translate-y-1/2">
+                                        {cartQuantity}
+                                    </span>
+                                )}
+                            </div>
+                            <Link to="/">
+                                <button onClick={handleLogout} className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center gap-2">
+                                    <FiLogOut />
+                                    Logout
+                                </button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <>
+                            <Link to="/login">
+                                <button className="py-2 lg:w-32 text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                    Login
+                                </button>
+                            </Link>
+                        </>
+                    )}
                 </div>
-                {/* medium and small device menu */}
+
+                {/* mobile hamburger */}
                 <div className="lg:hidden visible">
-                    <button className="text-white focus:outline-none"
-                        onClick={toggleMobileMenu}>
+                    <button className="text-white focus:outline-none" onClick={toggleMobileMenu}>
                         {click ? (<FaXmark className="text-purple-800 font-bold md:text-xl text-lg" />) : (<FaBars className="text-purple-800 font-bold md:text-xl text-lg" />)}
                     </button>
                 </div>
-                {/* Mobile menu */}
+
+                {/* Mobile menu dropdown */}
                 {isMobileMenuOpen && (
-                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute md:top-16 top-[72px] right-4 px-4 md:py-6 py-4 md:w-44 w-36 rounded-md shadow-lg border-4 border-purple-800 bg-white">
+                    <div style={{ zIndex: 9999 }} className="lg:hidden absolute md:top-16 top-[72px] right-4 px-4 md:py-6 py-4 md:w-48 w-40 rounded-md shadow-lg border-4 border-purple-800 bg-white">
                         <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
-                            <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                            }>Men</NavLink>
+                            <NavLink to='/menFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Men</NavLink>
                         </ul>
                         <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
-                            <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                            }>Women</NavLink>
+                            <NavLink to='/womenFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Women</NavLink>
                         </ul>
                         <ul className="block text-black md:mb-4 mb-3 md:text-base text-sm font-semibold">
-                            <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""
-                            }>Kids</NavLink>
+                            <NavLink to='/kidsFashion' className={({ isActive }) => isActive ? " text-purple-800 border-b-2 border-purple-800" : ""}>Kids</NavLink>
                         </ul>
+                        {/* Dashboard option for admin in mobile menu */}
+                        {userAvailability && userInfo?.isAdmin && (
+                            <ul className="block md:mb-4 mb-3">
+                                <a
+                                    href={`${ADMIN_PANEL_URL}/home`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 text-purple-800 md:text-base text-sm font-bold"
+                                >
+                                    <FaGauge className="text-base" />
+                                    Dashboard
+                                </a>
+                            </ul>
+                        )}
                         <div className="w-full">
-                            {
-                                userAvailability ?
-                                    <>
-                                        <Link to="/">
-                                            <button onClick={handleLogout} className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold md:text-base text-sm  rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
-                                                <FiLogOut />
-                                                Logout
-                                            </button>
-                                        </Link>
-                                    </>
-                                    :
-                                    <>
-                                        <Link to="/login">
-                                            <button className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
-                                                Login
-                                            </button>
-                                        </Link>
-                                    </>
-                            }
+                            {userAvailability ? (
+                                <>
+                                    <Link to="/">
+                                        <button onClick={handleLogout} className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold md:text-base text-sm rounded-lg bg-gradient-to-r from-blue-600 to-purple-800 flex items-center justify-center md:gap-2 gap-2">
+                                            <FiLogOut />
+                                            Logout
+                                        </button>
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/login">
+                                        <button className="md:w-[136px] w-[104px] md:py-2 py-[6px] text-white font-semibold lg:text-lg rounded-lg bg-gradient-to-r from-blue-600 to-purple-800">
+                                            Login
+                                        </button>
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
-
             </div>
         </div>
     );
