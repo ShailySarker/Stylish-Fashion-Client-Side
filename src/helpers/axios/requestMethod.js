@@ -19,14 +19,25 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}` // Fetch token from localStorage
 
-    // Authorization: `Bearer ${getToken()}`, // Ensure the "Bearer" prefix is used with the token
-  },
-  // headers: { Authorization: `Bearer ${getToken()}` },
+  //   headers: {
+  //   'Authorization': `Bearer ${localStorage.getItem('token')}` // Fetch token from localStorage
 
-  // headers: { token: `Bearer ${getToken()}` },
+  //   // Authorization: `Bearer ${getToken()}`, // Ensure the "Bearer" prefix is used with the token
+  // },
+  // // headers: { Authorization: `Bearer ${getToken()}` },
+
+  // // headers: { token: `Bearer ${getToken()}` },
+});
+
+// Dynamically attach the token before each request
+// This ensures token changes (login/logout) are always picked up
+userRequest.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // console.log(userRequest())
