@@ -194,70 +194,66 @@ const Cart = () => {
             </h2>
           </div>
         ) : (
-          <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:max-h-[540px] max-h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
-            {cartInfo?.products?.map((product) => (
-              <div
-                key={product?.cartItemId}
-                className="flex items-start justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300"
-              >
-                <div className="flex items-center justify-between w-[96%]">
-                  <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
-                    <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
-                      <img
-                        className="h-full w-full"
-                        src={product?.image}
-                        alt="product"
-                      />
-                    </div>
-                    <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
-                      <h4 className="md:block hidden lg:text-lg md:text-base text-sm font-medium">
-                        <span className="font-semibold">ID:</span>{" "}
-                        {product?.cartItemId}
-                      </h4>
-                      <h4 className="lg:text-lg md:text-base text-sm font-medium">
-                        <span className="font-semibold">Product Name:</span>{" "}
-                        {product?.title}
-                      </h4>
-                      <h4 className="lg:text-lg md:text-base text-sm font-medium">
-                        <span className="font-semibold">Size:</span>{" "}
-                        {product?.selectedSize}
-                      </h4>
-                      <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
-                        <p className="lg:text-lg md:text-base text-sm font-semibold">
-                          Quantity:{" "}
-                        </p>
-                        <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
-                          {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4> */}
-                          <h4 className="font-bold">
-                            {product?.productQuantity}
-                          </h4>
-                          {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4> */}
-                        </div>
+          <div className="lg:mt-12 md:mt-10 mt-6 flex lg:flex-row flex-col lg:gap-3 md:gap-9 gap-7">
+            <div className="lg:w-2/3 w-full flex flex-col lg:gap-4 md:gap-3 gap-[10px] lg:h-[480px] md:max-h-[540px] max-h-[580px] overflow-y-auto lg:pr-3 md:pr-2 pr-0">
+              {cartInfo?.products?.map((product) => (
+                <div
+                  key={product?.cartItemId}
+                  className="flex items-start justify-between border-2 border-purple-800 rounded-xl lg:p-4 md:p-3 p-2 shadow-md hover:bg-purple-800 bg-purple-200 text-black hover:text-white hover:duration-300"
+                >
+                  <div className="flex items-center justify-between w-[96%]">
+                    <div className="flex items-center lg:gap-8 md:gap-5 gap-3">
+                      <div className="lg:h-44 md:h-36 h-28 lg:w-36 md:w-28 w-24">
+                        <img
+                          className="h-full w-full"
+                          src={product?.image}
+                          alt="product"
+                        />
                       </div>
-                      <h4 className="md:hidden visible lg:text-lg md:text-base text-sm font-medium">
-                        <span className="font-semibold">Price:</span> $
-                        {`${product?.price * product?.productQuantity}`}
-                      </h4>
+                      <div className="flex flex-col lg:gap-3 md:gap-2 gap-1">
+                        <h4 className="md:block hidden lg:text-lg md:text-base text-sm font-medium">
+                          <span className="font-semibold">ID:</span>{" "}
+                          {product?.cartItemId}
+                        </h4>
+                        <h4 className="lg:text-lg md:text-base text-sm font-medium">
+                          <span className="font-semibold">Product Name:</span>{" "}
+                          {product?.title}
+                        </h4>
+                        <h4 className="lg:text-lg md:text-base text-sm font-medium">
+                          <span className="font-semibold">Size:</span>{" "}
+                          {product?.selectedSize}
+                        </h4>
+                        <div className="flex items-center lg:gap-3 md:gap-2 gap-1">
+                          <p className="lg:text-lg md:text-base text-sm font-semibold">
+                            Quantity:{" "}
+                          </p>
+                          <div className="flex items-center lg:text-xl md:text-lg text-base font-semibold lg:gap-3 md:gap-[10px] gap-2">
+                            {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleDecreaseProduct}><FaMinus className="lg:text-sm text-xs" /></h4> */}
+                            <h4 className="font-bold">
+                              {product?.productQuantity}
+                            </h4>
+                            {/* <h4 className="border-2 border-[#787878] bg-white lg:p-2 p-1 rounded-lg text-black" onClick={handleIncreaseProduct}><FaPlus className="lg:text-sm text-xs" /></h4> */}
+                          </div>
+                        </div>
+                        <h4 className="md:hidden visible lg:text-lg md:text-base text-sm font-medium">
+                          <span className="font-semibold">Price:</span> $
+                          {`${product?.price * product?.productQuantity}`}
+                        </h4>
 
-                      {/* <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.productQuantity}`}</h2> */}
+                        {/* <h2 className="lg:text-xl md:text-lg text-base font-bold">${`${product?.price * product?.productQuantity}`}</h2> */}
+                      </div>
                     </div>
+                    <h2 className="md:block hidden lg:text-xl md:text-lg text-base font-bold">
+                      ${`${product?.price * product?.productQuantity}`}
+                    </h2>
                   </div>
-                  <h2 className="md:block hidden lg:text-xl md:text-lg text-base font-bold">
-                    ${`${product?.price * product?.productQuantity}`}
-                  </h2>
+                  <FaXmark
+                    onClick={() => handleDeleteProduct(product?.cartItemId)}
+                    className="lg:text-2xl md:text-2xl text-xl md:p-1 p-[2px] bg-white border-2 border-purple-800 rounded-full text-slate-900"
+                  />
                 </div>
-                <FaXmark
-                  onClick={() => handleDeleteProduct(product?.cartItemId)}
-                  className="lg:text-2xl md:text-2xl text-xl md:p-1 p-[2px] bg-white border-2 border-purple-800 rounded-full text-slate-900"
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {cartInfo?.products?.length > 0 && (
-          <>
-            {/* order summary */}
+              ))}
+            </div>
             <div className="lg:w-1/3 md:w-2/3 w-full lg:h-[480px] lg:mx-0 mx-auto border-2 border-purple-800 rounded-xl lg:px-5 lg:py-7 md:p-6 p-4 shadow-lg">
               <h2 className="text-black font-semibold lg:text-3xl md:text-2xl text-xl">
                 Order Details
@@ -325,7 +321,7 @@ const Cart = () => {
                 </button>
               </StripeCheckout>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
