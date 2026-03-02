@@ -24,6 +24,7 @@ const MyAccount = React.lazy(() => import("../pages/MyAccount/MyAccount"));
 const Wishlist = React.lazy(() => import("../pages/Wishlist/Wishlist"));
 const OrderTracking = React.lazy(() => import("../pages/OrderTracking/OrderTracking"));
 const NewArrivalProducts = React.lazy(() => import("../pages/NewArrivalProducts/NewArrivalProducts"));
+const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
 
 const router = createBrowserRouter(
     [
@@ -89,7 +90,7 @@ const router = createBrowserRouter(
                     path: "/newArrivalProducts",
                     element: <Suspense fallback={
                         <LazyLoader />}>
-                        <NewArrivalProducts/>
+                        <NewArrivalProducts />
                     </Suspense>
                 },
                 {
@@ -158,6 +159,15 @@ const router = createBrowserRouter(
                         <LazyLoader />}>
                         <PrivateRouter>
                             <OrderTracking />
+                        </PrivateRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/dashboard",
+                    element: <Suspense fallback={
+                        <LazyLoader />}>
+                        <PrivateRouter>
+                            <Dashboard />
                         </PrivateRouter>
                     </Suspense>
                 },

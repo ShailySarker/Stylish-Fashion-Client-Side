@@ -99,25 +99,16 @@ const Header = () => {
                     <NavLink to="/menFashion" className={navLinkClass}>Men</NavLink>
                     <NavLink to="/womenFashion" className={navLinkClass}>Women</NavLink>
                     <NavLink to="/kidsFashion" className={navLinkClass}>Kids</NavLink>
-                    <NavLink to="/allProducts" className={navLinkClass}>All Products</NavLink>
-                    <NavLink to="/newArrivalProducts" className={navLinkClass}>New Arrivals</NavLink>
+                    {
+                        userAvailability && (
+                            isAdmin ?
+                                <NavLink to="/dashboard" className={navLinkClass}>Dashboard</NavLink>
+                                : <NavLink to="/admin/dashboard" className={navLinkClass}>Dashboard</NavLink>
+                        )
+                    }
+                    <NavLink to="/aboutUs" className={navLinkClass}>About Us</NavLink>
+                    <NavLink to="/contactUs" className={navLinkClass}>Contact Us</NavLink>
 
-                    {/* Admin-only: Dashboard link */}
-                    {isAdmin && (
-                        <a
-                            href={`${ADMIN_PANEL_URL}/home`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            id="admin-dashboard-link"
-                            className="flex items-center gap-[6px] text-purple-800 font-bold
-                                       border border-purple-800 rounded-lg px-3 py-1
-                                       hover:bg-purple-800 hover:text-white
-                                       transition-all duration-200"
-                        >
-                            <FaGauge className="text-base" />
-                            Dashboard
-                        </a>
-                    )}
                 </nav>
             </div>
 
@@ -188,6 +179,12 @@ const Header = () => {
 
                                     {/* Common user links */}
                                     <div className="py-1">
+                                        <DropdownLink
+                                            to="/dashboard"
+                                            icon={<FaGauge className="text-purple-600" />}
+                                            label="My Dashboard"
+                                            onClick={() => setUserDropdownOpen(false)}
+                                        />
                                         <DropdownLink
                                             to="/myAccount"
                                             icon={<FaUser className="text-purple-600" />}
@@ -371,6 +368,7 @@ const Header = () => {
                                 <div className="border-t border-dashed border-gray-200 mx-4" />
                                 <div className="px-4 py-3 flex flex-col gap-3">
                                     <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Account</p>
+                                    <MobileNavLink to="/dashboard" icon={<FaGauge className="text-purple-500" />} label="My Dashboard" onClick={toggleMobileMenu} />
                                     <MobileNavLink to="/myAccount" icon={<FaUser className="text-purple-500" />} label="My Account" onClick={toggleMobileMenu} />
                                     <MobileNavLink to="/wishlist" icon={<FaHeart className="text-rose-500" />} label="My Wishlist" onClick={toggleMobileMenu} />
                                     <MobileNavLink to="/orderTracking" icon={<FaBoxOpen className="text-blue-500" />} label="Order Tracking" onClick={toggleMobileMenu} />
