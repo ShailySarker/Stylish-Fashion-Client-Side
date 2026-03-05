@@ -18,14 +18,13 @@ import { FiLogOut } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { logOut } from "../redux/api/apiCalls";
 
-// Admin panel URL — update port if your admin app runs elsewhere
-const ADMIN_PANEL_URL = "http://localhost:3000";
-
 const Header = () => {
     const dispatch = useDispatch();
-    const cartQuantity = useSelector(state => state?.cart?.cartQuantity);
-    const userAvailability = useSelector(state => state?.user?.currentUser !== null);
-    const userInfo = useSelector(state => state?.user?.currentUser);
+    const cartQuantity = useSelector((state) => state?.cart?.cartQuantity);
+    const userAvailability = useSelector(
+        (state) => state?.user?.currentUser !== null,
+    );
+    const userInfo = useSelector((state) => state?.user?.currentUser);
     const isAdmin = userAvailability && userInfo?.isAdmin;
 
     // Mobile menu state
@@ -99,29 +98,23 @@ const Header = () => {
                     <NavLink to="/menFashion" className={navLinkClass}>Men</NavLink>
                     <NavLink to="/womenFashion" className={navLinkClass}>Women</NavLink>
                     <NavLink to="/kidsFashion" className={navLinkClass}>Kids</NavLink>
-                    {
-                        userAvailability && (
-                            isAdmin ?
-                                <NavLink to="/dashboard" className={navLinkClass}>Dashboard</NavLink>
-                                : <NavLink to="/admin/dashboard" className={navLinkClass}>Dashboard</NavLink>
-                        )
-                    }
+                    <NavLink to={isAdmin ? "/admin/dashboard" : "/dashboard"} className={navLinkClass}>Dashboard</NavLink>
                     <NavLink to="/aboutUs" className={navLinkClass}>About Us</NavLink>
                     <NavLink to="/contactUs" className={navLinkClass}>Contact Us</NavLink>
-
                 </nav>
             </div>
 
             {/* ── Right: Cart + User / Login ── */}
             <div className="flex items-center lg:gap-5 md:gap-4 gap-3">
-
-                {/* Cart icon (visible when logged in) */}
-                {userAvailability && (
+                {/* Cart icon (visible when logged in) - only for non-admins usually, but let's keep it consistent */}
+                {userAvailability && !isAdmin && (
                     <Link to="/cart" className="relative flex items-center">
                         <FaCartShopping className="lg:text-2xl md:text-xl text-lg text-purple-800" />
                         {cartQuantity > 0 && (
-                            <span className="absolute -top-2 -right-2 px-[6px] py-[1px] text-[10px] font-bold
-                                             text-white bg-red-600 rounded-full leading-4">
+                            <span
+                                className="absolute -top-2 -right-2 px-[6px] py-[1px] text-[10px] font-bold
+                                             text-white bg-red-600 rounded-full leading-4"
+                            >
                                 {cartQuantity}
                             </span>
                         )}
@@ -135,23 +128,27 @@ const Header = () => {
                             {/* Trigger button */}
                             <button
                                 id="user-menu-btn"
-                                onClick={() => setUserDropdownOpen(prev => !prev)}
+                                onClick={() => setUserDropdownOpen((prev) => !prev)}
                                 className="flex items-center gap-2 px-3 py-[7px] rounded-xl
                                            border-2 border-purple-800 text-purple-800 font-semibold
                                            hover:bg-purple-800 hover:text-white
                                            transition-all duration-200 text-sm"
                             >
-                                {/* Avatar initials */}
-                                <span className="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-700
+                                <span
+                                    className="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-700
                                                  text-white rounded-full flex items-center justify-center
-                                                 text-xs font-bold uppercase shrink-0">
+                                                 text-xs font-bold uppercase shrink-0"
+                                >
                                     {userInfo?.username?.charAt(0) || "U"}
                                 </span>
-                                <span className="max-w-[96px] truncate uppercase">{userInfo?.username}</span>
-                                {/* Admin badge */}
+                                <span className="max-w-[96px] truncate uppercase">
+                                    {userInfo?.username}
+                                </span>
                                 {isAdmin && (
-                                    <span className="text-[10px] font-bold bg-amber-400 text-amber-900
-                                                     px-[6px] py-[1px] rounded-full leading-4">
+                                    <span
+                                        className="text-[10px] font-bold bg-amber-400 text-amber-900
+                                                     px-[6px] py-[1px] rounded-full leading-4"
+                                    >
                                         ADMIN
                                     </span>
                                 )}
@@ -174,21 +171,22 @@ const Header = () => {
                                         <p className="text-sm font-bold text-purple-800 uppercase truncate">
                                             {userInfo?.username}
                                         </p>
-                                        <p className="text-xs text-gray-400 truncate">{userInfo?.email}</p>
+                                        <p className="text-xs text-gray-400 truncate">
+                                            {userInfo?.email}
+                                        </p>
                                     </div>
 
-                                    {/* Common user links */}
                                     <div className="py-1">
                                         <DropdownLink
-                                            to="/dashboard"
+                                            to={isAdmin ? "/admin/dashboard" : "/dashboard"}
                                             icon={<FaGauge className="text-purple-600" />}
-                                            label="My Dashboard"
+                                            label={isAdmin ? "Admin Overview" : "My Dashboard"}
                                             onClick={() => setUserDropdownOpen(false)}
                                         />
                                         <DropdownLink
-                                            to="/myAccount"
-                                            icon={<FaUser className="text-purple-600" />}
-                                            label="My Account"
+                                            to="/cart"
+                                            icon={<FaCartShopping className="text-purple-600" />}
+                                            label="My Cart"
                                             onClick={() => setUserDropdownOpen(false)}
                                         />
                                         <DropdownLink
@@ -205,67 +203,37 @@ const Header = () => {
                                         />
                                     </div>
 
-                                    {/* Admin-only section */}
                                     {isAdmin && (
                                         <>
                                             <div className="border-t border-dashed border-purple-200 mx-3" />
                                             <div className="py-1">
                                                 <p className="px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600">
-                                                    Admin
+                                                    Admin Section
                                                 </p>
-                                                <a
-                                                    href={`${ADMIN_PANEL_URL}/home`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    id="admin-dashboard-dropdown-link"
+                                                <DropdownLink
+                                                    to="/admin/users"
+                                                    icon={<FaUser className="text-purple-700" />}
+                                                    label="Manage Users"
                                                     onClick={() => setUserDropdownOpen(false)}
-                                                    className="flex items-center gap-3 px-4 py-2 text-sm
-                                                               text-gray-700 font-medium
-                                                               hover:bg-purple-50 hover:text-purple-800
-                                                               transition-colors duration-150"
-                                                >
-                                                    <FaGauge className="text-purple-700 text-base" />
-                                                    Dashboard
-                                                </a>
-                                                <a
-                                                    href={`${ADMIN_PANEL_URL}/users`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
+                                                />
+                                                <DropdownLink
+                                                    to="/admin/products"
+                                                    icon={<FaBoxOpen className="text-purple-700" />}
+                                                    label="Manage Products"
                                                     onClick={() => setUserDropdownOpen(false)}
-                                                    className="flex items-center gap-3 px-4 py-2 text-sm
-                                                               text-gray-700 font-medium
-                                                               hover:bg-purple-50 hover:text-purple-800
-                                                               transition-colors duration-150"
-                                                >
-                                                    <FaUser className="text-purple-700 text-base" />
-                                                    Manage Users
-                                                </a>
-                                                <a
-                                                    href={`${ADMIN_PANEL_URL}/products`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
+                                                />
+                                                <DropdownLink
+                                                    to="/admin/add-product"
+                                                    icon={<FaGauge className="text-purple-700" />}
+                                                    label="Add Product"
                                                     onClick={() => setUserDropdownOpen(false)}
-                                                    className="flex items-center gap-3 px-4 py-2 text-sm
-                                                               text-gray-700 font-medium
-                                                               hover:bg-purple-50 hover:text-purple-800
-                                                               transition-colors duration-150"
-                                                >
-                                                    <FaBoxOpen className="text-purple-700 text-base" />
-                                                    Manage Products
-                                                </a>
-                                                <a
-                                                    href={`${ADMIN_PANEL_URL}/transactions`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
+                                                />
+                                                <DropdownLink
+                                                    to="/admin/transactions"
+                                                    icon={<FaGauge className="text-purple-700" />}
+                                                    label="Transactions"
                                                     onClick={() => setUserDropdownOpen(false)}
-                                                    className="flex items-center gap-3 px-4 py-2 text-sm
-                                                               text-gray-700 font-medium
-                                                               hover:bg-purple-50 hover:text-purple-800
-                                                               transition-colors duration-150"
-                                                >
-                                                    <FaGauge className="text-purple-700 text-base" />
-                                                    Transactions
-                                                </a>
+                                                />
                                             </div>
                                         </>
                                     )}
@@ -315,11 +283,15 @@ const Header = () => {
 
                 {/* ── Mobile hamburger ── */}
                 <div className="lg:hidden visible">
-                    <button className="text-white focus:outline-none" onClick={toggleMobileMenu}>
-                        {click
-                            ? <FaXmark className="text-purple-800 font-bold md:text-xl text-lg" />
-                            : <FaBars className="text-purple-800 font-bold md:text-xl text-lg" />
-                        }
+                    <button
+                        className="text-white focus:outline-none"
+                        onClick={toggleMobileMenu}
+                    >
+                        {click ? (
+                            <FaXmark className="text-purple-800 font-bold md:text-xl text-lg" />
+                        ) : (
+                            <FaBars className="text-purple-800 font-bold md:text-xl text-lg" />
+                        )}
                     </button>
                 </div>
 
@@ -334,16 +306,22 @@ const Header = () => {
                         {userAvailability && (
                             <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-purple-100">
                                 <div className="flex items-center gap-2">
-                                    <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-700
+                                    <span
+                                        className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-700
                                                      text-white rounded-full flex items-center justify-center
-                                                     text-sm font-bold uppercase shrink-0">
+                                                     text-sm font-bold uppercase shrink-0"
+                                    >
                                         {userInfo?.username?.charAt(0) || "U"}
                                     </span>
                                     <div>
-                                        <p className="text-sm font-bold text-purple-800 uppercase">{userInfo?.username}</p>
+                                        <p className="text-sm font-bold text-purple-800 uppercase">
+                                            {userInfo?.username}
+                                        </p>
                                         {isAdmin && (
-                                            <span className="text-[10px] font-bold bg-amber-400 text-amber-900
-                                                             px-[6px] py-[1px] rounded-full">
+                                            <span
+                                                className="text-[10px] font-bold bg-amber-400 text-amber-900
+                                                             px-[6px] py-[1px] rounded-full"
+                                            >
                                                 ADMIN
                                             </span>
                                         )}
@@ -354,12 +332,39 @@ const Header = () => {
 
                         {/* Nav links */}
                         <div className="px-4 py-3 flex flex-col gap-3">
-                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Shop</p>
-                            <MobileNavLink to="/menFashion" label="Men" onClick={toggleMobileMenu} />
-                            <MobileNavLink to="/womenFashion" label="Women" onClick={toggleMobileMenu} />
-                            <MobileNavLink to="/kidsFashion" label="Kids" onClick={toggleMobileMenu} />
-                            <MobileNavLink to="/allProducts" label="All Products" onClick={toggleMobileMenu} />
-                            <MobileNavLink to="/newArrivalProducts" label="New Arrivals" onClick={toggleMobileMenu} />
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                                Shop
+                            </p>
+                            <MobileNavLink
+                                to="/menFashion"
+                                label="Men"
+                                onClick={toggleMobileMenu}
+                            />
+                            <MobileNavLink
+                                to="/womenFashion"
+                                label="Women"
+                                onClick={toggleMobileMenu}
+                            />
+                            <MobileNavLink
+                                to="/kidsFashion"
+                                label="Kids"
+                                onClick={toggleMobileMenu}
+                            />
+                            <MobileNavLink
+                                to={isAdmin ? "/admin/dashboard" : "/dashboard"}
+                                label="Dashboard"
+                                onClick={toggleMobileMenu}
+                            />
+                            <MobileNavLink
+                                to="/aboutUs"
+                                label="About Us"
+                                onClick={toggleMobileMenu}
+                            />
+                            <MobileNavLink
+                                to="/contactUs"
+                                label="Contact Us"
+                                onClick={toggleMobileMenu}
+                            />
                         </div>
 
                         {/* User links (when logged in) */}
@@ -367,11 +372,33 @@ const Header = () => {
                             <>
                                 <div className="border-t border-dashed border-gray-200 mx-4" />
                                 <div className="px-4 py-3 flex flex-col gap-3">
-                                    <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Account</p>
-                                    <MobileNavLink to="/dashboard" icon={<FaGauge className="text-purple-500" />} label="My Dashboard" onClick={toggleMobileMenu} />
-                                    <MobileNavLink to="/myAccount" icon={<FaUser className="text-purple-500" />} label="My Account" onClick={toggleMobileMenu} />
-                                    <MobileNavLink to="/wishlist" icon={<FaHeart className="text-rose-500" />} label="My Wishlist" onClick={toggleMobileMenu} />
-                                    <MobileNavLink to="/orderTracking" icon={<FaBoxOpen className="text-blue-500" />} label="Order Tracking" onClick={toggleMobileMenu} />
+                                    <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                                        Account
+                                    </p>
+                                    <MobileNavLink
+                                        to="/dashboard"
+                                        icon={<FaGauge className="text-purple-500" />}
+                                        label={isAdmin ? "Admin Overview" : "My Dashboard"}
+                                        onClick={toggleMobileMenu}
+                                    />
+                                    <MobileNavLink
+                                        to="/cart"
+                                        icon={<FaCartShopping className="text-purple-500" />}
+                                        label="My Cart"
+                                        onClick={toggleMobileMenu}
+                                    />
+                                    <MobileNavLink
+                                        to="/wishlist"
+                                        icon={<FaHeart className="text-rose-500" />}
+                                        label="My Wishlist"
+                                        onClick={toggleMobileMenu}
+                                    />
+                                    <MobileNavLink
+                                        to="/orderTracking"
+                                        icon={<FaBoxOpen className="text-blue-500" />}
+                                        label="Order Tracking"
+                                        onClick={toggleMobileMenu}
+                                    />
                                 </div>
                             </>
                         )}
@@ -381,27 +408,29 @@ const Header = () => {
                             <>
                                 <div className="border-t border-dashed border-purple-200 mx-4" />
                                 <div className="px-4 py-3 flex flex-col gap-3">
-                                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Admin</p>
-                                    <MobileExternalLink
-                                        href={`${ADMIN_PANEL_URL}/home`}
-                                        icon={<FaGauge className="text-purple-600" />}
-                                        label="Dashboard"
-                                        onClick={toggleMobileMenu}
-                                    />
-                                    <MobileExternalLink
-                                        href={`${ADMIN_PANEL_URL}/users`}
+                                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                                        Admin Section
+                                    </p>
+                                    <MobileNavLink
+                                        to="/admin/users"
                                         icon={<FaUser className="text-purple-600" />}
                                         label="Manage Users"
                                         onClick={toggleMobileMenu}
                                     />
-                                    <MobileExternalLink
-                                        href={`${ADMIN_PANEL_URL}/products`}
+                                    <MobileNavLink
+                                        to="/admin/products"
                                         icon={<FaBoxOpen className="text-purple-600" />}
                                         label="Manage Products"
                                         onClick={toggleMobileMenu}
                                     />
-                                    <MobileExternalLink
-                                        href={`${ADMIN_PANEL_URL}/transactions`}
+                                    <MobileNavLink
+                                        to="/admin/add-product"
+                                        icon={<FaGauge className="text-purple-600" />}
+                                        label="Add Product"
+                                        onClick={toggleMobileMenu}
+                                    />
+                                    <MobileNavLink
+                                        to="/admin/transactions"
                                         icon={<FaGauge className="text-purple-600" />}
                                         label="Transactions"
                                         onClick={toggleMobileMenu}
@@ -425,15 +454,19 @@ const Header = () => {
                             ) : (
                                 <div className="flex flex-col gap-2">
                                     <Link to="/login" onClick={toggleMobileMenu}>
-                                        <button className="w-full py-2 text-white text-sm font-semibold rounded-lg
-                                                           bg-gradient-to-r from-blue-600 to-purple-800">
+                                        <button
+                                            className="w-full py-2 text-white text-sm font-semibold rounded-lg
+                                                           bg-gradient-to-r from-blue-600 to-purple-800"
+                                        >
                                             Login
                                         </button>
                                     </Link>
                                     <Link to="/signUp" onClick={toggleMobileMenu}>
-                                        <button className="w-full py-2 text-sm font-semibold rounded-lg
+                                        <button
+                                            className="w-full py-2 text-sm font-semibold rounded-lg
                                                            border-2 border-purple-800 text-purple-800
-                                                           hover:bg-purple-800 hover:text-white transition-all">
+                                                           hover:bg-purple-800 hover:text-white transition-all"
+                                        >
                                             Sign Up
                                         </button>
                                     </Link>
@@ -448,7 +481,6 @@ const Header = () => {
 };
 
 /* ── Small reusable sub-components ── */
-
 const DropdownLink = ({ to, icon, label, onClick }) => (
     <Link
         to={to}
@@ -473,20 +505,6 @@ const MobileNavLink = ({ to, icon, label, onClick }) => (
         {icon}
         {label}
     </NavLink>
-);
-
-const MobileExternalLink = ({ href, icon, label, onClick }) => (
-    <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={onClick}
-        className="flex items-center gap-2 text-sm font-semibold text-gray-700
-                   hover:text-purple-800 transition-colors"
-    >
-        {icon}
-        {label}
-    </a>
 );
 
 export default Header;

@@ -25,6 +25,12 @@ const Wishlist = React.lazy(() => import("../pages/Wishlist/Wishlist"));
 const OrderTracking = React.lazy(() => import("../pages/OrderTracking/OrderTracking"));
 const NewArrivalProducts = React.lazy(() => import("../pages/NewArrivalProducts/NewArrivalProducts"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard/Dashboard"));
+const AdminRouter = React.lazy(() => import("./AdminRouter"));
+const ManageUsers = React.lazy(() => import("../pages/AdminPages/ManageUsers"));
+const ManageProducts = React.lazy(() => import("../pages/AdminPages/ManageProducts"));
+const AddProduct = React.lazy(() => import("../pages/AdminPages/AddProduct"));
+const EditProduct = React.lazy(() => import("../pages/AdminPages/EditProduct"));
+const Transactions = React.lazy(() => import("../pages/AdminPages/Transactions"));
 
 const router = createBrowserRouter(
     [
@@ -169,6 +175,55 @@ const router = createBrowserRouter(
                         <PrivateRouter>
                             <Dashboard />
                         </PrivateRouter>
+                    </Suspense>
+                },
+                // --- ADMIN ROUTES ---
+                {
+                    path: "/admin/dashboard",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <Dashboard />
+                        </AdminRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/admin/users",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <ManageUsers />
+                        </AdminRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/admin/products",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <ManageProducts />
+                        </AdminRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/admin/add-product",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <AddProduct />
+                        </AdminRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/admin/edit-product/:id",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <EditProduct />
+                        </AdminRouter>
+                    </Suspense>
+                },
+                {
+                    path: "/admin/transactions",
+                    element: <Suspense fallback={<LazyLoader />}>
+                        <AdminRouter>
+                            <Transactions />
+                        </AdminRouter>
                     </Suspense>
                 },
 
