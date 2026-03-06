@@ -8,6 +8,7 @@ import {
   FaLayerGroup,
   FaTags,
   FaStore,
+  FaAngleDown,
 } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -21,7 +22,7 @@ import { FaSearch } from "react-icons/fa";
 
 const ManageProducts = () => {
   const dispatch = useDispatch();
-  const { products, isLoading } = useSelector((state) => state?.products);
+  const { products, isFetching } = useSelector((state) => state?.product);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
 
@@ -31,24 +32,32 @@ const ManageProducts = () => {
 
   const handleDeleteWork = (id) => {
     Swal.fire({
-      title: "Delete Product?",
-      text: "This action cannot be undone!",
+      title: "Confirm Deletion?",
+      text: "This asset will be permanently removed from the catalog.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#1e1b4b",
+      confirmButtonColor: "#4f46e5",
       cancelButtonColor: "#ef4444",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, Remove Item",
+      background: "#fff",
+      customClass: {
+        popup: "rounded-[32px] border-none shadow-2xl",
+        confirmButton:
+          "rounded-xl px-6 py-3 font-black uppercase tracking-widest text-[10px]",
+        cancelButton:
+          "rounded-xl px-6 py-3 font-black uppercase tracking-widest text-[10px]",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteAdminProduct(id)).then(() => {
-          Swal.fire("Deleted!", "User has been removed.", "success");
+          Swal.fire("Success", "Catalog item has been purged.", "success");
         });
       }
     });
   };
 
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
+    return (products || []).filter((p) => {
       const matchesSearch =
         p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.brand?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -75,167 +84,180 @@ const ManageProducts = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
   // Stats
-  const inStockCount = products.filter((p) => p.inStack).length;
-  const outOfStockCount = products.length - inStockCount;
+  const inStockCount = (products || []).filter((p) => p.inStack).length;
 
   return (
-    <div className="lg:px-20 md:px-12 px-6 py-10 min-h-screen bg-gray-50/50">
+    <div className="lg:px-20 md:px-12 px-6 py-12 min-h-screen bg-[#FDFDFF] font-['Outfit']">
       {/* Header / Stats Section */}
-      <div className="mb-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            Product Catalog
+      <div className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-50/50 border border-indigo-100/50 backdrop-blur-xl rounded-full">
+            <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-pulse shadow-[0_0_8px_rgba(79,70,229,0.6)]"></span>
+            <span className="text-[10px] font-black uppercase tracking-[3px] text-indigo-700/80">
+              Global Inventory Node
+            </span>
+          </div>
+          <h1 className="text-6xl font-black text-gray-900 tracking-tighter italic leading-none">
+            Product{" "}
+            <span className="text-indigo-600 underline decoration-indigo-200 decoration-8 underline-offset-8">
+              Catalog
+            </span>
           </h1>
-          <p className="text-gray-500 mt-2 text-lg">
-            Inventory management and item tracking.
+          <p className="text-gray-400 font-medium tracking-tight text-lg">
+            Management of high-end fashion assets and stock telemetry.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-6 items-center">
           <StatCard
-            icon={<FaStore className="text-purple-600" />}
-            label="Total Inventory"
-            value={products.length}
+            icon={<FaStore className="text-indigo-600" />}
+            label="Total Matrix"
+            value={(products || []).length}
+            color="indigo"
           />
           <StatCard
             icon={<FaLayerGroup className="text-emerald-600" />}
-            label="In Stock"
+            label="Available Stock"
             value={inStockCount}
+            color="emerald"
           />
           <Link
             to="/admin/add-product"
-            className="group h-16 bg-purple-800 hover:bg-purple-900 text-white rounded-3xl flex items-center justify-center gap-3 px-8 transition-all shadow-lg active:scale-95 font-bold"
+            className="group h-20 bg-black hover:bg-indigo-600 text-white rounded-[32px] flex items-center justify-center gap-4 px-10 transition-all shadow-2xl shadow-indigo-200 active:scale-95 font-black uppercase text-[11px] tracking-[4px]"
           >
-            <FaPlus className="text-sm group-hover:rotate-90 transition-transform duration-300" />
-            Add New Item
+            <FaPlus className="text-sm group-hover:rotate-90 transition-transform duration-500" />
+            New Entry
           </Link>
         </div>
       </div>
 
       {/* Filter/Search Bar */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="mb-10 flex flex-col md:flex-row gap-6 items-center justify-between">
         <div className="flex gap-4 w-full md:w-auto">
-          <div className="relative flex-1 md:w-80">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative flex-1 md:w-[400px] group">
+            <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-indigo-300 group-focus-within:text-indigo-600 transition-colors" />
             <input
               type="text"
-              placeholder="Search inventory..."
+              placeholder="Query catalog items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 outline-none shadow-sm font-semibold"
+              className="w-full pl-14 pr-8 py-5 bg-white border border-gray-100 rounded-[32px] focus:ring-[15px] focus:ring-indigo-50/50 outline-none shadow-[0_15px_40px_rgba(0,0,0,0.02)] font-semibold text-gray-700"
             />
           </div>
 
-          <select
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 outline-none shadow-sm font-bold text-gray-600"
-          >
-            <option value="All">All Categories</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-          </select>
+          <div className="relative">
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="px-8 py-5 bg-white border border-gray-100 rounded-[32px] focus:ring-[15px] focus:ring-indigo-50/50 outline-none shadow-sm font-black uppercase text-[10px] tracking-widest text-gray-500 appearance-none min-w-[200px] cursor-pointer"
+            >
+              <option value="All">All Sectors</option>
+              <option value="Men">Men / Collective</option>
+              <option value="Women">Women / Studio</option>
+              <option value="Kids">Kids / Heritage</option>
+            </select>
+            <FaAngleDown className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
-        <div className="flex gap-4 text-sm font-black text-gray-400">
-          <span className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100 uppercase tracking-widest flex items-center gap-2">
-            <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
-            Status Live
+        <div className="flex gap-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          <span className="px-6 py-3 bg-white border border-gray-100 rounded-2xl shadow-sm flex items-center gap-3">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></span>
+            Telemetry Live
           </span>
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="py-32 flex flex-col items-center justify-center gap-5">
-          <div className="w-14 h-14 border-4 border-purple-100 border-t-purple-600 rounded-full animate-spin"></div>
-          <p className="text-gray-400 font-black animate-pulse uppercase tracking-[4px]">
-            Syncing Catalog...
+      {isFetching ? (
+        <div className="py-44 flex flex-col items-center justify-center gap-6">
+          <div className="w-16 h-16 border-[6px] border-indigo-50 border-t-indigo-600 rounded-full animate-spin shadow-xl"></div>
+          <p className="text-gray-400 font-black animate-pulse uppercase tracking-[5px] italic">
+            Syncing Global Cache...
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-gray-100/80 overflow-hidden">
+        <div className="bg-white rounded-[56px] shadow-[0_40px_100px_rgba(0,0,0,0.03)] border border-gray-50/80 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-[#fcfcfd] border-b border-gray-50 text-gray-400 text-[10px] uppercase font-black tracking-widest">
+              <thead className="bg-[#fcfcfd] border-b border-gray-50 text-gray-400 text-[10px] uppercase font-black tracking-[4px]">
                 <tr>
-                  <th className="px-10 py-6">Product Details</th>
-                  <th className="px-10 py-6 text-center">Category</th>
-                  <th className="px-10 py-6 text-center">Unit Price</th>
-                  <th className="px-10 py-6 text-center">Inventory</th>
-                  <th className="px-10 py-6 text-right">Actions</th>
+                  <th className="px-10 py-8">Asset Profile</th>
+                  <th className="px-10 py-8 text-center">Sector</th>
+                  <th className="px-10 py-8 text-center">Valuation</th>
+                  <th className="px-10 py-8 text-center">Status</th>
+                  <th className="px-10 py-8 text-right">Operations</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50/60">
                 {currentItems.map((product) => (
                   <tr
                     key={product._id}
-                    className="group hover:bg-gray-50/80 transition-all duration-300"
+                    className="group hover:bg-slate-50/50 transition-all duration-500"
                   >
-                    <td className="px-10 py-6">
-                      <div className="flex items-center gap-5">
-                        <div className="w-16 h-20 rounded-2xl bg-gray-100 overflow-hidden shadow-sm relative shrink-0">
+                    <td className="px-10 py-7">
+                      <div className="flex items-center gap-6">
+                        <div className="w-20 h-24 rounded-[28px] bg-gray-50 overflow-hidden shadow-md relative shrink-0 ring-4 ring-white group-hover:scale-105 transition-all duration-500">
                           <img
                             src={product.image}
-                            className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all scale-100 group-hover:scale-110 duration-500"
+                            className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all"
                             alt=""
                           />
                         </div>
                         <div>
-                          <p className="font-extrabold text-gray-900 group-hover:text-purple-700 transition-colors uppercase tracking-tight line-clamp-1">
+                          <p className="text-lg font-black text-gray-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight line-clamp-1 italic">
                             {product.title}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-2 py-0.5 rounded-lg uppercase">
+                          <div className="flex items-center gap-3 mt-1.5">
+                            <span className="text-[9px] font-black bg-indigo-50 text-indigo-500 px-2.5 py-1 rounded-lg uppercase tracking-widest">
                               {product.brand}
                             </span>
-                            <span className="text-[10px] font-black text-gray-300">
-                              #INV-{product._id?.slice(-6)}
+                            <span className="text-[9px] font-black text-gray-300 uppercase tracking-tighter">
+                              SKU-{product._id?.slice(-8)}
                             </span>
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-10 py-6 text-center">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-700 rounded-full">
-                        <span className="text-[10px] font-black uppercase tracking-tighter">
+                    <td className="px-10 py-7 text-center">
+                      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-50/50 text-indigo-600 rounded-full border border-indigo-100/50">
+                        <span className="text-[10px] font-black uppercase tracking-widest italic">
                           {product.category}
                         </span>
                       </div>
-                      <p className="text-[9px] font-bold text-gray-300 mt-1 uppercase tracking-widest italic">
+                      <p className="text-[9px] font-bold text-gray-300 mt-2 uppercase tracking-[3px] opacity-60">
                         {product.subCategory}
                       </p>
                     </td>
-                    <td className="px-10 py-6 text-center">
-                      <span className="text-lg font-black text-gray-900 italic">
+                    <td className="px-10 py-7 text-center">
+                      <span className="text-2xl font-black text-gray-900 italic tracking-tighter">
                         ${product.price?.toFixed(2)}
                       </span>
                     </td>
-                    <td className="px-10 py-6 text-center">
+                    <td className="px-10 py-7 text-center">
                       <div
-                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl ${product.inStack ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}
+                        className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl ${product.inStack ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-rose-50 text-rose-600 border border-rose-100"}`}
                       >
                         <div
-                          className={`w-2 h-2 rounded-full ${product.inStack ? "bg-emerald-500" : "bg-rose-500 shadow-[0_0_10px_rgb(244,63,94)] animate-pulse"}`}
+                          className={`w-2 h-2 rounded-full ${product.inStack ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-rose-500 shadow-[0_0_10px_rgb(244,63,94)] animate-pulse"}`}
                         ></div>
                         <span className="text-[10px] font-black uppercase tracking-widest">
-                          {product.inStack ? "In Stock" : "Out of Stock"}
+                          {product.inStack ? "Active" : "Depleted"}
                         </span>
                       </div>
                     </td>
-                    <td className="px-10 py-6">
-                      <div className="flex items-center justify-end gap-3 text-2xl">
+                    <td className="px-10 py-7">
+                      <div className="flex items-center justify-end gap-4">
                         <Link
                           to={`/admin/edit-product/${product._id}`}
-                          className="w-11 h-11 flex items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm active:scale-95"
+                          className="w-14 h-14 flex items-center justify-center rounded-[22px] bg-white border border-gray-100 text-gray-400 hover:text-indigo-600 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all group/btn"
                         >
-                          <BiEdit />
+                          <BiEdit className="text-2xl group-hover/btn:rotate-12 transition-transform" />
                         </Link>
                         <button
                           onClick={() => handleDeleteWork(product._id)}
-                          className="w-11 h-11 flex items-center justify-center rounded-2xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-sm active:scale-95"
+                          className="w-14 h-14 flex items-center justify-center rounded-[22px] bg-white border border-gray-100 text-gray-400 hover:text-rose-600 hover:border-rose-200 hover:shadow-xl hover:-translate-y-1 transition-all group/btn"
                         >
-                          <RiDeleteBin6Line />
+                          <RiDeleteBin6Line className="text-2xl group-hover/btn:scale-110 transition-transform" />
                         </button>
                       </div>
                     </td>
@@ -243,15 +265,15 @@ const ManageProducts = () => {
                 ))}
               </tbody>
             </table>
-            {currentItems.length === 0 && (
-              <div className="py-40 text-center flex flex-col items-center gap-5">
-                <FaStore className="text-8xl text-gray-100" />
-                <div className="space-y-1">
-                  <p className="text-xl font-black text-gray-800 italic uppercase">
-                    Catalog is empty
+            {(currentItems || []).length === 0 && (
+              <div className="py-44 text-center flex flex-col items-center gap-6">
+                <FaStore className="text-9xl text-gray-50 animate-pulse" />
+                <div className="space-y-2">
+                  <p className="text-2xl font-black text-gray-300 italic uppercase tracking-[6px]">
+                    Catalog Empty
                   </p>
-                  <p className="text-gray-400 font-medium">
-                    No results found for your active filters
+                  <p className="text-gray-400 font-medium tracking-tight">
+                    No artifacts detected in the current scan parameters.
                   </p>
                 </div>
               </div>
@@ -262,29 +284,37 @@ const ManageProducts = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-12 flex items-center justify-between px-4">
-          <p className="text-sm font-bold text-gray-400">
-            Page <span className="text-gray-900">{currentPage}</span> of{" "}
-            <span className="text-gray-900 font-black">{totalPages}</span>
-            <span className="ml-4 text-[10px] uppercase opacity-50">
-              Filtered from {products.length} units
-            </span>
+        <div className="mt-16 flex items-center justify-between px-6">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px]">
+            Scan Window{" "}
+            <span className="text-gray-900 font-black">
+              {indexOfFirstItem + 1}
+            </span>{" "}
+            to{" "}
+            <span className="text-gray-900 font-black">
+              {Math.min(indexOfLastItem, filteredProducts.length)}
+            </span>{" "}
+            of{" "}
+            <span className="text-indigo-600 underline decoration-indigo-200 decoration-4 underline-offset-4">
+              {filteredProducts.length}
+            </span>{" "}
+            artifacts
           </p>
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-3">
             <button
               onClick={goToPreviousPage}
               disabled={currentPage === 1}
-              className="w-12 h-12 rounded-2xl bg-white border border-gray-100 text-gray-400 hover:text-purple-600 hover:border-purple-200 disabled:opacity-30 transition-all shadow-sm flex items-center justify-center"
+              className="w-14 h-14 rounded-[24px] bg-white border border-gray-100 text-gray-400 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-30 transition-all shadow-lg flex items-center justify-center text-xl shadow-black/5"
             >
-              <FaAngleLeft className="text-lg" />
+              <FaAngleLeft />
             </button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 mx-2">
               {Array.from({ length: totalPages }).map((_, i) => (
                 <button
                   key={i + 1}
                   onClick={() => paginate(i + 1)}
-                  className={`w-12 h-12 rounded-2xl font-black text-sm transition-all shadow-md active:scale-90 ${currentPage === i + 1 ? "bg-purple-800 text-white shadow-purple-200" : "bg-white border border-gray-100 text-gray-500 hover:bg-gray-50"}`}
+                  className={`w-14 h-14 rounded-[22px] font-black text-sm transition-all shadow-md active:scale-95 ${currentPage === i + 1 ? "bg-indigo-600 text-white shadow-indigo-200" : "bg-white border border-gray-100 text-gray-600 hover:bg-gray-50"}`}
                 >
                   {i + 1}
                 </button>
@@ -294,9 +324,9 @@ const ManageProducts = () => {
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className="w-12 h-12 rounded-2xl bg-white border border-gray-100 text-gray-400 hover:text-purple-600 hover:border-purple-200 disabled:opacity-30 transition-all shadow-sm flex items-center justify-center"
+              className="w-14 h-14 rounded-[24px] bg-white border border-gray-100 text-gray-400 hover:text-indigo-600 hover:border-indigo-200 disabled:opacity-30 transition-all shadow-lg flex items-center justify-center text-xl shadow-black/5"
             >
-              <FaAngleRight className="text-lg" />
+              <FaAngleRight />
             </button>
           </nav>
         </div>
@@ -305,16 +335,20 @@ const ManageProducts = () => {
   );
 };
 
-const StatCard = ({ icon, label, value }) => (
-  <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex items-center gap-5 min-w-[220px] group hover:border-purple-100 transition-all">
-    <div className="w-16 h-16 rounded-[20px] bg-purple-50 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+const StatCard = ({ icon, label, value, color }) => (
+  <div
+    className={`bg-white p-8 rounded-[40px] border border-gray-100/80 shadow-[0_20px_50px_rgba(0,0,0,0.02)] flex items-center gap-6 min-w-[280px] group transition-all hover:border-${color}-200 hover:shadow-xl hover:-translate-y-2`}
+  >
+    <div
+      className={`w-20 h-20 rounded-[32px] bg-${color}-50 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform duration-500`}
+    >
       {icon}
     </div>
-    <div>
-      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+    <div className="space-y-1">
+      <p className="text-[11px] font-black text-gray-400 uppercase tracking-[4px]">
         {label}
       </p>
-      <p className="text-3xl font-black text-gray-900 italic tracking-tighter">
+      <p className="text-4xl font-black text-gray-900 italic tracking-tighter leading-none">
         {value}
       </p>
     </div>
