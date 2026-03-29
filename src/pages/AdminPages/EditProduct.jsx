@@ -1,7 +1,9 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
+import { fetchProductById, updateAdminProduct } from "../../redux/api/adminCalls";
 import app from "../../firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { fetchProductById, updateAdminProduct } from "../../redux/api/adminCalls";
 import {
     FaAngleDown,
     FaCircleCheck,
@@ -72,33 +74,58 @@ const EditProduct = () => {
         const getProduct = async () => {
             try {
                 const data = await fetchProductById(id);
+                // Strip MongoDB internal fields
                 setProduct({
-                    ...data,
-                    size: data.size || [],
-                    color: data.color || [],
+                    title: data.title || "",
+                    desc: data.desc || "",
+                    image: data.image || "",
+                    category: data.category || "",
+                    subCategory: data.subCategory || "",
+                    occasion: data.occasion || "",
+                    session: data.session || "",
+                    price: data.price || "",
+                    brand: data.brand || "",
+                    size: Array.isArray(data.size) ? data.size : [],
+                    color: Array.isArray(data.color) ? data.color : [],
+                    inStack: data.inStack !== undefined ? data.inStack : true,
                 });
             } catch (err) {
+                console.error("Failed to fetch product:", err);
                 Swal.fire("Error", "Could not retrieve product data.", "error");
                 navigate("/admin/products");
             } finally {
                 setFetching(false);
             }
         };
-        getProduct();
+        if (id) getProduct();
     }, [id, navigate]);
 
     const handleImageChange = async (e) => {
         if (e?.target?.files && e?.target?.files[0]) {
             const imageFile = e.target.files[0];
+
+            // Validate file type
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+            if (!allowedTypes.includes(imageFile.type)) {
+                return Swal.fire("Invalid File", "Please upload a valid image (JPG, PNG, WEBP).", "warning");
+            }
+
+            // Validate file size — max 10 MB
+            const maxSizeMB = 10;
+            if (imageFile.size > maxSizeMB * 1024 * 1024) {
+                return Swal.fire("File Too Large", `Image must be under ${maxSizeMB}MB. Please compress and try again.`, "warning");
+            }
+
             try {
                 setUploading(true);
                 const storage = getStorage(app);
-                const storageRef = ref(storage, "images/" + Date.now() + "_" + imageFile.name);
+                const storageRef = ref(storage, "products/" + Date.now() + "_" + imageFile.name);
                 await uploadBytes(storageRef, imageFile);
                 const downloadURL = await getDownloadURL(storageRef);
                 setProduct((prev) => ({ ...prev, image: downloadURL }));
             } catch (error) {
-                Swal.fire("Error", "Cloud asset synchronization failed.", "error");
+                console.error("Firebase upload error:", error?.message, error);
+                Swal.fire("Upload Error", error?.message || "Cloud asset synchronization failed.", "error");
             } finally {
                 setUploading(false);
             }
@@ -109,38 +136,63 @@ const EditProduct = () => {
         const { name, value, type, checked } = e.target;
         setProduct((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" ? (checked === true) : value,
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validation
+        if (!product.title || product.title.length < 3)
+            return Swal.fire("Validation Error", "Title should have at least 3 characters!", "warning");
+        if (product.desc.length < 10)
+            return Swal.fire("Validation Error", "Description should have at least 10 characters!", "warning");
         if (product.size.length === 0)
-            return Swal.fire("Validation Error", "Please select at least one size.", "warning");
+            return Swal.fire("Validation Error", "Please select at least one available size.", "warning");
         if (product.color.length === 0)
-            return Swal.fire("Validation Error", "Please select at least one color.", "warning");
+            return Swal.fire("Validation Error", "Please select at least one available color.", "warning");
         if (!product.price || Number(product.price) <= 0)
-            return Swal.fire("Validation Error", "Please enter a valid price.", "warning");
+            return Swal.fire("Validation Error", "Please enter a valid product price.", "warning");
 
         setLoading(true);
         try {
-            const result = await dispatch(
-                updateAdminProduct(id, { ...product, price: Number(product.price) })
-            );
-            if (result.success) {
+            // Build a clean payload without MongoDB internals
+            const payload = {
+                title: product.title,
+                desc: product.desc,
+                image: product.image,
+                category: product.category,
+                subCategory: product.subCategory,
+                occasion: product.occasion,
+                session: product.session,
+                price: Number(product.price),
+                brand: product.brand,
+                size: product.size,
+                color: product.color,
+                inStack: product.inStack,
+            };
+
+            const result = await dispatch(updateAdminProduct(id, payload));
+
+            if (result && result.success) {
                 Swal.fire({
                     position: "center",
                     icon: "success",
-                    title: "Catalog item synchronized.",
+                    title: "Product info is updated successfully!",
                     showConfirmButton: false,
                     timer: 2500,
                 });
                 navigate("/admin/products");
             } else {
-                throw new Error("Update failed");
+                const errMsg = result?.error?.response?.data?.message
+                    || result?.error?.message
+                    || "Failed to update catalog item. Please try again.";
+                Swal.fire("Update Failed", errMsg, "error");
             }
         } catch (err) {
-            Swal.fire("Error", "Failed to update catalog item. Please try again.", "error");
+            console.error("EditProduct handleSubmit error:", err);
+            Swal.fire("Error", "An unexpected error occurred. Please try again.", "error");
         } finally {
             setLoading(false);
         }
@@ -168,361 +220,286 @@ const EditProduct = () => {
 
     if (fetching)
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-[#FDFDFF] font-['Outfit']">
-                <div className="w-16 h-16 border-[6px] border-indigo-50 border-t-indigo-600 rounded-full animate-spin shadow-xl"></div>
-                <p className="text-gray-400 font-black animate-pulse uppercase tracking-[5px] italic">
-                    Fetching Asset Data...
-                </p>
+            <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-[#FBFCFF] font-['Outfit']">
+                <div className="w-20 h-20 border-[6px] border-indigo-50 border-t-indigo-500 rounded-full animate-spin shadow-2xl shadow-indigo-100"></div>
+                <div className="text-center space-y-2">
+                    <p className="text-indigo-900 font-black uppercase tracking-[6px] text-xs">
+                        Synchronizing
+                    </p>
+                    <p className="text-gray-400 font-medium text-sm">Retrieving asset data from global vault...</p>
+                </div>
             </div>
         );
 
     return (
-        <div className="min-h-screen bg-[#FDFDFF] py-12 lg:px-20 md:px-12 px-6 font-['Outfit']">
-            {/* Header */}
-            <div className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-50/50 border border-amber-100/50 backdrop-blur-xl rounded-full">
-                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>
-                        <span className="text-[10px] font-black uppercase tracking-[3px] text-amber-700/80">
-                            Catalog Edit Mode
-                        </span>
+        <div className="min-h-screen bg-[#FBFCFF] py-16 lg:px-24 md:px-16 px-8 font-['Outfit'] selection:bg-indigo-100 selection:text-indigo-900">
+            {/* Header Section */}
+            <div className="max-w-[1400px] mx-auto mb-16 space-y-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                    <div className="flex items-center gap-8">
+                        <button
+                            onClick={() => navigate("/admin/products")}
+                            className="bg-white hover:bg-indigo-50 text-indigo-500 w-16 h-16 rounded-3xl flex items-center justify-center border border-indigo-50 transition-all shadow-[0_10px_30px_rgba(79,70,229,0.08)] active:scale-90 group"
+                            title="Return to Catalog"
+                        >
+                            <FaArrowLeft className="text-xl group-hover:-translate-x-1 transition-transform" />
+                        </button>
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black uppercase tracking-[4px] text-gray-400">Inventory Management</span>
+                                <div className="h-1 w-1 bg-gray-300 rounded-full"></div>
+                                <span className="text-[10px] font-black uppercase tracking-[4px] text-indigo-500">Edit Archive</span>
+                            </div>
+                            <h1 className="text-5xl font-black text-gray-900 tracking-tighter italic">
+                                Update <span className="text-indigo-600">Product</span>
+                            </h1>
+                        </div>
                     </div>
-                    <h1 className="text-6xl font-black text-gray-900 tracking-tighter italic leading-none">
-                        Edit{" "}
-                        <span className="text-amber-500 underline decoration-amber-200 decoration-8 underline-offset-8">
-                            Artifact
-                        </span>
-                    </h1>
-                    <p className="text-gray-400 font-medium tracking-tight text-sm uppercase tracking-[3px]">
-                        Object ID:{" "}
-                        <span className="text-gray-600 font-black">{id?.toUpperCase()}</span>
-                    </p>
-                </div>
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => navigate("/admin/products")}
-                        className="flex items-center gap-3 px-8 py-4 bg-white border border-gray-100 text-gray-400 rounded-[28px] text-[10px] font-black uppercase tracking-[2px] hover:bg-gray-50 hover:text-gray-900 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.02)] active:scale-95"
-                    >
-                        <FaArrowLeft />
-                        Discard
-                    </button>
+
+                    <div className="flex items-center gap-4 bg-white p-3 rounded-[32px] border border-indigo-50 shadow-sm px-6">
+                        <div className={`w-3 h-3 rounded-full ${product.inStack ? "bg-emerald-500" : "bg-rose-500"} shadow-lg`}></div>
+                        <p className="text-[11px] font-black text-gray-500 uppercase tracking-widest leading-none">
+                            Asset ID: <span className="text-indigo-600 ml-2 font-mono">{id?.slice(-8).toUpperCase()}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                {/* Left: Image Panel */}
+            <form onSubmit={handleSubmit} className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+                {/* Left Panel: Visual Assets */}
                 <div className="lg:col-span-4 space-y-8">
-                    <div className="bg-white p-10 rounded-[48px] shadow-[0_40px_80px_rgba(0,0,0,0.03)] border border-gray-100/50 sticky top-10">
-                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-8 flex items-center gap-3">
-                            Asset Visualization
-                            <div className="flex-1 h-[1px] bg-gradient-to-r from-gray-100 to-transparent"></div>
-                        </p>
-
-                        <div className="relative group transition-all duration-700 overflow-hidden rounded-[40px] aspect-[4/5] bg-gray-50 border-2 border-dashed border-amber-100 flex flex-col items-center justify-center hover:border-amber-300 shadow-inner">
-                            {uploading && (
-                                <div className="absolute inset-0 z-20 bg-white/90 backdrop-blur-xl flex flex-col items-center justify-center gap-6">
-                                    <div className="w-14 h-14 border-[5px] border-amber-50 border-t-amber-500 rounded-full animate-spin shadow-lg"></div>
-                                    <p className="text-[10px] font-black text-amber-900 uppercase tracking-[5px] animate-pulse">
-                                        Syncing Cloud Storage
-                                    </p>
-                                </div>
-                            )}
-
-                            {product.image ? (
-                                <>
-                                    <img
-                                        src={product.image}
-                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                        alt="Preview"
-                                    />
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-6 z-10 backdrop-blur-sm">
-                                        <label className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-3xl shadow-2xl cursor-pointer hover:bg-white hover:text-amber-600 transition-all transform hover:-translate-y-2 flex items-center justify-center text-xl">
-                                            <FaCloudArrowUp />
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleImageChange}
-                                                className="hidden"
-                                            />
-                                        </label>
-                                        <button
-                                            type="button"
-                                            onClick={() => setProduct((p) => ({ ...p, image: "" }))}
-                                            className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-3xl shadow-2xl hover:bg-rose-600 hover:border-rose-500 transition-all transform hover:-translate-y-2 flex items-center justify-center text-xl"
-                                        >
-                                            <FaXmark />
-                                        </button>
+                    <div className="bg-white p-12 rounded-[56px] shadow-[0_50px_100px_rgba(0,0,0,0.03)] border border-indigo-50/50 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/30 rounded-full -mr-32 -mt-32 blur-3xl transition-all group-hover:bg-indigo-100/40"></div>
+                        
+                        <div className="relative z-10">
+                            <h4 className="text-[11px] font-black text-indigo-400 uppercase tracking-[4px] mb-8">Asset Visualization</h4>
+                            
+                            <div className="relative aspect-[4/5] rounded-[44px] overflow-hidden bg-slate-50 border-2 border-dashed border-indigo-50 group/image group-hover:border-indigo-200 transition-all shadow-inner">
+                                {uploading && (
+                                    <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center gap-6">
+                                        <div className="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
+                                        <p className="text-[10px] font-black text-indigo-900 uppercase tracking-[4px]">Syncing Image</p>
                                     </div>
-                                </>
-                            ) : (
-                                <label className="flex flex-col items-center gap-8 cursor-pointer group/label p-10 w-full h-full justify-center">
-                                    <div className="w-24 h-24 bg-white shadow-[0_20px_50px_rgba(245,158,11,0.12)] rounded-[40px] flex items-center justify-center transition-all duration-500 group-hover/label:rotate-[15deg] group-hover/label:scale-110">
-                                        <FaCloudArrowUp className="text-4xl text-amber-500" />
-                                    </div>
-                                    <div className="text-center space-y-2">
-                                        <p className="text-sm font-black text-gray-900 uppercase tracking-[4px] italic">
-                                            Upload New Asset
-                                        </p>
-                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[2px]">
-                                            Studio Assets (PNG, JPG)
-                                        </p>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                    />
-                                </label>
-                            )}
-                        </div>
+                                )}
 
-                        {/* Status Toggle */}
-                        <div className="mt-8 p-6 bg-gray-50/50 rounded-[32px] border border-gray-100">
-                            <div className="flex items-center gap-5">
-                                <div className="relative shrink-0">
-                                    <input
-                                        type="checkbox"
-                                        name="inStack"
-                                        id="inStack"
-                                        checked={product.inStack}
-                                        onChange={handleInputChange}
-                                        className="peer h-8 w-14 cursor-pointer appearance-none rounded-full bg-gray-200 transition-colors checked:bg-emerald-500 outline-none"
-                                    />
-                                    <div className="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all peer-checked:translate-x-6 shadow-md"></div>
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="inStack"
-                                        className="text-[11px] font-black text-gray-900 uppercase tracking-[3px] cursor-pointer block"
-                                    >
-                                        Marketplace Status
+                                {product.image ? (
+                                    <>
+                                        <img
+                                            src={product.image}
+                                            className="w-full h-full object-cover transition-all duration-1000 group-hover/image:scale-110"
+                                            alt="Preview"
+                                        />
+                                        <div className="absolute inset-0 bg-indigo-950/40 opacity-0 group-hover/image:opacity-100 transition-all duration-500 flex items-center justify-center gap-5 backdrop-blur-[2px]">
+                                            <label className="w-14 h-14 bg-white text-indigo-600 rounded-2xl flex items-center justify-center text-xl cursor-pointer hover:scale-110 active:scale-95 transition-all shadow-2xl hover:bg-indigo-600 hover:text-white">
+                                                <FaCloudArrowUp />
+                                                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={() => setProduct((p) => ({ ...p, image: "" }))}
+                                                className="w-14 h-14 bg-white/20 backdrop-blur-xl border border-white/30 text-white rounded-2xl flex items-center justify-center text-xl hover:bg-rose-600 hover:border-rose-500 transition-all shadow-2xl"
+                                            >
+                                                <FaXmark />
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <label className="flex flex-col items-center justify-center h-full cursor-pointer group/label">
+                                        <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-indigo-500 shadow-xl group-hover/label:scale-110 group-hover/label:-rotate-12 transition-all">
+                                            <FaCloudArrowUp className="text-3xl" />
+                                        </div>
+                                        <div className="mt-8 text-center px-8">
+                                            <p className="text-sm font-black text-slate-800 uppercase tracking-widest italic">New Asset</p>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">High-Res PNG or JPG</p>
+                                        </div>
+                                        <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                                     </label>
-                                    <p
-                                        className={`text-[10px] font-bold uppercase mt-1 tracking-widest ${product.inStack ? "text-emerald-500" : "text-rose-400"}`}
-                                    >
-                                        {product.inStack ? "Live Inventory ●" : "Archive / Out of Stock"}
-                                    </p>
-                                </div>
+                                )}
                             </div>
-                        </div>
 
-                        {/* Security badge */}
-                        <div className="mt-6 p-8 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-[40px] shadow-[0_30px_60px_rgba(0,0,0,0.2)] text-white relative overflow-hidden group">
-                            <div className="relative z-10 flex items-start gap-5">
-                                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
-                                    <FaCircleCheck className="text-amber-300 text-xl" />
-                                </div>
-                                <div>
-                                    <p className="text-[11px] font-black uppercase tracking-[3px] text-amber-300 mb-2">
-                                        Edit Certificate
-                                    </p>
-                                    <p className="text-[12px] leading-relaxed font-medium opacity-70 italic">
-                                        All changes are committed to the global matrix and reflected instantly.
-                                    </p>
+                            <div className="mt-12 p-8 bg-indigo-50/40 rounded-[36px] border border-indigo-100/50 border-dashed">
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="inStack" className="cursor-pointer">
+                                        <p className="text-[11px] font-black text-slate-900 uppercase tracking-[4px]">Inventory</p>
+                                        <p className={`text-[10px] font-bold uppercase mt-1 tracking-tight ${product.inStack ? "text-emerald-600" : "text-rose-500"}`}>
+                                            {product.inStack ? "Available in store ●" : "Archived / Hidden"}
+                                        </p>
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            name="inStack"
+                                            id="inStack"
+                                            checked={product.inStack === true || product.inStack === "true"}
+                                            onChange={handleInputChange}
+                                            className="peer h-8 w-14 cursor-pointer appearance-none rounded-full bg-slate-200 transition-colors checked:bg-indigo-600"
+                                        />
+                                        <div className="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all peer-checked:translate-x-6"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-1000"></div>
                         </div>
                     </div>
                 </div>
 
-                {/* Right: Form Panel */}
+                {/* Right Panel: Form hub */}
                 <div className="lg:col-span-8 space-y-12">
-                    <div className="bg-white p-14 rounded-[64px] shadow-[0_50px_100px_rgba(0,0,0,0.03)] border border-gray-100/50 space-y-16">
-                        {/* Product DNA Section */}
-                        <section className="space-y-10">
-                            <div className="flex items-center gap-5">
-                                <div className="w-2 h-8 bg-amber-500 rounded-full shadow-[0_4px_12px_rgba(245,158,11,0.3)]"></div>
-                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-[5px] italic">
-                                    Product DNA
-                                </h3>
+                    <div className="bg-white p-14 rounded-[72px] shadow-[0_50px_100px_rgba(0,0,0,0.03)] border border-indigo-50/50 space-y-16 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-50/20 rounded-full -mr-48 -mt-48 blur-3xl opacity-50"></div>
+                        
+                        {/* Section: Core DNA */}
+                        <section className="space-y-12 relative z-10">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-5">
+                                    <div className="w-2 h-8 bg-indigo-600 rounded-full"></div>
+                                    <h3 className="text-2xl font-black text-slate-900 uppercase tracking-[6px] italic">Identity</h3>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                <div className="md:col-span-2 relative group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[5px] mb-5 block flex items-center gap-3">
-                                        Identity Assignment
-                                        <div className="flex-1 h-[1px] bg-gray-50"></div>
-                                    </label>
-                                    <input
-                                        className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 text-xl font-bold focus:bg-white focus:border-amber-100 focus:ring-[15px] focus:ring-amber-50/30 transition-all placeholder:text-gray-300 placeholder:italic"
-                                        type="text"
-                                        name="title"
-                                        value={product.title}
-                                        onChange={handleInputChange}
-                                        placeholder="e.g. Midnight Onyx Blouson Jacket"
-                                        required
-                                    />
-                                    <MdTipsAndUpdates className="absolute right-10 top-[68px] text-gray-200 group-focus-within:text-amber-500 text-2xl transition-all group-focus-within:rotate-12" />
-                                </div>
-
-                                <div className="group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block flex items-center gap-3">
-                                        Sector <MdOutlineCategory className="text-gray-300" />
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-amber-100 focus:ring-[15px] focus:ring-amber-50/30 transition-all cursor-pointer"
-                                            name="category"
-                                            value={product.category}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                <div className="md:col-span-2 space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Product Title</label>
+                                    <div className="relative group">
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            value={product.title}
                                             onChange={handleInputChange}
+                                            className="w-full h-20 px-10 bg-slate-50 border-2 border-transparent rounded-[32px] outline-none text-slate-900 text-xl font-bold focus:bg-white focus:border-indigo-100 transition-all placeholder:text-slate-300"
+                                            placeholder="e.g. Signature Silk Bomber"
                                             required
-                                        >
-                                            <option value="">Select Domain</option>
-                                            <option value="Men">Men / Collective</option>
-                                            <option value="Women">Women / Studio</option>
-                                            <option value="Kids">Kids / Heritage</option>
-                                        </select>
-                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
+                                        />
+                                        <MdTipsAndUpdates className="absolute right-10 top-1/2 -translate-y-1/2 text-slate-200 group-focus-within:text-indigo-500 text-2xl transition-all" />
                                     </div>
                                 </div>
 
-                                <div className="group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block">
-                                        Classification
-                                    </label>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Gender Sector</label>
                                     <div className="relative">
                                         <select
-                                            className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-amber-100 focus:ring-[15px] focus:ring-amber-50/30 transition-all cursor-pointer"
+                                            name="category"
+                                            value={product.category}
+                                            onChange={handleInputChange}
+                                            className="w-full h-20 px-10 bg-slate-50 border-2 border-transparent rounded-[32px] outline-none text-slate-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-indigo-100 transition-all cursor-pointer"
+                                            required
+                                        >
+                                            <option value="">Choose Domain</option>
+                                            <option value="Men">Men / collective</option>
+                                            <option value="Women">Women / Studio</option>
+                                            <option value="Kids">Kids / Heritage</option>
+                                        </select>
+                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Global Classification</label>
+                                    <div className="relative">
+                                        <select
                                             name="subCategory"
                                             value={product.subCategory}
                                             onChange={handleInputChange}
+                                            className="w-full h-20 px-10 bg-slate-50 border-2 border-transparent rounded-[32px] outline-none text-slate-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-indigo-100 transition-all cursor-pointer"
                                             required
                                         >
-                                            <option value="">Select Architype</option>
-                                            {["Cap", "Coat", "Hudi", "Jacket", "Pant", "Shirt", "Shorts", "Suit", "Tshirt", "Frog", "Plazzo", "Bardot", "Formal", "Top", "Skirt", "TopSkirtSet", "TopPantSet", "TshirtPantSet", "WinterDressSet", "Other"].map(
-                                                (sub) => (
-                                                    <option key={sub} value={sub}>
-                                                        {sub}
-                                                    </option>
-                                                )
-                                            )}
+                                            <option value="">Choose Architype</option>
+                                            {["Cap", "Coat", "Hudi", "Jacket", "Pant", "Shirt", "Shorts", "Suit", "Tshirt", "Frog", "Plazzo", "Bardot", "Formal", "Top", "Skirt", "TopSkirtSet", "TopPantSet", "TshirtPantSet", "WinterDressSet", "Other"].map((s) => (
+                                                <option key={s} value={s}>{s}</option>
+                                            ))}
                                         </select>
-                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
+                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        {/* Market Dynamics Section */}
-                        <section className="space-y-10">
+                        {/* Section: Market Values */}
+                        <section className="space-y-12 relative z-10">
                             <div className="flex items-center gap-5">
-                                <div className="w-2 h-8 bg-emerald-500 rounded-full shadow-[0_4px_12px_rgba(16,185,129,0.3)]"></div>
-                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-[5px] italic">
-                                    Market Dynamics
-                                </h3>
+                                <div className="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-[6px] italic">Market Value</h3>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                <div className="group relative">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block flex items-center gap-3">
-                                        Asset Worth <MdOutlinePriceChange className="text-gray-300" />
-                                    </label>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Currency Valuation</label>
                                     <div className="relative">
-                                        <span className="absolute left-10 top-1/2 -translate-y-1/2 text-emerald-600 font-black text-2xl">
-                                            $
-                                        </span>
+                                        <span className="absolute left-10 top-1/2 -translate-y-1/2 text-emerald-600 font-black text-2xl">$</span>
                                         <input
-                                            className="w-full h-20 pl-16 pr-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black italic text-3xl focus:bg-white focus:border-emerald-100 focus:ring-[15px] focus:ring-emerald-50/30 transition-all"
                                             type="number"
                                             name="price"
                                             value={product.price}
                                             onChange={handleInputChange}
+                                            className="w-full h-20 pl-16 pr-10 bg-slate-50 border-2 border-transparent rounded-[32px] outline-none text-slate-900 font-black text-3xl focus:bg-white focus:border-emerald-100 transition-all italic"
                                             placeholder="0.00"
                                             required
                                         />
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block">
-                                        Heritage Brand
-                                    </label>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Heritage Brand</label>
                                     <div className="relative">
                                         <select
-                                            className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-amber-100 focus:ring-[15px] focus:ring-amber-50/30 transition-all cursor-pointer"
                                             name="brand"
                                             value={product.brand}
                                             onChange={handleInputChange}
+                                            className="w-full h-20 px-10 bg-slate-50 border-2 border-transparent rounded-[32px] outline-none text-slate-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-indigo-100 transition-all cursor-pointer"
                                             required
                                         >
                                             <option value="">Select Lineage</option>
-                                            {["Zara", "Levls", "Gucci", "OshkoshBgosh", "PoloRalphLauren", "Nordstorm", "H&M", "BossHugoBoss", "Gymboree", "MiniBoden", "Carters", "Tea", "UniQlo", "TheChildrensPlace", "TommyHilfighter", "JCrew", "Other"].map(
-                                                (b) => (
-                                                    <option key={b} value={b}>
-                                                        {b}
-                                                    </option>
-                                                )
-                                            )}
+                                            {["Zara", "Levls", "Gucci", "OshkoshBgosh", "PoloRalphLauren", "Nordstorm", "H&M", "BossHugoBoss", "Gymboree", "MiniBoden", "Carters", "Tea", "UniQlo", "TheChildrensPlace", "TommyHilfighter", "JCrew", "Other"].map((b) => (
+                                                <option key={b} value={b}>{b}</option>
+                                            ))}
                                         </select>
-                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
+                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" />
                                     </div>
                                 </div>
 
-                                {/* Color Picker */}
-                                <div className="relative group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block italic">
-                                        Chromatic Spectrum
-                                    </label>
+                                {/* Chromatic Spectrum */}
+                                <div className="space-y-4 relative">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Spectrum</label>
                                     <button
                                         type="button"
                                         onClick={() => setColorDropdownVisible(!colorDropdownVisible)}
-                                        className="w-full h-20 px-8 bg-gray-50/30 border-2 border-transparent rounded-[32px] flex items-center justify-between group transition-all hover:bg-white hover:border-amber-100 hover:shadow-xl outline-none"
+                                        className={`w-full h-20 px-8 bg-slate-50 border-2 rounded-[32px] flex items-center justify-between transition-all outline-none ${colorDropdownVisible ? "border-indigo-100 bg-white" : "border-transparent"}`}
                                     >
                                         <div className="flex -space-x-3">
                                             {product.color.length > 0 ? (
                                                 product.color.slice(0, 6).map((c) => (
-                                                    <div
-                                                        key={c.colorName}
-                                                        style={{ backgroundColor: c.colorValue }}
-                                                        className="w-10 h-10 rounded-2xl border-4 border-white shadow-lg transition-transform group-hover:scale-110"
-                                                    ></div>
+                                                    <div key={c.colorName} style={{ backgroundColor: c.colorValue }} className="w-10 h-10 rounded-2xl border-4 border-white shadow-md"></div>
                                                 ))
                                             ) : (
-                                                <span className="text-[10px] font-black uppercase text-gray-300 tracking-[3px]">
-                                                    Void Spectrum
-                                                </span>
+                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Choose Spectrum</span>
                                             )}
                                         </div>
-                                        <div
-                                            className={`p-3 rounded-2xl bg-white shadow-sm transition-transform duration-500 ${colorDropdownVisible ? "rotate-180" : ""}`}
-                                        >
-                                            <FaAngleDown className="text-amber-400" />
-                                        </div>
+                                        <FaAngleDown className={`text-indigo-400 transition-transform duration-500 ${colorDropdownVisible ? "rotate-180" : ""}`} />
                                     </button>
 
                                     {colorDropdownVisible && (
-                                        <div className="absolute z-50 top-full mt-6 left-0 w-full bg-white/95 backdrop-blur-xl border border-amber-50 shadow-[0_40px_100px_rgba(0,0,0,0.18)] rounded-[48px] p-10 origin-top">
-                                            <div className="relative mb-8">
-                                                <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-amber-300" />
+                                        <div className="absolute z-50 top-full mt-6 left-0 w-[400px] bg-white border border-indigo-50 shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[48px] p-10 animate-in fade-in zoom-in-95 duration-300">
+                                            <div className="relative mb-6">
+                                                <FaSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-indigo-300" />
                                                 <input
                                                     type="text"
                                                     placeholder="Search Spectrum..."
-                                                    className="w-full h-14 pl-14 pr-8 bg-gray-50 rounded-2xl outline-none font-black text-[10px] uppercase text-gray-700 placeholder:text-gray-300 tracking-widest border border-transparent focus:border-amber-100 transition-all"
+                                                    className="w-full h-14 pl-14 pr-8 bg-slate-50 rounded-2xl outline-none font-black text-[10px] uppercase text-indigo-900 border border-transparent focus:border-indigo-100"
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)}
                                                 />
                                             </div>
-                                            <div className="grid grid-cols-4 sm:grid-cols-6 gap-8 max-h-[350px] overflow-y-auto pr-4">
+                                            <div className="grid grid-cols-4 gap-6 max-h-[300px] overflow-y-auto pr-4 custom-scrollbar">
                                                 {filteredColorOptions.map((opt) => (
                                                     <button
                                                         key={opt.id}
                                                         type="button"
                                                         onClick={() => toggleColor(opt)}
-                                                        className={`flex flex-col items-center gap-3 group/swatch focus:outline-none transition-all ${product.color.some((c) => c.colorName === opt.colorName) ? "scale-110" : "hover:scale-105 opacity-60 hover:opacity-100"}`}
+                                                        className={`flex flex-col items-center gap-2 transition-all group ${product.color.some((c) => c.colorName === opt.colorName) ? "scale-105" : "opacity-40 hover:opacity-100"}`}
                                                     >
-                                                        <div
-                                                            className={`w-14 h-14 rounded-3xl transition-all duration-500 p-1.5 ${product.color.some((c) => c.colorName === opt.colorName) ? "ring-4 ring-amber-500 ring-offset-4 shadow-2xl" : "shadow-sm"}`}
-                                                        >
-                                                            <div
-                                                                style={{ backgroundColor: opt.colorValue }}
-                                                                className="w-full h-full rounded-2xl shadow-inner border border-black/5"
-                                                            ></div>
+                                                        <div className={`w-12 h-12 rounded-2xl p-1 ${product.color.some((c) => c.colorName === opt.colorName) ? "ring-2 ring-indigo-500 ring-offset-2" : ""}`}>
+                                                            <div style={{ backgroundColor: opt.colorValue }} className="w-full h-full rounded-xl shadow-inner border border-black/5"></div>
                                                         </div>
-                                                        <span
-                                                            className={`text-[9px] font-black uppercase tracking-widest ${product.color.some((c) => c.colorName === opt.colorName) ? "text-amber-600" : "text-gray-400"}`}
-                                                        >
+                                                        <span className="text-[8px] font-black uppercase text-slate-400 group-hover:text-indigo-600 truncate w-full text-center tracking-tighter">
                                                             {opt.colorName}
                                                         </span>
                                                     </button>
@@ -532,47 +509,34 @@ const EditProduct = () => {
                                     )}
                                 </div>
 
-                                {/* Size Picker */}
-                                <div className="relative group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block italic">
-                                        Volume Matrix
-                                    </label>
+                                {/* Volume Matrix */}
+                                <div className="space-y-4 relative">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block">Volume Matrix</label>
                                     <button
                                         type="button"
                                         onClick={() => setSizeDropdownVisible(!sizeDropdownVisible)}
-                                        className="w-full h-20 px-8 bg-gray-50/30 border-2 border-transparent rounded-[32px] flex items-center justify-between hover:bg-white hover:border-amber-100 hover:shadow-xl transition-all outline-none"
+                                        className={`w-full h-20 px-8 bg-slate-50 border-2 rounded-[32px] flex items-center justify-between transition-all outline-none ${sizeDropdownVisible ? "border-indigo-100 bg-white" : "border-transparent"}`}
                                     >
                                         <div className="flex gap-3">
                                             {product.size.length > 0 ? (
                                                 product.size.map((s) => (
-                                                    <span
-                                                        key={s}
-                                                        className="px-4 py-1.5 bg-gray-950 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md"
-                                                    >
-                                                        {s}
-                                                    </span>
+                                                    <span key={s} className="px-4 py-2 bg-indigo-950 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg">{s}</span>
                                                 ))
                                             ) : (
-                                                <span className="text-[10px] font-black uppercase text-gray-300 tracking-[3px]">
-                                                    Undefined Matrix
-                                                </span>
+                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Select Sizes</span>
                                             )}
                                         </div>
-                                        <div
-                                            className={`p-3 rounded-2xl bg-white shadow-sm transition-transform duration-500 ${sizeDropdownVisible ? "rotate-180" : ""}`}
-                                        >
-                                            <FaAngleDown className="text-amber-400" />
-                                        </div>
+                                        <FaAngleDown className={`text-indigo-400 transition-transform duration-500 ${sizeDropdownVisible ? "rotate-180" : ""}`} />
                                     </button>
 
                                     {sizeDropdownVisible && (
-                                        <div className="absolute z-40 top-full mt-6 left-0 w-full bg-white/95 backdrop-blur-xl border border-amber-50 shadow-[0_40px_100px_rgba(0,0,0,0.18)] rounded-[48px] p-10 flex flex-wrap gap-4">
+                                        <div className="absolute z-40 top-full mt-6 left-0 w-full bg-white border border-indigo-50 shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[48px] p-8 flex flex-wrap gap-4 animate-in fade-in zoom-in-95 duration-300">
                                             {sizeOptions.map((size) => (
                                                 <button
                                                     key={size}
                                                     type="button"
                                                     onClick={() => toggleSize(size)}
-                                                    className={`flex-1 min-w-[100px] h-16 flex items-center justify-center rounded-[24px] border-2 transition-all font-black text-[12px] tracking-[4px] ${product.size.includes(size) ? "bg-amber-500 text-white border-amber-500 shadow-2xl shadow-amber-200 -translate-y-1" : "bg-gray-50 border-transparent text-gray-400 hover:border-amber-100 hover:bg-white"}`}
+                                                    className={`flex-1 min-w-[100px] h-14 flex items-center justify-center rounded-2xl border-2 transition-all font-black text-[11px] tracking-widest ${product.size.includes(size) ? "bg-indigo-600 border-indigo-600 text-white shadow-lg -translate-y-1" : "bg-slate-50 border-transparent text-slate-400 hover:bg-white hover:border-indigo-100 hover:text-indigo-600"}`}
                                                 >
                                                     {size}
                                                 </button>
@@ -583,94 +547,39 @@ const EditProduct = () => {
                             </div>
                         </section>
 
-                        {/* Temporal Section */}
-                        <section className="space-y-10">
+                        {/* Section: Narrative */}
+                        <section className="space-y-10 relative z-10">
                             <div className="flex items-center gap-5">
-                                <div className="w-2 h-8 bg-rose-500 rounded-full shadow-[0_4px_12px_rgba(244,63,94,0.3)]"></div>
-                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-[5px] italic">
-                                    Temporal Deployment
-                                </h3>
+                                <div className="w-2 h-8 bg-slate-900 rounded-full"></div>
+                                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-[6px] italic">Narrative</h3>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                <div className="group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block">
-                                        Lifestyle Cluster
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-rose-100 focus:ring-[15px] focus:ring-rose-50/30 cursor-pointer transition-all"
-                                            name="occasion"
-                                            value={product.occasion || ""}
-                                            onChange={handleInputChange}
-                                        >
-                                            <option value="">Select Cluster</option>
-                                            {["Formal", "Casual", "Party", "Wedding", "Other"].map((oc) => (
-                                                <option key={oc} value={oc}>
-                                                    {oc}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
-                                    </div>
-                                </div>
-                                <div className="group">
-                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-[4px] mb-5 block">
-                                        Seasonal Anchor
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            className="w-full h-20 px-10 bg-gray-50/30 border-2 border-transparent rounded-[32px] outline-none text-gray-900 font-black uppercase text-[12px] tracking-[3px] appearance-none focus:bg-white focus:border-rose-100 focus:ring-[15px] focus:ring-rose-50/30 cursor-pointer transition-all"
-                                            name="session"
-                                            value={product.session || ""}
-                                            onChange={handleInputChange}
-                                        >
-                                            <option value="">Select Period</option>
-                                            {["Summer", "Rainy", "Autumn", "Winter", "Other"].map((se) => (
-                                                <option key={se} value={se}>
-                                                    {se}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <FaAngleDown className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" />
-                                    </div>
-                                </div>
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[5px] block italic">Public Exposition</label>
+                                <textarea
+                                    name="desc"
+                                    value={product.desc}
+                                    onChange={handleInputChange}
+                                    className="w-full p-12 bg-slate-50 border-2 border-transparent rounded-[48px] outline-none text-slate-900 font-medium text-lg min-h-[300px] focus:bg-white focus:border-indigo-100 transition-all leading-relaxed shadow-inner italic"
+                                    placeholder="Describe the silhouette, materials, and artisan craftsmanship..."
+                                    required
+                                />
                             </div>
                         </section>
 
-                        {/* Description Section */}
-                        <section className="space-y-10">
-                            <div className="flex items-center gap-5">
-                                <div className="w-2 h-8 bg-gray-900 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)]"></div>
-                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-[5px] italic flex items-center gap-4">
-                                    Archive Narrative
-                                    <MdOutlineDescription className="text-gray-300" />
-                                </h3>
-                            </div>
-                            <textarea
-                                className="w-full p-12 bg-gray-50/30 border-2 border-transparent rounded-[48px] outline-none text-gray-900 font-medium text-xl min-h-[280px] focus:bg-white focus:border-amber-100 focus:ring-[20px] focus:ring-amber-50/20 placeholder:text-gray-300 transition-all leading-relaxed shadow-inner italic"
-                                name="desc"
-                                value={product.desc}
-                                onChange={handleInputChange}
-                                placeholder="Meticulously crafted with a focus on silhouette and avant-garde craftsmanship..."
-                                required
-                            />
-                        </section>
-
-                        {/* Submit */}
-                        <div className="pt-12 border-t border-gray-100 flex items-center justify-center gap-8 flex-wrap">
+                        <div className="pt-16 border-t border-slate-50 flex justify-center">
                             <button
                                 type="submit"
                                 disabled={loading || uploading}
-                                className="h-24 px-16 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-[40px] font-black uppercase tracking-[8px] text-[13px] hover:from-black hover:to-black hover:shadow-[0_30px_70px_rgba(0,0,0,0.2)] transition-all flex items-center gap-8 active:scale-95 disabled:opacity-50 disabled:grayscale group shadow-[0_25px_60px_rgba(245,158,11,0.3)]"
+                                className="h-24 px-20 bg-indigo-600 text-white rounded-[40px] font-black uppercase tracking-[10px] text-[13px] hover:bg-black hover:shadow-2xl active:scale-95 transition-all flex items-center gap-8 disabled:opacity-50 group"
                             >
                                 {loading ? (
                                     <>
-                                        <div className="w-6 h-6 border-[3px] border-white/30 border-t-white rounded-full animate-spin"></div>
-                                        Committing Changes...
+                                        <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <span>Saving</span>
                                     </>
                                 ) : (
                                     <>
-                                        Commit Production Update
+                                        <span>Update Asset</span>
                                         <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center group-hover:rotate-180 transition-transform duration-700">
                                             <FaCircleCheck className="text-2xl" />
                                         </div>
@@ -686,3 +595,5 @@ const EditProduct = () => {
 };
 
 export default EditProduct;
+
+

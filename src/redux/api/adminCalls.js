@@ -2,6 +2,7 @@ import { userRequest } from "../../helpers/axios/requestMethod";
 import {
     getProductStart, getProductSuccess, getProductFailure,
     deleteProductStart, deleteProductSuccess, deleteProductFailure,
+    updateProductStart, updateProductSuccess, updateProductFailure,
     addProductStart, addProductSuccess, addProductFailure
 } from "../productRedux";
 import { setOrdersLoading, setOrders, setOrdersError, updateOrder } from "../orderRedux";
@@ -43,8 +44,10 @@ export const deleteAdminProduct = (id) => async (dispatch) => {
     try {
         await userRequest.delete(`/products/${id}`);
         dispatch(deleteProductSuccess(id));
+        return { success: true };
     } catch (error) {
         dispatch(deleteProductFailure());
+        return { success: false, error };
     }
 };
 
@@ -71,11 +74,13 @@ export const fetchProductById = async (id) => {
 };
 
 export const updateAdminProduct = (id, productData) => async (dispatch) => {
+    dispatch(updateProductStart());
     try {
         const response = await userRequest.put(`/products/${id}`, productData);
-        // Assuming you want to update the store too, but for simplicity we'll just return success
+        dispatch(updateProductSuccess({ id, product: response?.data }));
         return { success: true, data: response?.data };
     } catch (error) {
+        dispatch(updateProductFailure());
         console.error("Error updating product:", error);
         return { success: false, error };
     }

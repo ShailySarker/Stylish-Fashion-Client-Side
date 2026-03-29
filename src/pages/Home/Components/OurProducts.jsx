@@ -37,8 +37,8 @@ const OurProducts = () => {
         const getAllProducts = async () => {
             try {
                 const res = await publicRequest.get("/products");
-                // console.log(res?.data);
-                setAllProducts(res?.data.slice(0, 12));
+                const sortedProducts = (res?.data || []).sort((a,b) => new Date(b?.createdAt) - new Date(a?.createdAt));
+                setAllProducts(sortedProducts.slice(0, 12));
             } catch (error) {
                 console.log(error)
             }

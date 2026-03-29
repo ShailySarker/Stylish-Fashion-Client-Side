@@ -4,9 +4,7 @@ import {
   FaAngleLeft,
   FaAngleRight,
   FaPlus,
-  FaFilter,
   FaLayerGroup,
-  FaTags,
   FaStore,
   FaAngleDown,
   FaEye,
@@ -50,17 +48,31 @@ const ManageProducts = () => {
         cancelButton:
           "rounded-xl px-6 py-3 font-black uppercase tracking-widest text-[10px]",
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(deleteAdminProduct(id)).then(() => {
-          Swal.fire("Success", "Catalog item has been purged.", "success");
-        });
+        const res = await dispatch(deleteAdminProduct(id));
+        if (res?.success) {
+          Swal.fire("Deleted!", "Catalog item has been purged.", "success");
+        } else {
+          Swal.fire(
+            "Error",
+            "Failed to delete product. Please try again.",
+            "error",
+          );
+        }
       }
     });
   };
 
   const filteredProducts = useMemo(() => {
-    return (products || []).filter((p) => {
+    // Sort products by createdAt (latest first)
+    const sortedList = [...(products || [])].sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
+      return dateB - dateA;
+    });
+
+    return sortedList.filter((p) => {
       const matchesSearch =
         p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.brand?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -72,6 +84,12 @@ const ManageProducts = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterCategory]);
+
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -86,13 +104,47 @@ const ManageProducts = () => {
   const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+  // Smart pagination: returns array of page numbers with ellipsis markers (null)
+  const getPaginationRange = () => {
+    if (totalPages <= 7)
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    const range = [];
+    if (currentPage <= 4) {
+      range.push(1, 2, 3, 4, 5, null, totalPages);
+    } else if (currentPage >= totalPages - 3) {
+      range.push(
+        1,
+        null,
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      );
+    } else {
+      range.push(
+        1,
+        null,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        null,
+        totalPages,
+      );
+    }
+    return range;
+  };
+
   // Stats
   const inStockCount = (products || []).filter((p) => p.inStack).length;
 
   return (
     <>
       {viewProduct && (
-        <ProductViewModal product={viewProduct} onClose={() => setViewProduct(null)} />
+        <ProductViewModal
+          product={viewProduct}
+          onClose={() => setViewProduct(null)}
+        />
       )}
       <div className="lg:px-20 md:px-12 px-6 py-12 min-h-screen bg-[#FDFDFF] font-['Outfit']">
         {/* Header / Stats Section */}
@@ -167,19 +219,19 @@ const ManageProducts = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          {/* <div className="flex gap-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">
             <span className="px-6 py-3 bg-white border border-gray-100 rounded-2xl shadow-sm flex items-center gap-3">
               <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></span>
               Telemetry Live
             </span>
-          </div>
+          </div> */}
         </div>
 
         {isFetching ? (
           <div className="py-44 flex flex-col items-center justify-center gap-6">
             <div className="w-16 h-16 border-[6px] border-indigo-50 border-t-indigo-600 rounded-full animate-spin shadow-xl"></div>
             <p className="text-gray-400 font-black animate-pulse uppercase tracking-[5px] italic">
-              Syncing Global Cache...
+              Products Data Loading...
             </p>
           </div>
         ) : (
@@ -324,15 +376,24 @@ const ManageProducts = () => {
               </button>
 
               <div className="flex gap-2 mx-2">
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => paginate(i + 1)}
-                    className={`w-14 h-14 rounded-[22px] font-black text-sm transition-all shadow-md active:scale-95 ${currentPage === i + 1 ? "bg-indigo-600 text-white shadow-indigo-200" : "bg-white border border-gray-100 text-gray-600 hover:bg-gray-50"}`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+                {getPaginationRange().map((page, idx) =>
+                  page === null ? (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="w-14 h-14 flex items-center justify-center text-gray-300 font-black text-lg select-none"
+                    >
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => paginate(page)}
+                      className={`w-14 h-14 rounded-[22px] font-black text-sm transition-all shadow-md active:scale-95 ${currentPage === page ? "bg-indigo-600 text-white shadow-indigo-200" : "bg-white border border-gray-100 text-gray-600 hover:bg-gray-50"}`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
               </div>
 
               <button
@@ -356,7 +417,7 @@ const ProductViewModal = ({ product, onClose }) => (
     onClick={onClose}
   >
     <div
-      className="bg-white rounded-[56px] shadow-[0_60px_120px_rgba(0,0,0,0.2)] max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+      className="bg-white rounded-[56px] shadow-[0_60px_120px_rgba(0,0,0,0.2)] lg:max-w-4xl max-w-2xl w-full xl:max-h-[70vh] lg:max-h-[50vh] max-h-[70vh] overflow-y-auto"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Modal Header */}
@@ -364,7 +425,9 @@ const ProductViewModal = ({ product, onClose }) => (
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50/50 border border-indigo-100/50 rounded-full">
             <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></span>
-            <span className="text-[10px] font-black uppercase tracking-[3px] text-indigo-600/80">Product Dossier</span>
+            <span className="text-[10px] font-black uppercase tracking-[3px] text-indigo-600/80">
+              Product Dossier
+            </span>
           </div>
           <h2 className="text-3xl font-black text-gray-900 italic tracking-tighter uppercase leading-tight line-clamp-1">
             {product.title}
@@ -396,12 +459,22 @@ const ProductViewModal = ({ product, onClose }) => (
           {/* Price & Stock */}
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-1">Market Value</p>
-              <p className="text-5xl font-black text-gray-900 italic tracking-tighter">${Number(product.price || 0).toFixed(2)}</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-1">
+                Market Value
+              </p>
+              <p className="text-5xl font-black text-gray-900 italic tracking-tighter">
+                ${Number(product.price || 0).toFixed(2)}
+              </p>
             </div>
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border ${product.inStack ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-rose-50 border-rose-100 text-rose-500'}`}>
-              <div className={`w-2 h-2 rounded-full ${product.inStack ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]' : 'bg-rose-500 animate-pulse'}`}></div>
-              <span className="text-[10px] font-black uppercase tracking-widest">{product.inStack ? 'Active' : 'Depleted'}</span>
+            <div
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border ${product.inStack ? "bg-emerald-50 border-emerald-100 text-emerald-600" : "bg-rose-50 border-rose-100 text-rose-500"}`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full ${product.inStack ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" : "bg-rose-500 animate-pulse"}`}
+              ></div>
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                {product.inStack ? "Active" : "Depleted"}
+              </span>
             </div>
           </div>
 
@@ -410,20 +483,30 @@ const ProductViewModal = ({ product, onClose }) => (
             <MetaChip label="Brand" value={product.brand} />
             <MetaChip label="Sector" value={product.category} />
             <MetaChip label="Type" value={product.subCategory} />
-            <MetaChip label="Occasion" value={product.occasion || '—'} />
-            <MetaChip label="Season" value={product.session || '—'} />
+            <MetaChip label="Occasion" value={product.occasion || "—"} />
+            <MetaChip label="Season" value={product.session || "—"} />
             <MetaChip label="SKU" value={product._id?.slice(-10)} mono />
           </div>
 
           {/* Colors */}
           {product.color?.length > 0 && (
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-4">Chromatic Spectrum</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-4">
+                Chromatic Spectrum
+              </p>
               <div className="flex flex-wrap gap-3">
-                {product.color.map(c => (
-                  <div key={c.colorName} className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-2xl border border-gray-100">
-                    <div style={{ backgroundColor: c.colorValue }} className="w-5 h-5 rounded-lg border-2 border-white shadow-sm"></div>
-                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">{c.colorName}</span>
+                {product.color.map((c) => (
+                  <div
+                    key={c.colorName}
+                    className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-2xl border border-gray-100"
+                  >
+                    <div
+                      style={{ backgroundColor: c.colorValue }}
+                      className="w-5 h-5 rounded-lg border-2 border-white shadow-sm"
+                    ></div>
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">
+                      {c.colorName}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -433,10 +516,17 @@ const ProductViewModal = ({ product, onClose }) => (
           {/* Sizes */}
           {product.size?.length > 0 && (
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-4">Volume Matrix</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-4">
+                Volume Matrix
+              </p>
               <div className="flex flex-wrap gap-3">
-                {product.size.map(s => (
-                  <span key={s} className="px-5 py-2 bg-gray-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[4px]">{s}</span>
+                {product.size.map((s) => (
+                  <span
+                    key={s}
+                    className="px-5 py-2 bg-gray-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[4px]"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
@@ -445,8 +535,12 @@ const ProductViewModal = ({ product, onClose }) => (
           {/* Description */}
           {product.desc && (
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-3">Archive Narrative</p>
-              <p className="text-sm text-gray-600 font-medium leading-relaxed italic line-clamp-4">{product.desc}</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[4px] mb-3">
+                Archive Narrative
+              </p>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed italic line-clamp-4">
+                {product.desc}
+              </p>
             </div>
           )}
         </div>
@@ -457,8 +551,14 @@ const ProductViewModal = ({ product, onClose }) => (
 
 const MetaChip = ({ label, value, mono }) => (
   <div className="p-4 bg-gray-50/50 rounded-[20px] border border-gray-100/80">
-    <p className="text-[9px] font-black text-gray-400 uppercase tracking-[3px] mb-1">{label}</p>
-    <p className={`text-sm font-black text-gray-900 uppercase truncate ${mono ? 'font-mono text-[11px]' : ''}`}>{value || '—'}</p>
+    <p className="text-[9px] font-black text-gray-400 uppercase tracking-[3px] mb-1">
+      {label}
+    </p>
+    <p
+      className={`text-sm font-black text-gray-900 uppercase truncate ${mono ? "font-mono text-[11px]" : ""}`}
+    >
+      {value || "—"}
+    </p>
   </div>
 );
 

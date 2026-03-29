@@ -29,9 +29,9 @@ const Products = () => {
       try {
         setLoading(true);
         const res = await publicRequest.get("/products");
-        // setAllProducts(res?.data);
-        setAllProducts(res?.data || []);
-        setFilteredProducts(res?.data || []); // Initialize filteredProducts with all products
+        const sortedProducts = (res?.data || []).sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt));
+        setAllProducts(sortedProducts);
+        setFilteredProducts(sortedProducts); // Initialize filteredProducts with all products
       } catch (error) {
         setError("Failed to fetch product");
       } finally {
