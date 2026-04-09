@@ -100,7 +100,7 @@ export const fetchAllOrders = () => async (dispatch) => {
 export const updateOrderStatus = (orderId, status) => async (dispatch) => {
     try {
         const response = await userRequest.put(`/orders/${orderId}`, { status });
-        dispatch(updateOrder(response?.data));
+        dispatch(updateOrder(response?.data?.updatedOrder));
     } catch (error) {
         console.error("Error updating order:", error);
     }
