@@ -203,7 +203,7 @@ const Header = () => {
                       onClick={() => setUserDropdownOpen(false)}
                     />
                     <DropdownLink
-                      to="/myAccount"
+                      to="/change-password"
                       icon={<FaKey className="text-purple-600" />}
                       label="Change Password"
                       onClick={() => setUserDropdownOpen(false)}
@@ -416,9 +416,15 @@ const Header = () => {
                     Account
                   </p>
                   <MobileNavLink
-                    to="/dashboard"
-                    icon={<FaGauge className="text-purple-500" />}
-                    label={isAdmin ? "Admin Overview" : "My Dashboard"}
+                    to="/myAccount"
+                    icon={<FaUser className="text-purple-500" />}
+                    label="My Account"
+                    onClick={toggleMobileMenu}
+                  />
+                  <MobileNavLink
+                    to="/change-password"
+                    icon={<FaKey className="text-purple-500" />}
+                    label="Change Password"
                     onClick={toggleMobileMenu}
                   />
                   {!isAdmin && (

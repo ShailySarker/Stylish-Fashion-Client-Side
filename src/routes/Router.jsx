@@ -37,6 +37,9 @@ const CancellationAndRefundPolicy = React.lazy(
 );
 const NotFound = React.lazy(() => import("../pages/NotFound/NotFound"));
 const MyAccount = React.lazy(() => import("../pages/MyAccount/MyAccount"));
+const ChangePassword = React.lazy(
+  () => import("../pages/ChangePassword/ChangePassword"),
+);
 const Wishlist = React.lazy(() => import("../pages/Wishlist/Wishlist"));
 const OrderTracking = React.lazy(
   () => import("../pages/OrderTracking/OrderTracking"),
@@ -183,6 +186,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LazyLoader />}>
             <PrivateRouter>
               <MyAccount />
+            </PrivateRouter>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/change-password",
+        element: (
+          <Suspense fallback={<LazyLoader />}>
+            <PrivateRouter>
+              <ChangePassword />
             </PrivateRouter>
           </Suspense>
         ),

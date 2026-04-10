@@ -1,4 +1,4 @@
-import { publicRequest } from "../../helpers/axios/requestMethod";
+import { publicRequest, userRequest } from "../../helpers/axios/requestMethod";
 import { clearCart } from "../cartRedux";
 import { clearOrders } from "../orderRedux";
 import { loginFailure, loginStart, loginSuccess, logout, signUpFailure, signUpStart, signUpSuccess } from "../userRedux"
@@ -28,6 +28,16 @@ export const signUp = async (dispatch, user) => {
         dispatch(signUpFailure(errorMsg));
     }
 };
+
+export const changePassword = async (passwordData) => {
+    try {
+        const res = await userRequest.put("/auth/changePassword", passwordData);
+        return res?.data;
+    } catch (error) {
+        console.error("Change password error:", error);
+        throw error?.response?.data?.message || "Password change failed";
+    }
+}
 
 export const logOut = (dispatch) => {
     dispatch(clearWishlist());
